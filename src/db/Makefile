@@ -1,0 +1,19 @@
+INCDIRS = -I../../include
+
+OBJS =	graph.o			\
+	vertex.o		\
+	vertexid.o
+
+TGT = libdb.a
+
+all: $(OBJS)
+	ar -r $(TGT) $(OBJS)
+
+clean:
+	rm -f $(TGT) $(OBJS)
+
+wc: clean
+	wc -l *.c
+
+.c.o: $<
+	gcc -c -Wall $(INCDIRS) -o $@ $<
