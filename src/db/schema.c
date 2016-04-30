@@ -67,19 +67,42 @@ schema_element_print(element_t elem)
 }
 
 void
-schema_element_insert(schema_t s, element_t elem)
+schema_element_insert(schema_t *s, element_t elem)
 {
+	assert (s != NULL);
+	assert (elem != NULL);
 
+	if (*s != NULL)
+		elem->next = *s;
+
+	*s = elem;
 }
 
 void
-schema_element_remove(schema_t s, element_t elem)
+schema_element_remove(schema_t *s, element_t elem)
 {
+	schema_t prev, curr;
 
+	assert (s != NULL);
+	assert (elem != NULL);
+
+	for (prev = NULL, curr = *s;
+	     curr != NULL;
+	     prev = curr, curr = curr->next)
+		if (curr == elem) {
+			if (prev == NULL) {
+				*s = curr->next;
+			} else {
+				prev->next = curr->next;
+			}
+		}
 }
 
 void
 schema_print(schema_t s)
 {
+	element_t elem;
 
+	for (elem = s; elem != NULL; elem = elem->next)
+		schema_element_print(elem);
 }
