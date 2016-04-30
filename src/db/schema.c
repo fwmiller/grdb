@@ -1,12 +1,17 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "schema.h"
 
 void
 schema_element_alloc(element_t elem, enum base_types bt)
 {
+	assert (elem != NULL);
 
+	memset(elem, 0, sizeof(struct element));
+	elem->bt = bt;
+	elem->next = NULL;
 }
 
 void
