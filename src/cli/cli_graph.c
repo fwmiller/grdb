@@ -6,7 +6,7 @@
 #include "graph.h"
 
 static void
-cli_graph_rand(char *cmdline, int *pos)
+cli_graph_vertex(char *cmdline, int *pos)
 {
 	vertexid_t id;
 	vertex_t v;
@@ -91,8 +91,8 @@ cli_graph(char *cmdline)
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, &pos, " ", s);
 
-	if (strcmp(s, "rand") == 0)
-		cli_graph_rand(cmdline, &pos);
+	if (strcmp(s, "vertex") == 0)
+		cli_graph_vertex(cmdline, &pos);
 
 	if (strcmp(s, "edge") == 0)
 		cli_graph_edge(cmdline, &pos);
