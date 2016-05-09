@@ -47,7 +47,7 @@ typedef double bt_double_t;
 typedef struct bt_date *bt_date_t;
 typedef struct bt_time *bt_time_t;
 
-union attribute {
+union attribute_type {
 	struct bt_char s;
 	struct bt_varchar vs;
 	bt_boolean_t b;
@@ -58,22 +58,22 @@ union attribute {
 	struct bt_time time;
 };
 
-struct element {
+struct attribute {
 	enum base_types bt;
-	union attribute data;
-	struct element *next;
+	union attribute_type data;
+	struct attribute *next;
 };
 
-typedef union attribute *attribute_t;
-typedef struct element *element_t;
-typedef struct element *schema_t;
+typedef union attribute_type *attribute_type_t;
+typedef struct attribute *attribute_t;
+typedef struct attribute *schema_t;
 
 
-void schema_element_alloc(element_t elem, enum base_types bt);
-void schema_element_print(element_t elem);
+void schema_attribute_alloc(attribute_t attr, enum base_types bt);
+void schema_attribute_print(attribute_t attr);
 
-void schema_element_insert(schema_t *s, element_t elem);
-void schema_element_remove(schema_t *s, element_t elem);
+void schema_attribute_insert(schema_t *s, attribute_t attr);
+void schema_attribute_remove(schema_t *s, attribute_t attr);
 void schema_print(schema_t s);
 
 

@@ -8,7 +8,7 @@
 #define MAX_GRAPHS	8
 
 /* Graphs */
-extern vertex_t graphs[];
+extern struct graph graphs[];
 extern int currgraph;
 
 void nextarg(char *ln, int *pos, char *sep, char *arg);

@@ -3,30 +3,30 @@
 #include "graph.h"
 
 void
-graph_insert_vertex(vertex_t *g, vertex_t v)
+graph_insert_vertex(graph_t g, vertex_t v)
 {
 	assert (g != NULL);
 	assert (v != NULL);
 
-	if (*g == NULL) {
+	if (g->v == NULL) {
 		/* Insert vertex into empty graph */
-		*g = v;
+		g->v = v;
 		return;
 	}
 	/* Insert at the front of the double linked list */
-	(*g)->prev = v;
-	v->next = *g;
-	*g = v;
+	g->v->prev = v;
+	v->next = g->v;
+	g->v = v;
 }
 
 vertex_t
-graph_find_vertex_by_id(vertex_t g, vertexid_t id)
+graph_find_vertex_by_id(graph_t g, vertexid_t id)
 {
 	vertex_t v;
 
 	assert (g != NULL);
 
-	for (v = g; v != NULL; v = v->next)
+	for (v = g->v; v != NULL; v = v->next)
 		if (v->id == id)
 			return v;
 
@@ -34,7 +34,7 @@ graph_find_vertex_by_id(vertex_t g, vertexid_t id)
 }
 
 void
-graph_insert_edge(vertex_t g, vertexid_t v1, vertexid_t v2)
+graph_insert_edge(graph_t g, vertexid_t v1, vertexid_t v2)
 {
 	vertex_t v;
 
@@ -50,14 +50,20 @@ graph_insert_edge(vertex_t g, vertexid_t v1, vertexid_t v2)
 }
 
 void
-graph_print(vertex_t g)
+graph_print(graph_t g)
 {
 	vertex_t v;
 
 	assert (g != NULL);
 
-	for (v = g; v != NULL; v = v->next) {
+	for (v = g->v; v != NULL; v = v->next) {
 		vertex_print(v);
 		printf("\n");
 	}
+}
+
+void
+graph_print_schema(graph_t g)
+{
+	return;
 }

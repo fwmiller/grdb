@@ -6,7 +6,7 @@
 #include "schema.h"
 
 /* Graphs */
-vertex_t graphs[MAX_GRAPHS];
+struct graph graphs[MAX_GRAPHS];
 int currgraph = 0;
 
 char *readline(char *prompt);
@@ -51,8 +51,11 @@ cli()
 
 	cli_about(NULL);
 
-	for (i = 0; i < MAX_GRAPHS; i++)
-		graphs[i] = NULL;
+	for (i = 0; i < MAX_GRAPHS; i++) {
+		graphs[i].v = NULL;
+		graphs[i].sv = NULL;
+		graphs[i].se = NULL;
+	}
 
 	ncmds = sizeof(cmds) / sizeof(struct cli_cmd);
 
