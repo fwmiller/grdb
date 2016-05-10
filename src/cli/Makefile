@@ -21,8 +21,7 @@ clean:
 	rm -f $(TGT) $(OBJS)
 
 wc: clean
-	cd ../db; make wc;
-	wc -l *.c
+	wc -l ../../include/*.h ../db/*.c *.c
 
 .c.o: $<
 	gcc -c -Wall $(INCDIRS) -o $@ $<
