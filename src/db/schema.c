@@ -5,7 +5,7 @@
 #include "schema.h"
 
 void
-schema_attribute_alloc(attribute_t attr, enum base_types bt)
+schema_attribute_alloc(attribute_t attr, char *name, enum base_types bt)
 {
 	assert (attr != NULL);
 

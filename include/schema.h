@@ -2,6 +2,8 @@
 #define __SCHEMA_H
 
 
+#define ATTR_NAME_MAXLEN	256
+
 /* Base types */
 enum base_types
 {
@@ -59,6 +61,7 @@ union attribute_type {
 };
 
 struct attribute {
+	char name[ATTR_NAME_MAXLEN];
 	enum base_types bt;
 	union attribute_type data;
 	struct attribute *next;
@@ -69,7 +72,7 @@ typedef struct attribute *attribute_t;
 typedef struct attribute *schema_t;
 
 
-void schema_attribute_alloc(attribute_t attr, enum base_types bt);
+void schema_attribute_alloc(attribute_t attr, char *name, enum base_types bt);
 void schema_attribute_print(attribute_t attr);
 
 void schema_attribute_insert(schema_t *s, attribute_t attr);
