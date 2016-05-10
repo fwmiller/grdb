@@ -14,12 +14,14 @@ cli_graph_print()
 {
 	int i;
 
-	for (i = 0; i < MAX_GRAPHS; i++) {
-		if (i == currgraph)
-			printf(">");
-		printf("graph %d\n", i);
-		graph_print(&(graphs[i]));
-	}
+	for (i = 0; i < MAX_GRAPHS; i++)
+		if (graphs[i].v != NULL) {
+			if (i == currgraph) {
+				printf(">");
+			}
+			printf("graph %d\n", i);
+			graph_print(&(graphs[i]));
+		}
 }
 
 void
