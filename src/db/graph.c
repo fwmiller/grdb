@@ -61,9 +61,3 @@ graph_print(graph_t g)
 		printf("\n");
 	}
 }
-
-void
-graph_print_schema(graph_t g)
-{
-	return;
-}
