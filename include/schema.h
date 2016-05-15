@@ -28,7 +28,7 @@ typedef struct attribute *schema_t;
 
 extern char *base_types_str[];
 
-void schema_attribute_alloc(attribute_t attr, enum base_types bt, char *name);
+void schema_attribute_init(attribute_t attr, enum base_types bt, char *name);
 void schema_attribute_print(attribute_t attr);
 
 void schema_attribute_insert(schema_t *s, attribute_t attr);

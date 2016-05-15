@@ -33,13 +33,13 @@ cli_graph(char *cmdline)
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, &pos, " ", s);
 
-	if (strcmp(s, "vertex") == 0)
+	if (strcmp(s, "vertex") == 0 || strcmp(s, "v") == 0)
 		cli_graph_vertex(cmdline, &pos);
 
-	else if (strcmp(s, "edge") == 0)
+	else if (strcmp(s, "edge") == 0 || strcmp(s, "e") == 0)
 		cli_graph_edge(cmdline, &pos);
 
-	else if (strcmp(s, "schema") == 0)
+	else if (strcmp(s, "schema") == 0 || strcmp(s, "s") == 0)
 		cli_graph_schema(cmdline, &pos);
 
 	else if (strlen(s) == 0)

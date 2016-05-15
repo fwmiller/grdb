@@ -9,7 +9,7 @@ char *base_types_str[] = {
 };
 
 void
-schema_attribute_alloc(attribute_t attr, enum base_types bt, char *name)
+schema_attribute_init(attribute_t attr, enum base_types bt, char *name)
 {
 	assert (attr != NULL);
 	assert (name != NULL);
