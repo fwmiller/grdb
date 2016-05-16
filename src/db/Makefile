@@ -1,6 +1,7 @@
 INCDIRS = -I../../include
 
-OBJS =	graph.o			\
+OBJS =	edge.o			\
+	graph.o			\
 	schema.o		\
 	vertex.o		\
 	vertexid.o

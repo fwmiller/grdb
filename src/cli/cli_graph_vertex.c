@@ -27,7 +27,7 @@ cli_graph_vertex(char *cmdline, int *pos)
 
 		v = (vertex_t) malloc(sizeof(struct vertex));
 		assert(v != NULL);
-		vertex_alloc(v);
+		vertex_init(v);
 		vertex_set_id(v, id);
 		graph_insert_vertex(&(graphs[currgraph]), v);
 	}

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,6 +37,12 @@ cli_graph_edge(char *cmdline, int *pos)
 		printf("add edge (%04llx,%04llx) to graph %d\n",
 		       v1->id, v2->id, currgraph);
 
-		vertex_edge_insert(v1, v2->id);
+		{
+			/* Create and add an edge to the graph */
+			edge_t e = malloc(sizeof(struct edge));
+			assert (e != NULL);
+			edge_init(e);
+			edge_set_vertices(e, v1->id, v2->id);
+		}
 	}
 }

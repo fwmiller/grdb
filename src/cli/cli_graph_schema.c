@@ -31,7 +31,7 @@ cli_graph_schema_add(schema_type_t s, char *cmdline, int *pos)
 			attr = (attribute_t)
 				malloc(sizeof(struct attribute));
 			assert(attr != NULL);
-			schema_attribute_alloc(attr, i, name);
+			schema_attribute_init(attr, i, name);
 			schema_attribute_insert(
 				(s == EDGE ?
 				 &(graphs[currgraph].se) :
