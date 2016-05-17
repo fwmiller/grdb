@@ -14,7 +14,8 @@ enum base_types
 	FLOAT,		/* Float */
 	DOUBLE,		/* Double */
 	DATE,		/* Date */
-	TIME		/* Time (24 hour format) */
+	TIME,		/* Time (24 hour format) */
+	BASE_TYPES_MAX
 };
 
 struct attribute {
