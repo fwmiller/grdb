@@ -43,6 +43,7 @@ cli_graph_edge(char *cmdline, int *pos)
 			assert (e != NULL);
 			edge_init(e);
 			edge_set_vertices(e, v1->id, v2->id);
+			graph_insert_edge(&(graphs[currgraph]), e);
 		}
 	}
 }

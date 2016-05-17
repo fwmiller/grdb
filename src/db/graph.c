@@ -54,7 +54,6 @@ graph_insert_edge(graph_t g, edge_t e)
 	g->e->prev = e;
 	e->next = g->e;
 	g->e = e;
-
 }
 
 void
@@ -70,6 +69,7 @@ graph_print(graph_t g)
 		vertex_print(v);
 		printf("\n");
 	}
+
 	/* Edges */
 	for (e = g->e; e != NULL; e = e->next) {
 		edge_print(e);
