@@ -34,6 +34,7 @@ void schema_attribute_print(attribute_t attr);
 
 void schema_attribute_insert(schema_t *s, attribute_t attr);
 void schema_attribute_remove(schema_t *s, attribute_t attr);
+int schema_size(schema_t s);
 void schema_print(schema_t s);
 
 
