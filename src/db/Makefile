@@ -3,6 +3,7 @@ INCDIRS = -I../../include
 OBJS =	edge.o			\
 	graph.o			\
 	schema.o		\
+	tuple.o			\
 	vertex.o		\
 	vertexid.o
 

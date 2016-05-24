@@ -11,4 +11,6 @@ struct tuple {
 
 typedef struct tuple *tuple_t;
 
+void tuple_init(tuple_t t, schema_t s);
+
 #endif
