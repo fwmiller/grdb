@@ -24,10 +24,12 @@ struct attribute {
 	struct attribute *next;
 };
 
+typedef enum base_types base_types_t;
 typedef struct attribute *attribute_t;
 typedef struct attribute *schema_t;
 
 extern char *base_types_str[];
+extern int base_types_len[];
 
 void schema_attribute_init(attribute_t attr, enum base_types bt, char *name);
 void schema_attribute_print(attribute_t attr);

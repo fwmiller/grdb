@@ -12,5 +12,7 @@ struct tuple {
 typedef struct tuple *tuple_t;
 
 void tuple_init(tuple_t t, schema_t s);
+void tuple_set(tuple_t t, base_types_t bt, char *name, void *val);
+void tuple_print(tuple_t t);
 
 #endif

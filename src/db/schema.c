@@ -8,6 +8,11 @@ char *base_types_str[] = {
 	"CHAR", "VARCHAR", "BOOL", "INT", "FLOAT", "DOUBLE", "DATE", "TIME"
 };
 
+int base_types_len[] = {
+	1, 256, 1, sizeof(unsigned long long), sizeof(float),
+	sizeof(double), 10, 8
+};
+
 void
 schema_attribute_init(attribute_t attr, enum base_types bt, char *name)
 {
@@ -66,35 +71,9 @@ schema_size(schema_t s)
 	attribute_t attr;
 	int acc = 0;
 
-	for (attr = s; attr != NULL; attr = attr->next) {
-		switch (attr->bt) {
-		case CHARACTER:
-			acc++;
-			break;
-		case VARCHAR:
-			acc += 256;
-			break;
-		case BOOLEAN:
-			acc++;
-			break;
-		case INTEGER:
-			acc += sizeof(unsigned long long);
-			break;
-		case FLOAT:
-			acc += sizeof(float);
-			break;
-		case DOUBLE:
-			acc += sizeof(double);
-			break;
-		case DATE:
-			acc += 10; /* MM-DD-YYYY */
-			break;
-		case TIME:
-			acc += 8; /* HH-MM-SS */
-		case BASE_TYPES_MAX:
-			break;
-		}
-	}
+	for (attr = s; attr != NULL; attr = attr->next)
+		acc += base_types_len[attr->bt];
+
 	return acc;
 }
 
