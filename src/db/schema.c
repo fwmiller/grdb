@@ -9,7 +9,7 @@ char *base_types_str[] = {
 };
 
 int base_types_len[] = {
-	1, 256, 1, sizeof(unsigned long long), sizeof(float),
+	1, 256, 1, sizeof(long long int), sizeof(float),
 	sizeof(double), 10, 8
 };
 
