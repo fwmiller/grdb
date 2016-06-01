@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "tuple.h"
@@ -41,26 +42,69 @@ tuple_set(tuple_t t, base_types_t bt, char *name, void *val)
 void tuple_print(tuple_t t)
 {
 	attribute_t attr;
+	int offset;
 
 	assert (t != NULL);
 
 	for (attr = t->s; attr != NULL; attr = attr->next) {
+		offset = tuple_get_offset(t, attr->name);
+
 		switch (attr->bt) {
 		case CHARACTER:
+			{
+				int i = 0;
+
+				for (; i < base_types_len[CHARACTER]; i++)
+					printf("%c", *((char *)
+						(t->buf + offset + i)));
+			}
 			break;
+
 		case VARCHAR:
+			printf("%s", (char *) (t->buf + offset));
 			break;
+
 		case BOOLEAN:
+			{
+				unsigned char val;
+				val = *((unsigned char *)
+					(t->buf + offset));
+				if (val == 0)
+					printf("FALSE");
+				else
+					printf("TRUE");
+			}
 			break;
+
 		case INTEGER:
+			{
+				long long int val;
+				val = *((long long int *) (t->buf + offset));
+				printf("%lld", val);
+			}
 			break;
+
 		case FLOAT:
+			{
+				float val;
+				val = *((float *) (t->buf + offset));
+				printf("%4.2f", val);
+			}
 			break;
+
 		case DOUBLE:
+			{
+				double val;
+				val = *((double *) (t->buf + offset));
+				printf("%4.2f", val);
+			}
 			break;
+
 		case DATE:
 			break;
+
 		case TIME:
+
 		case BASE_TYPES_MAX:
 			break;
 		}
