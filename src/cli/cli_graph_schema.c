@@ -53,11 +53,11 @@ cli_graph_schema(char *cmdline, int *pos)
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
 
-	if (strcmp(s, "vertex") == 0) {
+	if (strcmp(s, "vertex") == 0 || strcmp(s, "v") == 0) {
 		cli_graph_schema_add(VERTEX, cmdline, pos);
 		return;
 	}
-	if (strcmp(s, "edge") == 0) {
+	if (strcmp(s, "edge") == 0 || strcmp(s, "e") == 0) {
 		cli_graph_schema_add(EDGE, cmdline, pos);
 		return;
 	}

@@ -15,8 +15,10 @@ cli_graph_vertex(char *cmdline, int *pos)
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
-	if (strlen(s) > 0)
-		n = atoi(s);
+	if (strlen(s) <= 0)
+		return;
+
+	n = atoi(s);
 
 	for (i = 0; i < n; i++) {
 		id = vertexid_rand();

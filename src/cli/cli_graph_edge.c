@@ -17,9 +17,10 @@ cli_graph_edge(char *cmdline, int *pos)
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
-	if (strlen(s) > 0)
-		m = atoi(s);
+	if (strlen(s) <= 0)
+		return;
 
+	m = atoi(s);
 	g = &(graphs[currgraph]);
 
 	for (j = 0; j < m; j++) {
