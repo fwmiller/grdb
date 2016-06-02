@@ -22,6 +22,17 @@ tuple_init(tuple_t t, schema_t s)
 static int
 tuple_get_offset(tuple_t t, char *name)
 {
+	attribute_t attr;
+	int offset = 0;
+
+	assert (t != NULL);
+	assert (name != NULL);
+
+	for (attr = t->s; attr != NULL; attr = attr->next) {
+		if (strcmp(name, attr->name) == 0)
+			return offset;
+		offset += base_types_len[attr->bt];
+	}
 	return (-1);
 }
 
@@ -101,9 +112,23 @@ void tuple_print(tuple_t t)
 			break;
 
 		case DATE:
+			{
+				int i = 0;
+
+				for (; i < base_types_len[DATE]; i++)
+					printf("%c", *((char *)
+						(t->buf + offset + i)));
+			}
 			break;
 
 		case TIME:
+			{
+				int i = 0;
+
+				for (; i < base_types_len[TIME]; i++)
+					printf("%c", *((char *)
+						(t->buf + offset + i)));
+			}
 
 		case BASE_TYPES_MAX:
 			break;
