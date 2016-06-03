@@ -20,6 +20,7 @@ cli_graph_vertex(char *cmdline, int *pos)
 
 	n = atoi(s);
 
+	/* Add the specified number of random vertices */
 	for (i = 0; i < n; i++) {
 		id = vertexid_rand();
 

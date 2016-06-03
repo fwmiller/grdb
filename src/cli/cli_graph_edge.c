@@ -8,7 +8,7 @@
 void
 cli_graph_edge(char *cmdline, int *pos)
 {
-	graph_t g;
+	graph_t g = &(graphs[currgraph]);
 	vertex_t v1, v2;
 	int i, n, v1idx, v2idx;
 
@@ -20,8 +20,8 @@ cli_graph_edge(char *cmdline, int *pos)
 	if (strlen(s) <= 0)
 		return;
 
+	/* Add the specified number of random edges to the graph */
 	m = atoi(s);
-	g = &(graphs[currgraph]);
 
 	for (j = 0; j < m; j++) {
 		/* Pick two random vertices in the current graph */

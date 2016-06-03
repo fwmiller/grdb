@@ -68,11 +68,11 @@ cli_graph_schema(char *cmdline, int *pos)
 				printf(">");
 			printf("graph %d\n", i);
 			if (graphs[i].sv != NULL) {
-				printf("Sv ");
+				printf("Sv = ");
 				schema_print(graphs[i].sv);
 			}
 			if (graphs[i].se != NULL) {
-				printf("\nSe ");
+				printf("\nSe = ");
 				schema_print(graphs[i].se);
 			}
 			printf("\n");
