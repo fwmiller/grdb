@@ -57,6 +57,8 @@ void tuple_print(tuple_t t)
 
 	assert (t != NULL);
 
+	printf("(");
+
 	for (attr = t->s; attr != NULL; attr = attr->next) {
 		offset = tuple_get_offset(t, attr->name);
 
@@ -133,5 +135,10 @@ void tuple_print(tuple_t t)
 		case BASE_TYPES_MAX:
 			break;
 		}
+
+		if (attr->next != NULL)
+			printf(",");
+
 	}
+	printf(")");
 }

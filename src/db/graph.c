@@ -57,7 +57,7 @@ graph_insert_edge(graph_t g, edge_t e)
 }
 
 void
-graph_print(graph_t g)
+graph_print(graph_t g, int with_tuples)
 {
 	vertex_t v;
 	edge_t e;
@@ -67,12 +67,16 @@ graph_print(graph_t g)
 	/* Vertices */
 	for (v = g->v; v != NULL; v = v->next) {
 		vertex_print(v);
+		if (v->tuple != NULL && with_tuples)
+			tuple_print(v->tuple);
 		printf("\n");
 	}
 
 	/* Edges */
 	for (e = g->e; e != NULL; e = e->next) {
 		edge_print(e);
+		if (e->tuple != NULL && with_tuples)
+			tuple_print(e->tuple);
 		printf("\n");
 	}
 }

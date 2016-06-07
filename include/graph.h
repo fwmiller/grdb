@@ -55,7 +55,7 @@ void graph_init(graph_t g);
 void graph_insert_vertex(graph_t g, vertex_t v);
 vertex_t graph_find_vertex_by_id(graph_t g, vertexid_t id);
 void graph_insert_edge(graph_t g, edge_t e);
-void graph_print(graph_t g);
+void graph_print(graph_t g, int with_tuples);
 
 
 #endif
