@@ -21,7 +21,7 @@ cli_graph_print()
 				printf(">");
 			}
 			printf("graph %d\n", i);
-			graph_print(&(graphs[i]), 1);
+			graph_print(&(graphs[i]), 0); /* no tuples */
 		}
 }
 

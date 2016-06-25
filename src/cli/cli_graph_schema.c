@@ -25,9 +25,6 @@ cli_graph_schema_add(schema_type_t s, char *cmdline, int *pos)
         nextarg(cmdline, pos, " ", name);
 
 	for (i = 0; i < BASE_TYPES_MAX; i++) {
-
-printf("type [%s] base_types_str [%s]\n", type, base_types_str[i]);
-
 		if (strcasecmp(type, base_types_str[i]) == 0) {
 			attribute_t attr;
 
