@@ -1,0 +1,44 @@
+Command Syntax:
+
+db>
+|
++-- about			// Display program information
+|
++-- help			// Help system
+|
++-- (quit|q)			// Quit
+|
++-- g				// Display all graphs (w/o tuples default)
+    |
+    +-- <num>			// Set <num> as current graph
+    |
+    +-- (new|n)			// Create a new graph and add to graphs list
+    |				//   New graph contains single undecorated
+    |				//   vertex
+    |
+    +-- (delete|d) <num>	// Delete graph <num>.  Cannot be current
+    |	 			//   graph
+    |
+    +-- (vertex|v)		// Display current graph vertices only
+    |
+    +-- (edge|e)		// Display current graph edges only
+    |   |
+    |   +-- <id>		// Add edge between a vertex <id> in the
+    |				//   current graph and a newly created
+    |				//   vertex.  The vertex <id> MUST already
+    |				//   be in the current graph.
+    |
+    +-- (schema|s)		// Display current graphs schemas
+    |	|
+    |	+-- (v|e)		// Display vertex|edge schema for current
+    |	    |			//   graph
+    |	    |
+    |	    |			// Add attribute <name> with <type> to the
+    |	    |			//   vertex|edge schema for the current graph
+    |	    +-- <type> <name>
+    |
+    +-- (tuple|t)		// Display current graph with tuples
+	|
+	+-- (v|e)		// Display all vertices|edges tuples for
+				//   current graph
+

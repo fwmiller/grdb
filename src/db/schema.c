@@ -82,11 +82,11 @@ schema_print(schema_t s)
 {
 	attribute_t attr;
 
-	printf("{");
+	printf("[");
 	for (attr = s; attr != NULL; attr = attr->next) {
 		schema_attribute_print(attr);
 		if (attr->next != NULL)
 			printf(",");
 	}
-	printf("}");
+	printf("]");
 }
