@@ -64,19 +64,24 @@ graph_print(graph_t g, int with_tuples)
 
 	assert (g != NULL);
 
+	printf("({");
 	/* Vertices */
 	for (v = g->v; v != NULL; v = v->next) {
 		vertex_print(v);
 		if (v->tuple != NULL && with_tuples)
 			tuple_print(v->tuple);
-		printf("\n");
+		if (v->next != NULL)
+			printf(",");
 	}
 
+	printf("},{");
 	/* Edges */
 	for (e = g->e; e != NULL; e = e->next) {
 		edge_print(e);
 		if (e->tuple != NULL && with_tuples)
 			tuple_print(e->tuple);
-		printf("\n");
+		if (e->next != NULL)
+			printf(",");
 	}
+	printf("})");
 }

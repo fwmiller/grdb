@@ -27,5 +27,6 @@ vertex_print(vertex_t v)
 {
 	assert(v != NULL);
 
-	printf("%04llx", v->id);
+	//printf("%04llx", v->id);
+	printf("%llu", v->id);
 }

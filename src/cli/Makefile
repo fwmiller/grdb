@@ -4,6 +4,7 @@ LIBDIRS = -L../db
 OBJS =	cli.o			\
 	cli_graph.o		\
 	cli_graph_edge.o	\
+	cli_graph_new.o		\
 	cli_graph_schema.o	\
 	cli_graph_tuple.o	\
 	cli_graph_vertex.o	\

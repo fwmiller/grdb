@@ -29,5 +29,6 @@ edge_print(edge_t e)
 {
 	assert(e != NULL);
 
-	printf("(%04llx,%04llx)", e->id1, e->id2);
+	//printf("(%04llx,%04llx)", e->id1, e->id2);
+	printf("(%llu,%llu)", e->id1, e->id2);
 }

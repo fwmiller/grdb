@@ -8,7 +8,7 @@
 void
 cli_graph_edge(char *cmdline, int *pos)
 {
-	graph_t g = &(graphs[currgraph]);
+	graph_t g = current;
 	vertex_t v1, v2;
 	int i, n, v1idx, v2idx;
 
@@ -35,8 +35,7 @@ cli_graph_edge(char *cmdline, int *pos)
 		     v2 != NULL && i < v2idx;
 		     v2 = v2->next, i++);
 
-		printf("add edge (%04llx,%04llx) to graph %d\n",
-		       v1->id, v2->id, currgraph);
+		printf("add edge (%04llx,%04llx)\n", v1->id, v2->id);
 
 		{
 			/* Create and add an edge to the graph */
@@ -44,7 +43,7 @@ cli_graph_edge(char *cmdline, int *pos)
 			assert (e != NULL);
 			edge_init(e);
 			edge_set_vertices(e, v1->id, v2->id);
-			graph_insert_edge(&(graphs[currgraph]), e);
+			graph_insert_edge(current, e);
 		}
 	}
 }

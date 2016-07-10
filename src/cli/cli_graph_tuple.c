@@ -9,5 +9,5 @@ cli_graph_tuple(char *cmdline, int *pos)
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
 
-	graph_print(&(graphs[currgraph]), 1); /* with tuples */
+	graph_print(current, 1); /* with tuples */
 }

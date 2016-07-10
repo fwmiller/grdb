@@ -19,7 +19,7 @@ cli_graph_vertex(char *cmdline, int *pos)
 		return;
 
 	/* Check for empty schema */
-	if (graphs[currgraph].sv == NULL) {
+	if (current->sv == NULL) {
 		printf("add a vertex schema\n");
 		return;
 	}
@@ -32,12 +32,12 @@ cli_graph_vertex(char *cmdline, int *pos)
 		/* XXX Check for duplicate id */
 
 		/* XXX Check for empty schema */
-		if (graphs[currgraph].sv == NULL) {
+		if (current->sv == NULL) {
 			printf("add a vertex schema\n");
 			return;
 		}
 
-		printf("add vertex %04llx to graph %d\n", id, currgraph);
+		printf("add vertex %04llx to current graph\n", id);
 
 		v = (vertex_t) malloc(sizeof(struct vertex));
 		assert(v != NULL);
@@ -47,7 +47,7 @@ cli_graph_vertex(char *cmdline, int *pos)
 		/* Create a new tuple for the vertex */
 		v->tuple = malloc(sizeof(struct tuple));
 		assert (v->tuple != NULL);
-		tuple_init(v->tuple, graphs[currgraph].sv);
-		graph_insert_vertex(&(graphs[currgraph]), v);
+		tuple_init(v->tuple, current->sv);
+		graph_insert_vertex(current, v);
 	}
 }

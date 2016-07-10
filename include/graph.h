@@ -36,6 +36,8 @@ struct graph {
 	schema_t sv;		/* Vertex schema */
 	struct edge *e;		/* Edges */
 	schema_t se;		/* Edge schema */
+
+	struct graph *next;
 };
 
 typedef struct vertex *vertex_t;

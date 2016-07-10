@@ -8,13 +8,12 @@
 #define MAX_GRAPHS	8
 
 /* Graphs */
-extern struct graph graphs[];
-extern int currgraph;
+extern graph_t graphs, current;
 
 void nextarg(char *ln, int *pos, char *sep, char *arg);
 
-void cli_about(char *cmdline);
-void cli_help(char *cmdline);
-void cli_graph(char *cmdline);
+void cli_graph(char *cmdline, int *pos);
+
+void cli_graphs_insert(graph_t g);
 
 #endif

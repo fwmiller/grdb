@@ -33,9 +33,8 @@ cli_graph_schema_add(schema_type_t s, char *cmdline, int *pos)
 			assert(attr != NULL);
 			schema_attribute_init(attr, i, name);
 			schema_attribute_insert(
-				(s == EDGE ?
-				 &(graphs[currgraph].se) :
-				 &(graphs[currgraph].sv)), attr);
+				(s == EDGE ? &(current->se) : &(current->sv)),
+				attr);
 			break;
 		}
 	}
@@ -45,7 +44,8 @@ void
 cli_graph_schema(char *cmdline, int *pos)
 {
 	char s[BUFSIZE];
-	int i;
+	graph_t g;
+	int cnt = 0;
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
@@ -59,18 +59,18 @@ cli_graph_schema(char *cmdline, int *pos)
 		return;
 	}
 	/* Display all graph schemas */
-	for (i = 0; i < MAX_GRAPHS; i++) {
-		if (graphs[i].sv != NULL || graphs[i].se != NULL) {
-			if (i == currgraph)
+	for (g = graphs; g != NULL; g = g->next, cnt++) {
+		if (g->sv != NULL || g->se != NULL) {
+			if (g == current)
 				printf(">");
-			printf("graph %d\n", i);
-			if (graphs[i].sv != NULL) {
+			printf("graph %d\n", cnt);
+			if (g->sv != NULL) {
 				printf("Sv = ");
-				schema_print(graphs[i].sv);
+				schema_print(g->sv);
 			}
-			if (graphs[i].se != NULL) {
+			if (g->se != NULL) {
 				printf("\nSe = ");
-				schema_print(graphs[i].se);
+				schema_print(g->se);
 			}
 			printf("\n");
 		}

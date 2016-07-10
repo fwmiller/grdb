@@ -3,43 +3,24 @@
 #include <string.h>
 #include "cli.h"
 #include "graph.h"
-#include "schema.h"
 
 /* Graphs */
-struct graph graphs[MAX_GRAPHS];
-int currgraph = 0;
+graph_t graphs = NULL;
+graph_t current = NULL;
 
 char *readline(char *prompt);
 
-struct cli_cmd {
-	char *cmd;
-	void (*f) (char *);
-};
-
-static struct cli_cmd cmds[] = {
-	{ "about", cli_about },
-	{ "help", cli_help },
-	{ "g", cli_graph },
-};
-
-void
-cli_about(char *cmdline)
+static void
+cli_about()
 {
 	printf("Graph Database\n");
 	printf("(C) Frank W. Miller\n");
 }
 
-void
-cli_help(char *cmdline)
+static void
+cli_help()
 {
-	int i, ncmds;
-
-	ncmds = sizeof(cmds) / sizeof(struct cli_cmd);
-
-	for (i = 0; i < ncmds; i++)
-		printf("%s ", cmds[i].cmd);
-
-	printf("(quit|q)\n");
+	return;
 }
 
 void
@@ -47,17 +28,9 @@ cli()
 {
 	char *cmdline = NULL;
 	char cmd[BUFSIZE];
-	int i, ncmds, pos;
+	int pos;
 
-	cli_about(NULL);
-
-	for (i = 0; i < MAX_GRAPHS; i++) {
-		graphs[i].v = NULL;
-		graphs[i].sv = NULL;
-		graphs[i].se = NULL;
-	}
-
-	ncmds = sizeof(cmds) / sizeof(struct cli_cmd);
+	cli_about();
 
 	for (;;) {
 		if (cmdline != NULL) {
@@ -72,7 +45,7 @@ cli()
 			continue;
 
 		if (strcmp(cmdline, "?") == 0) {
-			cli_help(cmdline);
+			cli_help();
 			continue;
 		}
 		if (strcmp(cmdline, "quit") == 0 ||
@@ -83,11 +56,31 @@ cli()
 		pos = 0;
 		nextarg(cmdline, &pos, " ", cmd);
 
-		for (i = 0; i < ncmds; i++)
-			if (strcmp(cmd, cmds[i].cmd) == 0) {
-				if (cmds[i].f != NULL)
-					(*(cmds[i].f)) (cmdline);
-				break;
-			}
+		if (strcmp(cmd, "about") == 0 || strcmp(cmd, "a") == 0) {
+			cli_about();
+			continue;
+
+		} else if (strcmp(cmd, "help") == 0 ||
+			   strcmp(cmd, "h") == 0) {
+			cli_help();
+			continue;
+
+		} else if (strcmp(cmd, "graph") == 0 ||
+			   strcmp(cmd, "g") == 0) {
+			cli_graph(cmdline, &pos);
+			continue;
+		}
 	}
+}
+
+void cli_graphs_insert(graph_t g)
+{
+	graph_t f;
+
+	if (graphs == NULL) {
+		graphs = g;
+		return;
+	}
+	for (f = graphs; f->next != NULL; f = f->next);
+	f->next = g;
 }
