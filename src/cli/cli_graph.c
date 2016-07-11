@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +7,6 @@
 #include "graph.h"
 
 void cli_graph_new(char *cmdline, int *pos);
-void cli_graph_vertex(char *cmdline, int *pos);
 void cli_graph_edge(char *cmdline, int *pos);
 void cli_graph_schema(char *cmdline, int *pos);
 void cli_graph_tuple(char *cmdline, int *pos);
@@ -40,9 +40,6 @@ cli_graph(char *cmdline, int *pos)
 	if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0)
 		cli_graph_new(cmdline, pos);
 
-	else if (strcmp(s, "vertex") == 0 || strcmp(s, "v") == 0)
-		cli_graph_vertex(cmdline, pos);
-
 	else if (strcmp(s, "edge") == 0 || strcmp(s, "e") == 0)
 		cli_graph_edge(cmdline, pos);
 
@@ -52,6 +49,9 @@ cli_graph(char *cmdline, int *pos)
 	else if (strcmp(s, "tuple") == 0 || strcmp(s, "t") == 0)
 		cli_graph_tuple(cmdline, pos);
 
-	else if (strlen(s) == 0)
+	else if (isdigit(s[0])) {
+		// Change current graph
+
+	} else if (strlen(s) == 0)
 		cli_graph_print();
 }

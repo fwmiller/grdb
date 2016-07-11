@@ -7,7 +7,6 @@ OBJS =	cli.o			\
 	cli_graph_new.o		\
 	cli_graph_schema.o	\
 	cli_graph_tuple.o	\
-	cli_graph_vertex.o	\
 	lex.o			\
 	main.o
 
