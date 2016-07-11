@@ -50,7 +50,16 @@ cli_graph(char *cmdline, int *pos)
 		cli_graph_tuple(cmdline, pos);
 
 	else if (isdigit(s[0])) {
+		graph_t g;
+		int i, cnt;
+
 		// Change current graph
+		i = atoi(s);
+		for (g = graphs, cnt = 0; g != NULL; g = g->next, cnt++)
+			if (cnt == i) {
+				current = g;
+				return;
+			}
 
 	} else if (strlen(s) == 0)
 		cli_graph_print();
