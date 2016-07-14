@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include "cli.h"
 
@@ -10,4 +11,5 @@ cli_graph_tuple(char *cmdline, int *pos)
 	nextarg(cmdline, pos, " ", s);
 
 	graph_print(current, 1); /* with tuples */
+	printf("\n");
 }

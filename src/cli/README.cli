@@ -23,15 +23,18 @@ db>
     |
     +-- (schema|s)		// Display current graphs schemas
     |	|
-    |	+-- (v|e)		// Display vertex|edge schema for current
-    |	    |			//   graph
-    |	    |
-    |	    |			// Add attribute <name> with <type> to the
-    |	    |			//   vertex|edge schema for the current graph
-    |	    +-- <type> <name>
+    |	|			// Add attribute <name> with <type> to
+    |   |			//   the vertex|edge schema for the current
+    |   |			//   graph
+    |	+-- (v|e) <type> <name>
     |
     +-- (tuple|t)		// Display current graph with tuples
 	|
-	+-- (v|e)		// Display all vertices|edges tuples for
-				//   current graph
+	|			// Set the <value> for the attribute
+	|			//   <name> in the vertex|edge tuple
+	|			//   If a single <id> is specified, the
+	|			//   value is assumed to be for a vertex.
+	|			//   If a second <id2> is specified, the
+	|			//   value is assumed to be for an edge.
+	+-- <id> [<id2>] <name> <value>
 

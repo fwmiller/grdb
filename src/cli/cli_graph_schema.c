@@ -45,7 +45,7 @@ cli_graph_schema(char *cmdline, int *pos)
 {
 	char s[BUFSIZE];
 	graph_t g;
-	int cnt = 0;
+	int cnt;
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
@@ -59,7 +59,7 @@ cli_graph_schema(char *cmdline, int *pos)
 		return;
 	}
 	/* Display all graph schemas */
-	for (g = graphs; g != NULL; g = g->next, cnt++) {
+	for (g = graphs, cnt = 0; g != NULL; g = g->next, cnt++) {
 		if (g->sv != NULL || g->se != NULL) {
 			if (g == current)
 				printf(">");
