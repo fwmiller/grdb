@@ -10,6 +10,50 @@ enum schema_type { VERTEX, EDGE };
 typedef enum schema_type schema_type_t;
 
 static void
+cli_graph_update_tuples(schema_type_t s)
+{
+	if (s == VERTEX) {
+		vertex_t v;
+
+		/*
+		 * Loop over all vertices in the current graph and update
+		 *   their tuples
+		 */
+		for (v = current->v; v != NULL; v = v->next) {
+			if (v->tuple == NULL) {
+				tuple_t t;
+
+				/* Create a new tuple for the vertex */
+				t = (tuple_t) malloc(sizeof(struct tuple));
+				assert (t != NULL);
+				tuple_init(t, current->sv);
+				v->tuple = t;
+			}
+		}
+
+	} else if (s == EDGE) {
+		edge_t e;
+
+		/*
+		 * Loop over all edges in the current graph and update
+		 *   their tuples
+		 */
+		for (e = current->e; e != NULL; e = e->next) {
+			if (e->tuple == NULL) {
+				tuple_t t;
+
+				/* Create a new tuple for the edge */
+				t = (tuple_t) malloc(sizeof(struct tuple));
+				assert (t != NULL);
+				tuple_init(t, current->se);
+				e->tuple = t;
+			}
+		}
+
+	}
+}
+
+static void
 cli_graph_schema_add(schema_type_t s, char *cmdline, int *pos)
 {
 	char type[BUFSIZE];
@@ -28,16 +72,22 @@ cli_graph_schema_add(schema_type_t s, char *cmdline, int *pos)
 		if (strcasecmp(type, base_types_str[i]) == 0) {
 			attribute_t attr;
 
+			/*
+			 * Create a new schema attribute and insert it
+			 *   in the schema for the edge|vertex
+			 */
 			attr = (attribute_t)
 				malloc(sizeof(struct attribute));
 			assert(attr != NULL);
 			schema_attribute_init(attr, i, name);
-			schema_attribute_insert(
-				(s == EDGE ? &(current->se) : &(current->sv)),
-				attr);
+			schema_attribute_insert( (s == EDGE ?
+					&(current->se) :
+					&(current->sv)),
+					attr);
 			break;
 		}
 	}
+	cli_graph_update_tuples(s);
 }
 
 void
@@ -67,9 +117,10 @@ cli_graph_schema(char *cmdline, int *pos)
 			if (g->sv != NULL) {
 				printf("Sv = ");
 				schema_print(g->sv);
+				printf("\n");
 			}
 			if (g->se != NULL) {
-				printf("\nSe = ");
+				printf("Se = ");
 				schema_print(g->se);
 			}
 			printf("\n");
