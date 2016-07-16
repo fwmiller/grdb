@@ -9,6 +9,7 @@ cli_graph_edge(char *cmdline, int *pos)
 {
 	vertex_t v, w;
 	edge_t e;
+	tuple_t t;
 	char s[BUFSIZE];
 	int i, j;
 
@@ -41,6 +42,14 @@ cli_graph_edge(char *cmdline, int *pos)
 		assert (v != NULL);
 		vertex_init(v);
 		v->id = i;
+
+		/* Create the vertex tuple based on its schema */
+		if (current->sv != NULL) {
+			t = (tuple_t) malloc(sizeof(struct tuple));
+			assert (t != NULL);
+			tuple_init(t, current->sv);
+			v->tuple = t;
+		}
 		graph_insert_vertex(current, v);
 
 	} else if (w == NULL) {
@@ -49,11 +58,27 @@ cli_graph_edge(char *cmdline, int *pos)
 		assert (w != NULL);
 		vertex_init(w);
 		w->id = j;
+
+		/* Create the vertex tuple based on its schema */
+		if (current->sv != NULL) {
+			t = (tuple_t) malloc(sizeof(struct tuple));
+			assert (t != NULL);
+			tuple_init(t, current->sv);
+			w->tuple = t;
+		}
 		graph_insert_vertex(current, w);
 	}
 	e = (edge_t) malloc(sizeof(struct edge));
 	assert (e != NULL);
 	edge_init(e);
 	edge_set_vertices(e, i, j);
+
+	/* Create the edge tuple based on its schema */
+	if (current->se != NULL) {
+		t = (tuple_t) malloc(sizeof(struct tuple));
+		assert (t != NULL);
+		tuple_init(t, current->se);
+		e->tuple = t;
+	}
 	graph_insert_edge(current, e);
 }

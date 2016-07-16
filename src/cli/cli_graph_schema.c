@@ -23,11 +23,17 @@ cli_graph_update_tuples(schema_type_t s)
 			if (v->tuple == NULL) {
 				tuple_t t;
 
+printf("Add new vertex tuple\n");
+
 				/* Create a new tuple for the vertex */
 				t = (tuple_t) malloc(sizeof(struct tuple));
 				assert (t != NULL);
 				tuple_init(t, current->sv);
 				v->tuple = t;
+
+			} else {
+				/* Current tuple needs to be added to */
+printf("Update vertex tuple\n");
 			}
 		}
 
@@ -42,11 +48,17 @@ cli_graph_update_tuples(schema_type_t s)
 			if (e->tuple == NULL) {
 				tuple_t t;
 
+printf("Add new edge tuple\n");
+
 				/* Create a new tuple for the edge */
 				t = (tuple_t) malloc(sizeof(struct tuple));
 				assert (t != NULL);
 				tuple_init(t, current->se);
 				e->tuple = t;
+
+			} else {
+				/* Current tuple needs to be added to */
+printf("Update edge tuple\n");
 			}
 		}
 
@@ -122,8 +134,8 @@ cli_graph_schema(char *cmdline, int *pos)
 			if (g->se != NULL) {
 				printf("Se = ");
 				schema_print(g->se);
+				printf("\n");
 			}
-			printf("\n");
 		}
 	}
 }

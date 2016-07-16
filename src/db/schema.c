@@ -36,13 +36,17 @@ schema_attribute_print(attribute_t attr)
 void
 schema_attribute_insert(schema_t *s, attribute_t attr)
 {
+	schema_t t;
+
 	assert (s != NULL);
 	assert (attr != NULL);
 
-	if (*s != NULL)
-		attr->next = *s;
-
-	*s = attr;
+	if (*s == NULL) {
+		*s = attr;
+		return;
+	}
+	for (t = *s; t->next != NULL; t = t->next);
+	t->next = attr;
 }
 
 void
