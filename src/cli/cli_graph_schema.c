@@ -10,6 +10,30 @@ enum schema_type { VERTEX, EDGE };
 typedef enum schema_type schema_type_t;
 
 static void
+cli_graph_create_vertex_tuple(vertex_t v)
+{
+	tuple_t t;
+
+	/* Create a new tuple for the vertex */
+	t = (tuple_t) malloc(sizeof(struct tuple));
+	assert (t != NULL);
+	tuple_init(t, current->sv);
+	v->tuple = t;
+}
+
+static void
+cli_graph_create_edge_tuple(edge_t e)
+{
+	tuple_t t;
+
+	/* Create a new tuple for the edge */
+	t = (tuple_t) malloc(sizeof(struct tuple));
+	assert (t != NULL);
+	tuple_init(t, current->se);
+	e->tuple = t;
+}
+
+static void
 cli_graph_update_tuples(schema_type_t s)
 {
 	if (s == VERTEX) {
@@ -20,18 +44,9 @@ cli_graph_update_tuples(schema_type_t s)
 		 *   their tuples
 		 */
 		for (v = current->v; v != NULL; v = v->next) {
-			if (v->tuple == NULL) {
-				tuple_t t;
-
-printf("Add new vertex tuple\n");
-
-				/* Create a new tuple for the vertex */
-				t = (tuple_t) malloc(sizeof(struct tuple));
-				assert (t != NULL);
-				tuple_init(t, current->sv);
-				v->tuple = t;
-
-			} else {
+			if (v->tuple == NULL)
+				cli_graph_create_vertex_tuple(v);
+			else {
 				/* Current tuple needs to be added to */
 printf("Update vertex tuple\n");
 			}
@@ -45,18 +60,9 @@ printf("Update vertex tuple\n");
 		 *   their tuples
 		 */
 		for (e = current->e; e != NULL; e = e->next) {
-			if (e->tuple == NULL) {
-				tuple_t t;
-
-printf("Add new edge tuple\n");
-
-				/* Create a new tuple for the edge */
-				t = (tuple_t) malloc(sizeof(struct tuple));
-				assert (t != NULL);
-				tuple_init(t, current->se);
-				e->tuple = t;
-
-			} else {
+			if (e->tuple == NULL)
+				cli_graph_create_edge_tuple(e);
+			else {
 				/* Current tuple needs to be added to */
 printf("Update edge tuple\n");
 			}

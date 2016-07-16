@@ -57,7 +57,7 @@ void tuple_print(tuple_t t)
 
 	assert (t != NULL);
 
-	printf("(");
+	printf("[");
 
 	for (attr = t->s; attr != NULL; attr = attr->next) {
 		offset = tuple_get_offset(t, attr->name);
@@ -140,5 +140,5 @@ void tuple_print(tuple_t t)
 			printf(",");
 
 	}
-	printf(")");
+	printf("]");
 }
