@@ -34,7 +34,7 @@ cli_graph_create_edge_tuple(edge_t e)
 }
 
 static void
-cli_graph_update_tuples(schema_type_t s)
+cli_graph_update_tuples(schema_type_t s, int old_schema_size)
 {
 	if (s == VERTEX) {
 		vertex_t v;
@@ -47,8 +47,23 @@ cli_graph_update_tuples(schema_type_t s)
 			if (v->tuple == NULL)
 				cli_graph_create_vertex_tuple(v);
 			else {
-				/* Current tuple needs to be added to */
-printf("Update vertex tuple\n");
+				tuple_t t;
+
+				/* Current vertex tuple needs adding to */
+
+				// Allocate a new tuple
+				t = (tuple_t) malloc(sizeof(struct tuple));
+				assert (t != NULL);
+				tuple_init(t, current->sv);
+
+				// XXX Copy old data to new tuple
+				memcpy(t->buf, v->tuple->buf,
+				       old_schema_size);
+
+				// XXX Need to free the old tuple resources
+
+				// Set new tuple for vertex
+				v->tuple = t;
 			}
 		}
 
@@ -63,8 +78,8 @@ printf("Update vertex tuple\n");
 			if (e->tuple == NULL)
 				cli_graph_create_edge_tuple(e);
 			else {
-				/* Current tuple needs to be added to */
-printf("Update edge tuple\n");
+				/* Current edge tuple needs adding to */
+
 			}
 		}
 
@@ -98,14 +113,18 @@ cli_graph_schema_add(schema_type_t s, char *cmdline, int *pos)
 				malloc(sizeof(struct attribute));
 			assert(attr != NULL);
 			schema_attribute_init(attr, i, name);
-			schema_attribute_insert( (s == EDGE ?
-					&(current->se) :
-					&(current->sv)),
-					attr);
+			schema_attribute_insert(
+				(s == EDGE ?
+				 &(current->se) :
+				 &(current->sv)),
+				attr);
 			break;
 		}
 	}
-	cli_graph_update_tuples(s);
+	if (s == EDGE)
+		cli_graph_update_tuples(s, schema_size(current->se));
+	else
+		cli_graph_update_tuples(s, schema_size(current->sv));
 }
 
 void

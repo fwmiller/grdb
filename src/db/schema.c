@@ -78,6 +78,7 @@ schema_size(schema_t s)
 	for (attr = s; attr != NULL; attr = attr->next)
 		acc += base_types_len[attr->bt];
 
+printf("schema size %d bytes\n", acc);
 	return acc;
 }
 
