@@ -19,6 +19,17 @@ tuple_init(tuple_t t, schema_t s)
 	memset(t->buf, 0, t->len);
 }
 
+void
+tuple_delete(tuple_t t)
+{
+	assert (t != NULL);
+
+	if (t->buf != NULL)
+		free(t->buf);
+
+	memset(t, 0, sizeof(struct tuple));
+}
+
 static int
 tuple_get_offset(tuple_t t, char *name)
 {

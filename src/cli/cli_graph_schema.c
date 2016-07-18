@@ -34,55 +34,69 @@ cli_graph_create_edge_tuple(edge_t e)
 }
 
 static void
+cli_graph_modify_vertex_tuple(vertex_t v, int old_schema_size)
+{
+	tuple_t t;
+
+	/* Allocate a new tuple */
+	t = (tuple_t) malloc(sizeof(struct tuple));
+	assert (t != NULL);
+	tuple_init(t, current->sv);
+
+	/* Copy old data to new tuple */
+	memcpy(t->buf, v->tuple->buf, old_schema_size);
+
+	/* Free the old tuple resources */
+	tuple_delete(v->tuple);
+
+	/* Set new tuple for vertex */
+	v->tuple = t;
+}
+
+static void
+cli_graph_modify_edge_tuple(edge_t e, int old_schema_size)
+{
+	tuple_t t;
+
+	/* Allocate a new tuple */
+	t = (tuple_t) malloc(sizeof(struct tuple));
+	assert (t != NULL);
+	tuple_init(t, current->se);
+
+	/* Copy old data to new tuple */
+	memcpy(t->buf, e->tuple->buf, old_schema_size);
+
+	/* Free the old tuple resources */
+	tuple_delete(e->tuple);
+
+	/* Set new tuple for vertex */
+	e->tuple = t;
+}
+
+static void
 cli_graph_update_tuples(schema_type_t s, int old_schema_size)
 {
 	if (s == VERTEX) {
 		vertex_t v;
 
-		/*
-		 * Loop over all vertices in the current graph and update
-		 *   their tuples
-		 */
-		for (v = current->v; v != NULL; v = v->next) {
+		/* Update all vertices in the graph */
+		for (v = current->v; v != NULL; v = v->next)
 			if (v->tuple == NULL)
 				cli_graph_create_vertex_tuple(v);
-			else {
-				tuple_t t;
-
-				/* Current vertex tuple needs adding to */
-
-				// Allocate a new tuple
-				t = (tuple_t) malloc(sizeof(struct tuple));
-				assert (t != NULL);
-				tuple_init(t, current->sv);
-
-				// XXX Copy old data to new tuple
-				memcpy(t->buf, v->tuple->buf,
-				       old_schema_size);
-
-				// XXX Need to free the old tuple resources
-
-				// Set new tuple for vertex
-				v->tuple = t;
-			}
-		}
+			else
+				cli_graph_modify_vertex_tuple(
+					v, old_schema_size);
 
 	} else if (s == EDGE) {
 		edge_t e;
 
-		/*
-		 * Loop over all edges in the current graph and update
-		 *   their tuples
-		 */
-		for (e = current->e; e != NULL; e = e->next) {
+		/* Update all edges in the graph */
+		for (e = current->e; e != NULL; e = e->next)
 			if (e->tuple == NULL)
 				cli_graph_create_edge_tuple(e);
-			else {
-				/* Current edge tuple needs adding to */
-
-			}
-		}
-
+			else
+				cli_graph_modify_edge_tuple(
+					e, old_schema_size);
 	}
 }
 
