@@ -19,4 +19,4 @@ wc: clean
 	wc -l *.c
 
 .c.o: $<
-	gcc -c -Wall $(INCDIRS) -o $@ $<
+	gcc -c -Wall -g $(INCDIRS) -o $@ $<

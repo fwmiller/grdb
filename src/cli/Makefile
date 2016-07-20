@@ -15,7 +15,7 @@ TGT = db
 
 all: $(OBJS)
 	cd ../db; make;
-	gcc $(LIBDIRS) -o $(TGT) $(OBJS) $(LIBS)
+	gcc $(LIBDIRS) -g -o $(TGT) $(OBJS) $(LIBS)
 
 clean:
 	cd ../db; make clean;
@@ -25,4 +25,4 @@ wc: clean
 	wc -l ../../include/*.h ../db/*.c *.c
 
 .c.o: $<
-	gcc -c -Wall $(INCDIRS) -o $@ $<
+	gcc -g -c -Wall $(INCDIRS) -o $@ $<
