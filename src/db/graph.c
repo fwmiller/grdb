@@ -7,7 +7,6 @@ void
 graph_init(graph_t g)
 {
 	assert (g != NULL);
-
 	memset(g, 0, sizeof(struct graph));
 }
 

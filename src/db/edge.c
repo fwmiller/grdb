@@ -1,18 +1,14 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "graph.h"
 
 void
 edge_init(edge_t e)
 {
 	assert(e != NULL);
-
-	e->id1 = 0;
-	e->id2 = 0;
-	e->prev = NULL;
-	e->next = NULL;
-	e->tuple = NULL;
+	memset(e, 0, sizeof(struct edge));
 }
 
 void

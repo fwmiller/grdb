@@ -127,11 +127,12 @@ cli_graph_schema_add(schema_type_t s, char *cmdline, int *pos)
 				malloc(sizeof(struct attribute));
 			assert(attr != NULL);
 			schema_attribute_init(attr, i, name);
-			schema_attribute_insert(
-				(s == EDGE ?
-				 &(current->se) :
-				 &(current->sv)),
-				attr);
+			if (s == EDGE)
+				schema_attribute_insert(
+					&(current->se), attr);
+			else
+				schema_attribute_insert(
+					&(current->sv), attr);
 			break;
 		}
 	}

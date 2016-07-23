@@ -1,17 +1,14 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "graph.h"
 
 void
 vertex_init(vertex_t v)
 {
 	assert(v != NULL);
-
-	v->id = 0;
-	v->prev = NULL;
-	v->next = NULL;
-	v->tuple = NULL;
+	memset(v, 0, sizeof(struct vertex));
 }
 
 void

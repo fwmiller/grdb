@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "cli.h"
 #include "graph.h"
 
@@ -9,6 +10,8 @@ graph_t graphs = NULL;
 graph_t current = NULL;
 
 char *readline(char *prompt);
+
+static int tty = 0;
 
 static void
 cli_about()
@@ -27,22 +30,43 @@ void
 cli()
 {
 	char *cmdline = NULL;
-	char cmd[BUFSIZE];
+	char cmd[BUFSIZE], prompt[BUFSIZE];
 	int pos;
 
-	cli_about();
+	tty = isatty(STDIN_FILENO);
+	if (tty)
+		cli_about();
 
 	for (;;) {
 		if (cmdline != NULL) {
 			free(cmdline);
 			cmdline = NULL;
 		}
-		cmdline = readline(PROMPT);
+
+
+		// cmdline = readline(PROMPT);
+		memset(prompt, 0, BUFSIZE);
+		if (graphs == NULL)
+			//sprintf(prompt, "> ");
+			sprintf(prompt, "db> ");
+		else
+			//sprintf(prompt, "%d> ", graphs_get_current_index());
+			sprintf(prompt, "db> ");
+
+		if (tty)
+			cmdline = readline(prompt);
+		else
+			cmdline = readline("");
+
+
 		if (cmdline == NULL)
 			continue;
 
 		if (strlen(cmdline) == 0)
 			continue;
+
+		if (!tty)
+			printf("%s\n", cmdline);
 
 		if (strcmp(cmdline, "?") == 0) {
 			cli_help();
