@@ -75,15 +75,34 @@ schema_size(schema_t s)
 	attribute_t attr;
 	int acc = 0;
 
+	assert (s != NULL);
+
 	for (attr = s; attr != NULL; attr = attr->next)
 		acc += base_types_len[attr->bt];
 	return acc;
+}
+
+base_types_t
+schema_find_type_by_name(schema_t s, char *name)
+{
+	attribute_t attr;
+	base_types_t bt;
+
+	assert (s != NULL);
+
+	for (attr = s, bt = 0; attr != NULL; attr = attr->next, bt++)
+		if (strcasecmp(name, attr->name) == 0)
+			return bt;
+
+	return BASE_TYPES_MAX;
 }
 
 void
 schema_print(schema_t s)
 {
 	attribute_t attr;
+
+	assert (s != NULL);
 
 	printf("[");
 	for (attr = s; attr != NULL; attr = attr->next) {

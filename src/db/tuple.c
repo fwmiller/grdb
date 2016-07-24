@@ -29,7 +29,7 @@ tuple_delete(tuple_t t)
 	memset(t, 0, sizeof(struct tuple));
 }
 
-static int
+int
 tuple_get_offset(tuple_t t, char *name)
 {
 	attribute_t attr;
@@ -47,9 +47,10 @@ tuple_get_offset(tuple_t t, char *name)
 	return (-1);
 }
 
-void
-tuple_set(tuple_t t, base_types_t bt, char *name, void *val)
+int
+tuple_set(tuple_t t, char *name, void *val)
 {
+#if 0
 	int offset;
 
 	assert (t != NULL);
@@ -57,11 +58,14 @@ tuple_set(tuple_t t, base_types_t bt, char *name, void *val)
 	assert (val != NULL);
 
 	offset = tuple_get_offset(t, name);
-	if (offset >= 0) {
-		printf("tuple_set: offset %d len %d\n",
-			offset, base_types_len[bt]);
-		memcpy(t->buf + offset, val, base_types_len[bt]);
-	}
+	if (offset < 0)
+		return (-1);
+
+	printf("tuple_set: offset %d len %d\n",
+		offset, base_types_len[bt]);
+	memcpy(t->buf + offset, val, base_types_len[bt]);
+#endif
+	return 0;
 }
 
 void tuple_print(tuple_t t)

@@ -48,10 +48,10 @@ cli()
 		memset(prompt, 0, BUFSIZE);
 		if (graphs == NULL)
 			//sprintf(prompt, "> ");
-			sprintf(prompt, "db> ");
+			sprintf(prompt, "grdb> ");
 		else
 			//sprintf(prompt, "%d> ", graphs_get_current_index());
-			sprintf(prompt, "db> ");
+			sprintf(prompt, "grdb> ");
 
 		if (tty)
 			cmdline = readline(prompt);
