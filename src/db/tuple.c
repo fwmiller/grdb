@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,23 +49,89 @@ tuple_get_offset(tuple_t t, char *name)
 }
 
 int
-tuple_set(tuple_t t, char *name, void *val)
+tuple_set(tuple_t t, char *name, char *val)
 {
-#if 0
 	int offset;
-
+	base_types_t bt;
+	
 	assert (t != NULL);
 	assert (name != NULL);
 	assert (val != NULL);
 
 	offset = tuple_get_offset(t, name);
-	if (offset < 0)
+	if (offset < 0) {
+		printf("offset of [%s] not found\n", name);
 		return (-1);
+	}
+	printf("offset of [%s] is %d\n", name, offset);
 
-	printf("tuple_set: offset %d len %d\n",
-		offset, base_types_len[bt]);
+	bt = schema_find_type_by_name(t->s, name);
+	if (bt == BASE_TYPES_MAX) {
+		printf("type of [%s] not found\n", name);
+		return (-1);
+	}
+	printf("type of [%s] is %s len %d\n",
+		name, base_types_str[bt], base_types_len[bt]);
+
+	switch (bt) {
+	case CHARACTER:
+		printf("set [%s] to '%c'\n", name, *((char *) val));
+		memcpy(t->buf + offset, val, 1);
+		printf("result '%c'\n", *((char *) (t->buf + offset)));
+		break;
+
+	case VARCHAR:
+		printf("set [%s] to [%s]\n", name, val);
+		memcpy(t->buf + offset, val, strlen(val));
+		printf("result [%s]\n", (char *) t->buf + offset);
+		break;
+
+	case BOOLEAN:
+		if (strcasecmp(val, "true") == 0) {
+			int i = 1;
+			printf("set [%s] to %d\n", name, i);
+			memcpy(t->buf + offset, &i, base_types_len[bt]);
+			printf("result %d\n", *((int *) t->buf + offset));
+		} else {
+			int i = 0;
+			printf("set [%s] to %d\n", name, i);
+			memcpy(t->buf + offset, &i, base_types_len[bt]);
+			printf("result %d\n", *((int *) t->buf + offset));
+		}
+		break;
+	case INTEGER:
+		{
+			int i = atoi(val);
+			printf("set [%s] to %d\n", name, i);
+			memcpy(t->buf + offset, &i, base_types_len[bt]);
+			printf("result %d\n", *((int *) t->buf + offset));
+		}
+		break;
+	case FLOAT:
+		{
+			float fval = atof(val);
+			printf("set [%s] to %4.2f\n", name, fval);
+			memcpy(t->buf + offset, &fval, base_types_len[bt]);
+			printf("result %4.2f\n", *((float *) t->buf + offset));
+		}
+		break;
+	case DOUBLE:
+		{
+			double dval = atof(val);
+			printf("set [%s] to %4.2f\n", name, dval);
+			memcpy(t->buf + offset, &dval, base_types_len[bt]);
+			printf("result %4.2f\n", *((double *) t->buf + offset));
+		}
+		break;
+	case DATE:
+	case TIME:
+		memcpy(t->buf + offset, val, base_types_len[bt]);
+		break;
+	case BASE_TYPES_MAX:
+		break;
+	}
 	memcpy(t->buf + offset, val, base_types_len[bt]);
-#endif
+
 	return 0;
 }
 

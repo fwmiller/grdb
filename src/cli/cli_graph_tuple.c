@@ -57,7 +57,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("Illegal vertex id\n");
 			return;
 		}
-		if (!tuple_set(v->tuple, s2, s3)) {
+		if (tuple_set(v->tuple, s2, s3) < 0) {
 			printf("Set tuple value failed\n");
 			return;
 		}

@@ -86,13 +86,12 @@ base_types_t
 schema_find_type_by_name(schema_t s, char *name)
 {
 	attribute_t attr;
-	base_types_t bt;
 
 	assert (s != NULL);
 
-	for (attr = s, bt = 0; attr != NULL; attr = attr->next, bt++)
+	for (attr = s; attr != NULL; attr = attr->next)
 		if (strcasecmp(name, attr->name) == 0)
-			return bt;
+			return attr->bt;
 
 	return BASE_TYPES_MAX;
 }
