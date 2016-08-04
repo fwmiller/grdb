@@ -1,0 +1,7 @@
+g n
+g s v int i
+g t
+g t 1 i 2
+g t
+quit
+

@@ -4,5 +4,7 @@ g s e int j
 g e 1 2
 g s v float k
 g s e float m
+g
+g s
 quit
 

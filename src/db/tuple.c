@@ -48,6 +48,67 @@ tuple_get_offset(tuple_t t, char *name)
 	return (-1);
 }
 
+/****************************************************************************
+ * Getters and Setters - C style!
+ */
+
+static char
+tuple_get_char(char *tbuf)
+{
+	return *tbuf;
+}
+
+static void
+tuple_set_char(char *tbuf, char ch)
+{
+	assert (tbuf != NULL);
+	*tbuf = ch;
+}
+
+static char *
+tuple_get_varchar(char *tbuf, char *s, int maxlen)
+{
+	assert (tbuf != NULL);
+	assert (s != NULL);
+
+	memset(s, 0, maxlen);
+	if (strlen(tbuf) < maxlen - 1)
+		memcpy(s, tbuf, strlen(tbuf));
+	else
+		memcpy(s, tbuf, maxlen - 1);
+
+	return s;
+}
+
+static void
+tuple_set_varchar(char *tbuf, char *s)
+{
+	assert (tbuf != NULL);
+	assert (s != NULL);
+
+	memset(tbuf, 0, base_types_len[VARCHAR]);
+	if (strlen(s) < base_types_len[VARCHAR] - 1)
+		memcpy(tbuf, s, strlen(tbuf));
+	else
+		memcpy(tbuf, s, base_types_len[VARCHAR]);
+}
+
+static int
+tuple_get_bool(char *tbuf)
+{
+	assert (tbuf != NULL);
+	return (int) *((unsigned char *) tbuf);
+}
+
+static void
+tuple_set_bool(char *tbuf, int val)
+{
+	assert (tbuf != NULL);
+	*((unsigned char *) tbuf) = (unsigned char) val;
+}
+
+/***************************************************************************/
+
 int
 tuple_set(tuple_t t, char *name, char *val)
 {
@@ -88,15 +149,17 @@ tuple_set(tuple_t t, char *name, char *val)
 
 	case BOOLEAN:
 		if (strcasecmp(val, "true") == 0) {
-			int i = 1;
-			printf("set [%s] to %d\n", name, i);
+			unsigned char i = 1;
+			printf("set [%s] to %d\n", name, (int) i);
 			memcpy(t->buf + offset, &i, base_types_len[bt]);
-			printf("result %d\n", *((int *) t->buf + offset));
+			printf("result %d\n",
+				(int) *((unsigned char *) t->buf + offset));
 		} else {
 			int i = 0;
 			printf("set [%s] to %d\n", name, i);
 			memcpy(t->buf + offset, &i, base_types_len[bt]);
-			printf("result %d\n", *((int *) t->buf + offset));
+			printf("result %d\n",
+				(int) *((unsigned char *) t->buf + offset));
 		}
 		break;
 	case INTEGER:
@@ -141,7 +204,6 @@ void tuple_print(tuple_t t)
 	int i, offset;
 	float fval;
 	double dval;
-	long long int lval;
 	unsigned char val;
 
 	assert (t != NULL);
@@ -174,8 +236,8 @@ void tuple_print(tuple_t t)
 				break;
 
 			case INTEGER:
-				lval = *((long long int *) (t->buf + offset));
-				printf("%lld", lval);
+				i = *((int *) (t->buf + offset));
+				printf("%d", i);
 				break;
 
 			case FLOAT:
