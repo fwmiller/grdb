@@ -48,67 +48,6 @@ tuple_get_offset(tuple_t t, char *name)
 	return (-1);
 }
 
-/****************************************************************************
- * Getters and Setters - C style!
- */
-
-static char
-tuple_get_char(char *tbuf)
-{
-	return *tbuf;
-}
-
-static void
-tuple_set_char(char *tbuf, char ch)
-{
-	assert (tbuf != NULL);
-	*tbuf = ch;
-}
-
-static char *
-tuple_get_varchar(char *tbuf, char *s, int maxlen)
-{
-	assert (tbuf != NULL);
-	assert (s != NULL);
-
-	memset(s, 0, maxlen);
-	if (strlen(tbuf) < maxlen - 1)
-		memcpy(s, tbuf, strlen(tbuf));
-	else
-		memcpy(s, tbuf, maxlen - 1);
-
-	return s;
-}
-
-static void
-tuple_set_varchar(char *tbuf, char *s)
-{
-	assert (tbuf != NULL);
-	assert (s != NULL);
-
-	memset(tbuf, 0, base_types_len[VARCHAR]);
-	if (strlen(s) < base_types_len[VARCHAR] - 1)
-		memcpy(tbuf, s, strlen(tbuf));
-	else
-		memcpy(tbuf, s, base_types_len[VARCHAR]);
-}
-
-static int
-tuple_get_bool(char *tbuf)
-{
-	assert (tbuf != NULL);
-	return (int) *((unsigned char *) tbuf);
-}
-
-static void
-tuple_set_bool(char *tbuf, int val)
-{
-	assert (tbuf != NULL);
-	*((unsigned char *) tbuf) = (unsigned char) val;
-}
-
-/***************************************************************************/
-
 int
 tuple_set(tuple_t t, char *name, char *val)
 {
@@ -137,13 +76,13 @@ tuple_set(tuple_t t, char *name, char *val)
 	switch (bt) {
 	case CHARACTER:
 		printf("set [%s] to '%c'\n", name, *((char *) val));
-		memcpy(t->buf + offset, val, 1);
+		tuple_set_char(t->buf + offset, val[0]);
 		printf("result '%c'\n", *((char *) (t->buf + offset)));
 		break;
 
 	case VARCHAR:
 		printf("set [%s] to [%s]\n", name, val);
-		memcpy(t->buf + offset, val, strlen(val));
+		tuple_set_varchar(t->buf + offset, val);
 		printf("result [%s]\n", (char *) t->buf + offset);
 		break;
 
@@ -151,13 +90,13 @@ tuple_set(tuple_t t, char *name, char *val)
 		if (strcasecmp(val, "true") == 0) {
 			unsigned char i = 1;
 			printf("set [%s] to %d\n", name, (int) i);
-			memcpy(t->buf + offset, &i, base_types_len[bt]);
+			tuple_set_bool(t->buf + offset, 1);
 			printf("result %d\n",
 				(int) *((unsigned char *) t->buf + offset));
 		} else {
 			int i = 0;
 			printf("set [%s] to %d\n", name, i);
-			memcpy(t->buf + offset, &i, base_types_len[bt]);
+			tuple_set_bool(t->buf + offset, 1);
 			printf("result %d\n",
 				(int) *((unsigned char *) t->buf + offset));
 		}
@@ -166,7 +105,7 @@ tuple_set(tuple_t t, char *name, char *val)
 		{
 			int i = atoi(val);
 			printf("set [%s] to %d\n", name, i);
-			memcpy(t->buf + offset, &i, base_types_len[bt]);
+			tuple_set_int(t->buf + offset, i);
 			printf("result %d\n", *((int *) t->buf + offset));
 		}
 		break;
@@ -174,7 +113,7 @@ tuple_set(tuple_t t, char *name, char *val)
 		{
 			float fval = atof(val);
 			printf("set [%s] to %4.2f\n", name, fval);
-			memcpy(t->buf + offset, &fval, base_types_len[bt]);
+			tuple_set_float(t->buf + offset, fval);
 			printf("result %4.2f\n", *((float *) t->buf + offset));
 		}
 		break;
@@ -182,19 +121,19 @@ tuple_set(tuple_t t, char *name, char *val)
 		{
 			double dval = atof(val);
 			printf("set [%s] to %4.2f\n", name, dval);
-			memcpy(t->buf + offset, &dval, base_types_len[bt]);
+			tuple_set_double(t->buf + offset, dval);
 			printf("result %4.2f\n", *((double *) t->buf + offset));
 		}
 		break;
 	case DATE:
+		tuple_set_date(t->buf + offset, val);
+		break;
 	case TIME:
-		memcpy(t->buf + offset, val, base_types_len[bt]);
+		tuple_set_time(t->buf + offset, val);
 		break;
 	case BASE_TYPES_MAX:
 		break;
 	}
-	memcpy(t->buf + offset, val, base_types_len[bt]);
-
 	return 0;
 }
 
