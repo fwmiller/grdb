@@ -5,6 +5,10 @@
 #include "cli.h"
 #include "graph.h"
 
+#if _DEBUG
+void bufdump(char *buf, int size);
+#endif
+
 #define CLI_GRAPH_CREATE_TUPLE(SCHEMA, ELEMENT)				\
 {									\
 	tuple_t t;							\
@@ -35,9 +39,15 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 		for (v = current->v; v != NULL; v = v->next)
 			if (v->tuple == NULL) {
 				CLI_GRAPH_CREATE_TUPLE(current->sv, v);
+#if _DEBUG
+				bufdump(v->tuple->buf, v->tuple->len);
+#endif
 			} else {
 				CLI_GRAPH_MODIFY_TUPLE(
 					current->sv, v, old_schema_size);
+#if _DEBUG
+				bufdump(v->tuple->buf, v->tuple->len);
+#endif
 			}
 
 	} else if (st == EDGE) {
@@ -47,9 +57,15 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 		for (e = current->e; e != NULL; e = e->next)
 			if (e->tuple == NULL) {
 				CLI_GRAPH_CREATE_TUPLE(current->se, e);
+#if _DEBUG
+				bufdump(e->tuple->buf, e->tuple->len);
+#endif
 			} else {
 				CLI_GRAPH_MODIFY_TUPLE(
 					current->se, e, old_schema_size);
+#if _DEBUG
+				bufdump(e->tuple->buf, e->tuple->len);
+#endif
 			}
 	}
 }

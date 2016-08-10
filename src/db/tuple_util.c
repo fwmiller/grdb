@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "tuple.h"
@@ -30,9 +31,10 @@ tuple_get_varchar(char *tbuf, char *s, int maxlen)
 	memset(s, 0, maxlen);
 	if (strlen(tbuf) < maxlen - 1)
 		memcpy(s, tbuf, strlen(tbuf));
-	else
+	else {
+		printf("get varchar overflow\n");
 		memcpy(s, tbuf, maxlen - 1);
-
+	}
 	return s;
 }
 
@@ -45,8 +47,10 @@ tuple_set_varchar(char *tbuf, char *s)
 	memset(tbuf, 0, base_types_len[VARCHAR]);
 	if (strlen(s) < base_types_len[VARCHAR] - 1)
 		memcpy(tbuf, s, strlen(tbuf));
-	else
-		memcpy(tbuf, s, base_types_len[VARCHAR]);
+	else {
+		printf("set varchar overflow\n");
+		memcpy(tbuf, s, base_types_len[VARCHAR] - 1);
+	}
 }
 
 int
@@ -108,51 +112,37 @@ tuple_set_double(char *tbuf, double val)
 char *
 tuple_get_date(char *tbuf, char *date)
 {
-	int i;
-
 	assert (tbuf != NULL);
 	assert (date != NULL);
 
-	for (i = 0; i < base_types_len[DATE]; i++)
-		date[i] = tbuf[i];
-
+	memcpy(date, tbuf, base_types_len[DATE]);
 	return date;
 }
 
 void
 tuple_set_date(char *tbuf, char *date)
 {
-	int i;
-
 	assert (tbuf != NULL);
 	assert (date != NULL);
 
-	for (i = 0; i < base_types_len[DATE]; i++)
-		tbuf[i] = date[i];
+	memcpy(tbuf, date, base_types_len[DATE]);
 }
 
 char *
 tuple_get_time(char *tbuf, char *time)
 {
-	int i;
-
 	assert (tbuf != NULL);
 	assert (time != NULL);
 
-	for (i = 0; i < base_types_len[DATE]; i++)
-		time[i] = tbuf[i];
-
+	memcpy(time, tbuf, base_types_len[DATE]);
 	return time;
 }
 
 void
 tuple_set_time(char *tbuf, char *time)
 {
-	int i;
-
 	assert (tbuf != NULL);
 	assert (time != NULL);
 
-	for (i = 0; i < base_types_len[DATE]; i++)
-		tbuf[i] = time[i];
+	memcpy(tbuf, time, base_types_len[DATE]);
 }

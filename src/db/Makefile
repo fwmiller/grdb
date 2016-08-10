@@ -1,3 +1,5 @@
+DEBUG = -D_DEBUG
+
 INCDIRS = -I../../include
 
 OBJS =	edge.o			\
@@ -20,4 +22,4 @@ wc: clean
 	wc -l *.c
 
 .c.o: $<
-	gcc -c -Wall -g $(INCDIRS) -o $@ $<
+	gcc -c -Wall -g $(DEBUG) $(INCDIRS) -o $@ $<

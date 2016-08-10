@@ -5,9 +5,16 @@
 #include <string.h>
 #include "tuple.h"
 
+#if _DEBUG
+void bufdump(char *buf, int size);
+#endif
+
 void
 tuple_init(tuple_t t, schema_t s)
 {
+	attribute_t attr;
+	int offset;
+
 	assert (t != NULL);
 	assert (s != NULL);
 
@@ -17,6 +24,48 @@ tuple_init(tuple_t t, schema_t s)
 	t->buf = malloc(t->len);
 	assert(t->buf != NULL);
 	memset(t->buf, 0, t->len);
+
+	/* Set inital values */
+	for (offset = 0, attr = s;
+	     attr != NULL;
+	     offset += base_types_len[attr->bt], attr = attr->next)
+		switch (attr->bt) {
+		case CHARACTER:
+			tuple_set_char(t->buf + offset, 0);
+			break;
+		case VARCHAR:
+			{
+				char *s = "";
+				tuple_set_varchar(t->buf + offset, s);
+			}
+			break;
+		case BOOLEAN:
+			tuple_set_bool(t->buf + offset, 0);
+			break;
+		case INTEGER:
+			tuple_set_int(t->buf + offset, 0);
+			break;
+		case FLOAT:
+			tuple_set_float(t->buf + offset, 0.0);
+			break;
+		case DOUBLE:
+			tuple_set_double(t->buf + offset, 0.0);
+			break;
+		case DATE:
+			{
+				char *date = "01-01-1970";
+				tuple_set_date(t->buf + offset, date);
+			}
+			break;
+		case TIME:
+			{
+				char *time = "00:00:00";
+				tuple_set_time(t->buf + offset, time);
+			}
+			break;
+		case BASE_TYPES_MAX:
+			break;
+		}
 }
 
 void
@@ -41,7 +90,7 @@ tuple_get_offset(tuple_t t, char *name)
 
 	for (attr = t->s, offset = 0;
 	     attr != NULL;
-	     attr = attr->next, offset += base_types_len[attr->bt])
+	     offset += base_types_len[attr->bt], attr = attr->next)
 		if (strcmp(name, attr->name) == 0)
 			return offset;
 
@@ -59,91 +108,76 @@ tuple_set(tuple_t t, char *name, char *val)
 	assert (val != NULL);
 
 	offset = tuple_get_offset(t, name);
+
+	printf("name [%s] offset %d\n", name, offset);
+
 	if (offset < 0) {
 		printf("offset of [%s] not found\n", name);
 		return (-1);
 	}
-	printf("offset of [%s] is %d\n", name, offset);
-
 	bt = schema_find_type_by_name(t->s, name);
 	if (bt == BASE_TYPES_MAX) {
 		printf("type of [%s] not found\n", name);
 		return (-1);
 	}
-	printf("type of [%s] is %s len %d\n",
-		name, base_types_str[bt], base_types_len[bt]);
-
 	switch (bt) {
 	case CHARACTER:
-		printf("set [%s] to '%c'\n", name, *((char *) val));
 		tuple_set_char(t->buf + offset, val[0]);
-		printf("result '%c'\n", *((char *) (t->buf + offset)));
 		break;
 
 	case VARCHAR:
-		printf("set [%s] to [%s]\n", name, val);
 		tuple_set_varchar(t->buf + offset, val);
-		printf("result [%s]\n", (char *) t->buf + offset);
 		break;
 
 	case BOOLEAN:
-		if (strcasecmp(val, "true") == 0) {
-			unsigned char i = 1;
-			printf("set [%s] to %d\n", name, (int) i);
+		if (strcasecmp(val, "true") == 0)
 			tuple_set_bool(t->buf + offset, 1);
-			printf("result %d\n",
-				(int) *((unsigned char *) t->buf + offset));
-		} else {
-			int i = 0;
-			printf("set [%s] to %d\n", name, i);
-			tuple_set_bool(t->buf + offset, 1);
-			printf("result %d\n",
-				(int) *((unsigned char *) t->buf + offset));
-		}
+		else
+			tuple_set_bool(t->buf + offset, 0);
+
 		break;
 	case INTEGER:
 		{
 			int i = atoi(val);
-			printf("set [%s] to %d\n", name, i);
 			tuple_set_int(t->buf + offset, i);
-			printf("result %d\n", *((int *) t->buf + offset));
 		}
 		break;
 	case FLOAT:
 		{
 			float fval = atof(val);
-			printf("set [%s] to %4.2f\n", name, fval);
 			tuple_set_float(t->buf + offset, fval);
-			printf("result %4.2f\n", *((float *) t->buf + offset));
 		}
 		break;
 	case DOUBLE:
 		{
 			double dval = atof(val);
-			printf("set [%s] to %4.2f\n", name, dval);
 			tuple_set_double(t->buf + offset, dval);
-			printf("result %4.2f\n", *((double *) t->buf + offset));
 		}
 		break;
 	case DATE:
+		/* XXX Need to validate date string */
 		tuple_set_date(t->buf + offset, val);
 		break;
 	case TIME:
+		/* XXX Need to validate time string */
 		tuple_set_time(t->buf + offset, val);
 		break;
 	case BASE_TYPES_MAX:
 		break;
 	}
+#if _DEBUG
+	bufdump(t->buf, t->len);
+#endif
 	return 0;
 }
 
 void tuple_print(tuple_t t)
 {
 	attribute_t attr;
-	int i, offset;
+	int i, offset, val;
 	float fval;
 	double dval;
-	unsigned char val;
+	unsigned char ch;
 
 	assert (t != NULL);
 	assert (t->buf != NULL);
@@ -155,19 +189,16 @@ void tuple_print(tuple_t t)
 		if (offset >= 0) {
 			switch (attr->bt) {
 			case CHARACTER:
-				for (i = 0;
-				     i < base_types_len[CHARACTER];
-				     i++)
-					printf("%c", *((char *)
-						(t->buf + offset + i)));
+				ch = tuple_get_char(t->buf + offset);
+				printf("'%c'", ch);
 				break;
 
 			case VARCHAR:
-				printf("%s", (char *) (t->buf + offset));
+				printf("\"%s\"", (char *) (t->buf + offset));
 				break;
 
 			case BOOLEAN:
-				val = *((unsigned char *) (t->buf + offset));
+				val = tuple_get_bool(t->buf + offset);
 				if (val == 0)
 					printf("FALSE");
 				else
@@ -175,17 +206,17 @@ void tuple_print(tuple_t t)
 				break;
 
 			case INTEGER:
-				i = *((int *) (t->buf + offset));
+				i = tuple_get_int(t->buf + offset);
 				printf("%d", i);
 				break;
 
 			case FLOAT:
-				fval = *((float *) (t->buf + offset));
+				fval = tuple_get_float(t->buf + offset);
 				printf("%4.2f", fval);
 				break;
 
 			case DOUBLE:
-				dval = *((double *) (t->buf + offset));
+				dval = tuple_get_double(t->buf + offset);
 				printf("%4.2f", dval);
 				break;
 

@@ -1,0 +1,14 @@
+run
+g n
+g s v char i
+g t 1 i x
+g s v bool k
+g s v int l
+g s v float m
+g s v double n
+g s v date d
+g s v time t
+g s
+g t
+quit
+

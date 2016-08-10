@@ -10,11 +10,11 @@ enum base_types
 	CHARACTER,	/* Fixed length character string */
 	VARCHAR,	/* Variable length character string */
 	BOOLEAN,	/* Boolean */
-	INTEGER,	/* Integer (64-bit integer) */
+	INTEGER,	/* Integer */
 	FLOAT,		/* Float */
 	DOUBLE,		/* Double */
-	DATE,		/* Date */
-	TIME,		/* Time (24 hour format) */
+	DATE,		/* Date string */
+	TIME,		/* Time string (24 hour format) */
 	BASE_TYPES_MAX
 };
 

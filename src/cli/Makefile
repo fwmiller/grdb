@@ -1,7 +1,8 @@
 INCDIRS = -I../../include
 LIBDIRS = -L../db
 
-OBJS =	cli.o			\
+OBJS =	bufdump.o 		\
+	cli.o			\
 	cli_graph.o		\
 	cli_graph_edge.o	\
 	cli_graph_new.o		\

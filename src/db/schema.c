@@ -5,13 +5,10 @@
 #include "schema.h"
 
 char *base_types_str[] = {
-	"CHAR", "VARCHAR", "BOOL", "INT", "FLOAT", "DOUBLE", "DATE", "TIME"
-};
+	"CHAR", "VARCHAR", "BOOL", "INT", "FLOAT", "DOUBLE", "DATE", "TIME" };
 
 int base_types_len[] = {
-	1, 256, 1, sizeof(long long int), sizeof(float),
-	sizeof(double), 10, 8
-};
+	1, 256, 1, sizeof(int), sizeof(float), sizeof(double), 10, 8 };
 
 void
 schema_attribute_init(attribute_t attr, enum base_types bt, char *name)
