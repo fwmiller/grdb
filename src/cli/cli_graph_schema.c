@@ -40,12 +40,14 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 			if (v->tuple == NULL) {
 				CLI_GRAPH_CREATE_TUPLE(current->sv, v);
 #if _DEBUG
+				printf("create old_schema_size %d\n", old_schema_size);
 				bufdump(v->tuple->buf, v->tuple->len);
 #endif
 			} else {
 				CLI_GRAPH_MODIFY_TUPLE(
 					current->sv, v, old_schema_size);
 #if _DEBUG
+				printf("modify old_schema_size %d\n", old_schema_size);
 				bufdump(v->tuple->buf, v->tuple->len);
 #endif
 			}
@@ -58,12 +60,14 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 			if (e->tuple == NULL) {
 				CLI_GRAPH_CREATE_TUPLE(current->se, e);
 #if _DEBUG
+				printf("create old_schema_size %d\n", old_schema_size);
 				bufdump(e->tuple->buf, e->tuple->len);
 #endif
 			} else {
 				CLI_GRAPH_MODIFY_TUPLE(
 					current->se, e, old_schema_size);
 #if _DEBUG
+				printf("modify old_schema_size %d\n", old_schema_size);
 				bufdump(e->tuple->buf, e->tuple->len);
 #endif
 			}
@@ -75,7 +79,12 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 {
 	char type[BUFSIZE];
 	char name[BUFSIZE];
-	int i;
+	int i, old_schema_size;
+
+	if (st == EDGE)
+		old_schema_size = schema_size(current->se);
+	else if (st == VERTEX)
+		old_schema_size = schema_size(current->sv);
 
 	/* Attribute type */
         memset(type, 0, BUFSIZE);
@@ -106,10 +115,7 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 			break;
 		}
 	}
-	if (st == EDGE)
-		cli_graph_update_tuples(st, schema_size(current->se));
-	else if (st == VERTEX)
-		cli_graph_update_tuples(st, schema_size(current->sv));
+	cli_graph_update_tuples(st, old_schema_size);
 }
 
 void

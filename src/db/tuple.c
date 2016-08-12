@@ -221,15 +221,26 @@ void tuple_print(tuple_t t)
 				break;
 
 			case DATE:
-				for (i = 0; i < base_types_len[DATE]; i++)
-					printf("%c", *((char *)
-						(t->buf + offset + i)));
+				{
+					char s[base_types_len[DATE] + 1];
+
+					memset(s, 0,
+						base_types_len[DATE] + 1);
+					tuple_get_date(t->buf + offset, s);
+					printf("%s", s);
+				}
 				break;
 
 			case TIME:
-				for (i = 0; i < base_types_len[TIME]; i++)
-					printf("%c", *((char *)
-						(t->buf + offset + i)));
+				{
+					char s[base_types_len[TIME] + 1];
+
+					memset(s, 0,
+						base_types_len[TIME] + 1);
+					tuple_get_time(t->buf + offset, s);
+					printf("%s", s);
+				}
+				break;
 
 			case BASE_TYPES_MAX:
 				break;

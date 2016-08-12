@@ -9,6 +9,7 @@ g s v double n
 g s v date d
 g s v time t
 g s
+g t 1 l 84
 g t
 quit
 

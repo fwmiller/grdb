@@ -72,8 +72,6 @@ schema_size(schema_t s)
 	attribute_t attr;
 	int acc = 0;
 
-	assert (s != NULL);
-
 	for (attr = s; attr != NULL; attr = attr->next)
 		acc += base_types_len[attr->bt];
 	return acc;

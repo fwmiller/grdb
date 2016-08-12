@@ -134,7 +134,7 @@ tuple_get_time(char *tbuf, char *time)
 	assert (tbuf != NULL);
 	assert (time != NULL);
 
-	memcpy(time, tbuf, base_types_len[DATE]);
+	memcpy(time, tbuf, base_types_len[TIME]);
 	return time;
 }
 
@@ -144,5 +144,5 @@ tuple_set_time(char *tbuf, char *time)
 	assert (tbuf != NULL);
 	assert (time != NULL);
 
-	memcpy(tbuf, time, base_types_len[DATE]);
+	memcpy(tbuf, time, base_types_len[TIME]);
 }

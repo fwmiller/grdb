@@ -26,4 +26,4 @@ wc: clean
 	wc -l ../../include/*.h ../db/*.c *.c
 
 .c.o: $<
-	gcc -g -c -Wall $(INCDIRS) -o $@ $<
+	gcc -g -c -Wall -D_DEBUG $(INCDIRS) -o $@ $<
