@@ -1,4 +1,5 @@
-INCDIRS = -I../../include
+include ../Makefile.rules
+
 LIBDIRS = -L../db
 
 OBJS =	bufdump.o 		\
@@ -16,7 +17,7 @@ TGT = db
 
 all: $(OBJS)
 	cd ../db; make;
-	gcc $(LIBDIRS) -g -o $(TGT) $(OBJS) $(LIBS)
+	$(CC) $(LIBDIRS) $(GDB) -o $(TGT) $(OBJS) $(LIBS)
 
 clean:
 	cd ../db; make clean;
@@ -24,6 +25,3 @@ clean:
 
 wc: clean
 	wc -l ../../include/*.h ../db/*.c *.c
-
-.c.o: $<
-	gcc -g -c -Wall -D_DEBUG $(INCDIRS) -o $@ $<

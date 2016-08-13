@@ -1,0 +1,8 @@
+CC = gcc
+CFLAGS = -c -Wall
+GDB = -g
+DEBUG = -D_DEBUG
+INCDIRS = -I../../include
+
+.c.o: $<
+	$(CC) $(CFLAGS) $(GDB) $(DEBUG) $(INCDIRS) -o $@ $<

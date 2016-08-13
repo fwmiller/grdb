@@ -1,6 +1,4 @@
-DEBUG = -D_DEBUG
-
-INCDIRS = -I../../include
+include ../Makefile.rules
 
 OBJS =	edge.o			\
 	graph.o			\
@@ -20,6 +18,3 @@ clean:
 
 wc: clean
 	wc -l *.c
-
-.c.o: $<
-	gcc -c -Wall -g $(DEBUG) $(INCDIRS) -o $@ $<
