@@ -108,9 +108,9 @@ tuple_set(tuple_t t, char *name, char *val)
 	assert (val != NULL);
 
 	offset = tuple_get_offset(t, name);
-
+#if _DEBUG
 	printf("name [%s] offset %d\n", name, offset);
-
+#endif
 	if (offset < 0) {
 		printf("offset of [%s] not found\n", name);
 		return (-1);
@@ -171,13 +171,14 @@ tuple_set(tuple_t t, char *name, char *val)
 	return 0;
 }
 
-void tuple_print(tuple_t t)
+
+void
+tuple_print(tuple_t t)
 {
 	attribute_t attr;
 	int i, offset, val;
 	float fval;
 	double dval;
-	unsigned char ch;
 
 	assert (t != NULL);
 	assert (t->buf != NULL);
@@ -189,12 +190,13 @@ void tuple_print(tuple_t t)
 		if (offset >= 0) {
 			switch (attr->bt) {
 			case CHARACTER:
-				ch = tuple_get_char(t->buf + offset);
-				printf("'%c'", ch);
+				printf("'%c'",
+					tuple_get_char(t->buf + offset));
 				break;
 
 			case VARCHAR:
-				printf("\"%s\"", (char *) (t->buf + offset));
+				printf("\"%s\"",
+					(char *) (t->buf + offset));
 				break;
 
 			case BOOLEAN:
