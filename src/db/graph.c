@@ -43,6 +43,12 @@ graph_find_vertex_by_id(graph_t g, vertexid_t id)
 	return NULL;
 }
 
+edge_t
+graph_find_edge_by_ids(graph_t g, vertexid_t id1, vertexid_t id2)
+{
+
+}
+
 void
 graph_insert_edge(graph_t g, edge_t e)
 {
