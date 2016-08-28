@@ -53,7 +53,9 @@ tuple_init(tuple_t t, schema_t s)
 			break;
 		case DATE:
 			{
-				char *date = "01-01-1970";
+				/* A mark in time */
+				char *date = "08-27-2016";
+				//char *date = "01-01-1970";
 				tuple_set_date(t->buf + offset, date);
 			}
 			break;

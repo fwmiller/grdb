@@ -46,7 +46,7 @@ tuple_set_varchar(char *tbuf, char *s)
 
 	memset(tbuf, 0, base_types_len[VARCHAR]);
 	if (strlen(s) < base_types_len[VARCHAR] - 1)
-		memcpy(tbuf, s, strlen(tbuf));
+		memcpy(tbuf, s, strlen(s));
 	else {
 		printf("set varchar overflow\n");
 		memcpy(tbuf, s, base_types_len[VARCHAR] - 1);

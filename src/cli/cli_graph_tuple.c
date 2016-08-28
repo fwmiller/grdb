@@ -43,6 +43,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 
 	if (st == VERTEX) {
 		vertex_t v;
+		base_types_t type;
 
 		/*
 		 * Set the value of a vertex tuple
@@ -56,6 +57,27 @@ cli_graph_tuple(char *cmdline, int *pos)
 		if (v == NULL) {
 			printf("Illegal vertex id\n");
 			return;
+		}
+		/* Check for a VARCHAR */
+		type = schema_find_type_by_name(v->tuple->s, s2);
+		if (type == VARCHAR) {
+			char *first, *second;
+
+			first = strchr(cmdline, '"');
+			if (first == NULL) {
+				printf("Missing first quote");
+				return;
+			}
+			second = strchr(first + 1, '"');
+			if (second == NULL) {
+				printf("Missing last quote");
+				return;
+			}
+			memset(s3, 0, BUFSIZE);
+			strncpy(s3, first + 1, second - first - 1);
+#if _DEBUG
+			printf("s3=[%s]\n", s3);
+#endif
 		}
 		if (tuple_set(v->tuple, s2, s3) < 0) {
 			printf("Set tuple value failed\n");
