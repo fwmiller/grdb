@@ -43,7 +43,6 @@ cli_graph_tuple(char *cmdline, int *pos)
 
 	if (st == VERTEX) {
 		vertex_t v;
-		base_types_t type;
 
 		/*
 		 * Set the value of a vertex tuple
@@ -59,8 +58,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			return;
 		}
 		/* Check for a VARCHAR */
-		type = schema_find_type_by_name(v->tuple->s, s2);
-		if (type == VARCHAR) {
+		if (schema_find_type_by_name(v->tuple->s, s2) == VARCHAR) {
 			char *first, *second;
 
 			first = strchr(cmdline, '"');
@@ -80,15 +78,34 @@ cli_graph_tuple(char *cmdline, int *pos)
 #endif
 		}
 		if (tuple_set(v->tuple, s2, s3) < 0) {
-			printf("Set tuple value failed\n");
+			printf("Set vertex tuple value failed\n");
 			return;
 		}
 
 
 	} else if (st == EDGE) {
+		edge_t e;
+		vertexid_t id2;
+
 		/*
 		 * Set the value of an edge tuple
 		 */
+		if (current->se == NULL) {
+			printf("Missing edge schema\n");
+			return;
+		}
+		id2 = (vertexid_t) atoi(s2);
 
+		e = graph_find_edge_by_ids(current, id1, id2);
+		if (e == NULL) {
+			printf("Illegal vertex id(s)\n");
+			return;
+		}
+		/* XXX Check for a VARCHAR */
+
+		if (tuple_set(e->tuple, s3, s4) < 0) {
+			printf("Set edge tuple value failed\n");
+			return;
+		}
 	}
 }
