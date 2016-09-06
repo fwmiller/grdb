@@ -46,7 +46,15 @@ graph_find_vertex_by_id(graph_t g, vertexid_t id)
 edge_t
 graph_find_edge_by_ids(graph_t g, vertexid_t id1, vertexid_t id2)
 {
+	edge_t e;
 
+	assert (g != NULL);
+
+	for (e = g->e; e != NULL; e = e->next)
+		if (e->id1 == id1 && e->id2 == id2)
+			return e;
+
+	return NULL;
 }
 
 void
