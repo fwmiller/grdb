@@ -82,7 +82,7 @@ Sv = \[CHAR:ch,VARCHAR:s,BOOL:result,INT:i,FLOAT:f,DOUBLE:g,DATE:d,TIME:t\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\['',\"\",FALSE,0,0.00,0.00,01-01-1970,00:00:00\]},{})\r
+({1\['',\"\",FALSE,0,0.00,0.00,08-27-2016,00:00:00\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof
