@@ -3,7 +3,7 @@
 
 #include "graph.h"
 
-#define PROMPT		"db> "
+#define PROMPT		"grdb> "
 #define BUFSIZE		4096
 #define MAX_GRAPHS	8
 
