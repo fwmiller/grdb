@@ -101,8 +101,26 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("Illegal vertex id(s)\n");
 			return;
 		}
-		/* XXX Check for a VARCHAR */
+		/* Check for a VARCHAR */
+		if (schema_find_type_by_name(e->tuple->s, s3) == VARCHAR) {
+			char *first, *second;
 
+			first = strchr(cmdline, '"');
+			if (first == NULL) {
+				printf("Missing first quote");
+				return;
+			}
+			second = strchr(first + 1, '"');
+			if (second == NULL) {
+				printf("Missing last quote");
+				return;
+			}
+			memset(s4, 0, BUFSIZE);
+			strncpy(s4, first + 1, second - first - 1);
+#if _DEBUG
+			printf("s4=[%s]\n", s4);
+#endif
+		}
 		if (tuple_set(e->tuple, s3, s4) < 0) {
 			printf("Set edge tuple value failed\n");
 			return;

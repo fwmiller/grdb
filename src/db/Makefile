@@ -4,6 +4,8 @@ OBJS =	edge.o			\
 	graph.o			\
 	schema.o		\
 	tuple.o			\
+	tuple_print.o		\
+	tuple_set.o		\
 	tuple_util.o		\
 	vertex.o		\
 	vertexid.o
