@@ -1,5 +1,0 @@
-#!/bin/sh
-./db < tests/graph_new
-./db < tests/graph_new_two
-./db < tests/graph_new_ten
-./db < tests/graph_change_graph

@@ -1,0 +1,13 @@
+g n
+g e 1 2
+g s e char i
+g s v bool k
+g s e int l
+g s v float m
+g s e double n
+g s v date d
+g s e time t
+g s v varchar s
+g s
+g t
+quit
