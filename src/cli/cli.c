@@ -18,6 +18,10 @@ cli_about()
 {
 	printf("Graph Database\n");
 	printf("(C) Frank W. Miller\n");
+	printf("This program comes with ABSOLUTELY NO WARRANTY\n");
+	printf("This is free software. You are welcome to redistribute\n");
+	printf("it under the terms of the GNU General Public License\n");
+	printf("Version 3\n");
 }
 
 static void
