@@ -75,6 +75,59 @@ valid_date(char *val)
 	return 1;
 }
 
+static int
+valid_time(char *val)
+{
+	char s[3];
+	int h, m, sec;
+
+	/* Syntax check */
+	if (!(isdigit(val[0]) &&
+	    isdigit(val[1]) &&
+	    val[2] == ':' &&
+	    isdigit(val[3]) &&
+	    isdigit(val[4]) &&
+	    val[5] == ':' &&
+	    isdigit(val[6]) &&
+	    isdigit(val[7]))) {
+#if _DEBUG
+		printf("valid_time: bad syntax\n");
+#endif
+		return 0;
+	}
+	/* Hours range check */
+	memset(s, 0, 3);
+	memcpy(s, val, 2);
+	h = atoi(s);
+	if (h < 0 || h > 24) {
+#if _DEBUG
+		printf("valid_time: hour out of range\n");
+#endif
+		return 0;
+	}
+	/* Minutes range check */
+	memset(s, 0, 3);
+	memcpy(s, val + 3, 2);
+	m = atoi(s);
+	if (m < 0 || m > 59) {
+#if _DEBUG
+		printf("valid_time: minutes out of range\n");
+#endif
+		return 0;
+	}
+	/* Seconds range check */
+	memset(s, 0, 3);
+	memcpy(s, val + 6, 2);
+	sec = atoi(s);
+	if (sec < 0 || sec > 59) {
+#if _DEBUG
+		printf("valid_time: seconds out of range\n");
+#endif
+		return 0;
+	}
+	return 1;
+}
+
 int
 tuple_set(tuple_t t, char *name, char *val)
 {
@@ -137,8 +190,8 @@ tuple_set(tuple_t t, char *name, char *val)
 			tuple_set_date(t->buf + offset, val);
 		break;
 	case TIME:
-		/* XXX Need to validate time string */
-		tuple_set_time(t->buf + offset, val);
+		if (valid_time(val))
+			tuple_set_time(t->buf + offset, val);
 		break;
 	case BASE_TYPES_MAX:
 		break;
