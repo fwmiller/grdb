@@ -43,6 +43,9 @@ tuple_print(tuple_t t)
 				printf("%d", i);
 				break;
 
+			case ENUM:
+				break;
+
 			case FLOAT:
 				fval = tuple_get_float(t->buf + offset);
 				printf("%4.2f", fval);

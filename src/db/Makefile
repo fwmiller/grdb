@@ -3,6 +3,7 @@ include ../Makefile.rules
 OBJS =	edge.o			\
 	graph.o			\
 	schema.o		\
+	string_pool.o		\
 	tuple.o			\
 	tuple_print.o		\
 	tuple_set.o		\

@@ -10,6 +10,7 @@ enum base_types
 	CHARACTER,	/* Fixed length character string */
 	VARCHAR,	/* Variable length character string */
 	BOOLEAN,	/* Boolean */
+	ENUM,		/* Enum type */
 	INTEGER,	/* Integer */
 	FLOAT,		/* Float */
 	DOUBLE,		/* Double */

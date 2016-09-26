@@ -173,6 +173,8 @@ tuple_set(tuple_t t, char *name, char *val)
 			tuple_set_int(t->buf + offset, i);
 		}
 		break;
+	case ENUM:
+		break;
 	case FLOAT:
 		{
 			float fval = atof(val);
