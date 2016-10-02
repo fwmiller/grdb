@@ -4,48 +4,7 @@
 #endif
 #include <stdlib.h>
 #include <string.h>
-
-/*****************************************************************************
-******************************************************************************
-
-
-A string pool is a list of strings and an array index to their locations
-in a single allocated block of memory.
-
-+---------+----------------------------------------+--------------------+
-| entries | string pool   | array of indexes into  | string pool memory |
-|         | memory length | string pool memory     |                    |
-+---------+----------------------------------------+--------------------+
-^byte idx ^               ^                        ^
-|         |               |                        |
-0         1               3                        entries * 2 + 3
-
-The entries field contains the number of strings in the string pool.  This
-field is a byte, which limits the number of entries to 256.
-
-The string pool memory length field contains a 16-bit value that is
-the length of the string pool memory buffer in bytes
-
-The array of indexes contains the list of pointers to the strings in
-the string pool memory buffer.  Each index is 16-bit value.  This
-effectively limits the overall size of the string pool to ~64 KB.
-
-The string pool memory buffer is a contiguous block of bytes that is used
-to hold the concatenated strings.
-
-When a entry is added or removed, the string pool is reallocated and the
-proper data is copied from the old to the new version.
-
-
-******************************************************************************
-*****************************************************************************/
-
-
-typedef unsigned char *string_pool_t;
-
-#if _DEBUG
-void bufdump(char *buf, int size);
-#endif
+#include "string_pool.h"
 
 void
 string_pool_init(string_pool_t *pool)
@@ -57,7 +16,33 @@ string_pool_init(string_pool_t *pool)
 
 	*pool = malloc(1);
 	assert(*pool != NULL);
-	*pool = 0;
+	(*pool)[0] = 0;
+}
+
+void
+string_pool_print(string_pool_t pool)
+{
+	int i, n, pos;
+
+	if (pool == NULL) {
+#if _DEBUG
+		printf("string_pool_init: pool is NULL\n");
+#endif
+		return;
+	}
+	/* n is the number of entries in the current string pool */
+	n = (int) pool[0];
+	
+	printf("entries %d", n);
+	if (n > 0)
+		printf(" string pool memory size %d bytes",
+			*((unsigned short *) (pool + 1)));
+	printf("\n");
+
+	for (pos = 0, i = 0;
+	     i < n;
+	     pos += ((unsigned short *) (pool + 3))[i], i++)
+		printf("[%s]\n", pool + 3 + n * 2 + pos);
 }
 
 void
@@ -77,7 +62,7 @@ string_pool_insert(string_pool_t *pool, char *s)
 	n = (*pool)[0];
 
 	/* plen is the length of the current string pool memory */
-	plen = *((unsigned short *) (pool + 1));
+	plen = (n > 0 ? *((unsigned short *) (pool + 1)) : 0);
 
 #if _DEBUG
 	printf("entries %d string pool memory length %d bytes\n", n, plen);
@@ -109,7 +94,6 @@ string_pool_insert(string_pool_t *pool, char *s)
 
 	/* Copy new string to end of string pool memory */
 	memcpy(buf + 3 + (n + 1) * 2 + plen, s, len);
-
 #if _DEBUG
 	bufdump((char *) buf, blen);
 #endif
