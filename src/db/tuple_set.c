@@ -5,6 +5,10 @@
 #include <string.h>
 #include "tuple.h"
 
+#if _DEBUG
+void bufdump(char *buf, int size);
+#endif
+
 static int
 valid_date(char *val)
 {

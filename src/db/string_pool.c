@@ -1,4 +1,7 @@
 #include <assert.h>
+#if _DEBUG
+#include <stdio.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -38,7 +41,11 @@ proper data is copied from the old to the new version.
 *****************************************************************************/
 
 
-typedef char *string_pool_t;
+typedef unsigned char *string_pool_t;
+
+#if _DEBUG
+void bufdump(char *buf, int size);
+#endif
 
 void
 string_pool_init(string_pool_t *pool)
@@ -63,16 +70,49 @@ string_pool_insert(string_pool_t *pool, char *s)
 	assert(*pool != NULL);
 	assert(s != NULL);
 
+	/* Length of the new string to be added to the enum */
 	len = strlen(s);
+
+	/* n is the number of entries in the current string pool */
 	n = (*pool)[0];
+
+	/* plen is the length of the current string pool memory */
 	plen = *((unsigned short *) (pool + 1));
+
 #if _DEBUG
 	printf("entries %d string pool memory length %d bytes\n", n, plen);
+	bufdump((char *) (pool + 3 + n * 2), plen);
 #endif
-	blen = 3 + ((n + 1) * 2) + plen + strlen(s) + 1;
+	/* blen is the overall size of new string pool */
+	blen = 3 + ((n + 1) * 2) + plen + len + 1;
 #if _DEBUG
-	printf("new string pool memory length %d bytes\n", blen);
+	printf("new string pool size %d bytes\n", blen);
 #endif
 	buf = malloc(blen);
 	assert(buf != NULL);
+	memset(buf, 0, blen);
+
+	/* Setup number of entries in new string pool */
+	*buf = (unsigned char) n + 1;
+
+	/* Setup string pool memory length in new string pool */
+	*((unsigned short *) (buf + 1)) = plen + len + 1;
+
+	/* Copy array of indexes from old to new pool */
+	memcpy(buf + 3, pool + 3, n * 2);
+
+	/* Setup index pointer for new string as last index in new pool */
+	*((unsigned short *) (buf + 3 + n * 2)) = plen;
+
+	/* Copy string pool memory from old to new pool */
+	memcpy(buf + 3 + (n + 1) * 2, pool + 3 + n * 2, plen);
+
+	/* Copy new string to end of string pool memory */
+	memcpy(buf + 3 + (n + 1) * 2 + plen, s, len);
+
+#if _DEBUG
+	bufdump((char *) buf, blen);
+#endif
+	free(*pool);
+	*pool = (string_pool_t) buf;
 }

@@ -45,6 +45,8 @@ tuple_init(tuple_t t, schema_t s)
 		case INTEGER:
 			tuple_set_int(t->buf + offset, 0);
 			break;
+		case ENUM:
+			break;
 		case FLOAT:
 			tuple_set_float(t->buf + offset, 0.0);
 			break;
