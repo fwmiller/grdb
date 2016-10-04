@@ -1,7 +1,5 @@
 #include <assert.h>
-#if _DEBUG
 #include <stdio.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 #include "string_pool.h"

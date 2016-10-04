@@ -24,6 +24,10 @@ main(int argc, char**argv)
 	string_pool_insert(&pool, "Yet another");
 	string_pool_print(pool);
 
+	printf("\ninsert \"And again\"\n");
+	string_pool_insert(&pool, "And another");
+	string_pool_print(pool);
+
 	cli();
 	exit(0);
 }
