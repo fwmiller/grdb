@@ -7,6 +7,7 @@ void cli();
 int
 main(int argc, char**argv)
 {
+#if 0
 	string_pool_t pool = NULL;
 
 	string_pool_init(&pool);
@@ -27,7 +28,7 @@ main(int argc, char**argv)
 	printf("\ninsert \"And again\"\n");
 	string_pool_insert(&pool, "And another");
 	string_pool_print(pool);
-
+#endif
 	cli();
 	exit(0);
 }

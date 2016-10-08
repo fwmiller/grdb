@@ -171,13 +171,13 @@ tuple_set(tuple_t t, char *name, char *val)
 			tuple_set_bool(t->buf + offset, 0);
 
 		break;
+	case ENUM:
+		break;
 	case INTEGER:
 		{
 			int i = atoi(val);
 			tuple_set_int(t->buf + offset, i);
 		}
-		break;
-	case ENUM:
 		break;
 	case FLOAT:
 		{

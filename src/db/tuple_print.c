@@ -38,12 +38,12 @@ tuple_print(tuple_t t)
 					printf("TRUE");
 				break;
 
+			case ENUM:
+				break;
+
 			case INTEGER:
 				i = tuple_get_int(t->buf + offset);
 				printf("%d", i);
-				break;
-
-			case ENUM:
 				break;
 
 			case FLOAT:
