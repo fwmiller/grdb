@@ -26,7 +26,7 @@ tuple_init(tuple_t t, schema_t s)
 	memset(t->buf, 0, t->len);
 
 	/* Set inital values */
-	for (offset = 0, attr = s;
+	for (offset = 0, attr = s->attrlist;
 	     attr != NULL;
 	     offset += base_types_len[attr->bt], attr = attr->next)
 		switch (attr->bt) {
@@ -92,7 +92,7 @@ tuple_get_offset(tuple_t t, char *name)
 	assert (t != NULL);
 	assert (name != NULL);
 
-	for (attr = t->s, offset = 0;
+	for (attr = t->s->attrlist, offset = 0;
 	     attr != NULL;
 	     offset += base_types_len[attr->bt], attr = attr->next)
 		if (strcmp(name, attr->name) == 0)

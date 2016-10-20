@@ -5,10 +5,28 @@
 #include "schema.h"
 
 char *base_types_str[] = {
-	"CHAR", "VARCHAR", "BOOL", "ENUM", "INT", "FLOAT", "DOUBLE", "DATE", "TIME" };
+	"CHAR",
+	"VARCHAR",
+	"BOOL",
+	"ENUM",
+	"INT",
+	"FLOAT",
+	"DOUBLE",
+	"DATE",
+	"TIME"
+};
 
 int base_types_len[] = {
-	1, 256, 1, sizeof(void *), sizeof(int), sizeof(float), sizeof(double), 10, 8 };
+	1,
+	256,
+	1,
+	1,
+	sizeof(int),
+	sizeof(float),
+	sizeof(double),
+	10,
+	8
+};
 
 void
 schema_attribute_init(attribute_t attr, enum base_types bt, char *name)
@@ -31,39 +49,51 @@ schema_attribute_print(attribute_t attr)
 }
 
 void
-schema_attribute_insert(schema_t *s, attribute_t attr)
+schema_attribute_insert(schema_t s, attribute_t attr)
 {
-	schema_t t;
+	attribute_t t;
 
 	assert (s != NULL);
 	assert (attr != NULL);
 
-	if (*s == NULL) {
-		*s = attr;
+	if (s->attrlist == NULL) {
+		s->attrlist = attr;
 		return;
 	}
-	for (t = *s; t->next != NULL; t = t->next);
+	for (t = s->attrlist; t->next != NULL; t = t->next);
 	t->next = attr;
 }
 
 void
-schema_attribute_remove(schema_t *s, attribute_t attr)
+schema_attribute_remove(schema_t s, attribute_t attr)
 {
-	schema_t prev, curr;
+	attribute_t prev, curr;
 
 	assert (s != NULL);
 	assert (attr != NULL);
 
-	for (prev = NULL, curr = *s;
+	for (prev = NULL, curr = s->attrlist;
 	     curr != NULL;
 	     prev = curr, curr = curr->next)
 		if (curr == attr) {
 			if (prev == NULL) {
-				*s = curr->next;
+				s->attrlist = curr->next;
 			} else {
 				prev->next = curr->next;
 			}
 		}
+}
+
+void
+schema_init(schema_t *s)
+{
+	assert (s != NULL);
+
+	if (*s != NULL)
+		free(s);
+
+	*s = malloc(sizeof(struct schema));
+	memset(*s, 0, sizeof(struct schema));
 }
 
 int
@@ -72,7 +102,9 @@ schema_size(schema_t s)
 	attribute_t attr;
 	int acc = 0;
 
-	for (attr = s; attr != NULL; attr = attr->next)
+	assert(s != NULL);
+
+	for (attr = s->attrlist; attr != NULL; attr = attr->next)
 		acc += base_types_len[attr->bt];
 	return acc;
 }
@@ -84,7 +116,7 @@ schema_find_type_by_name(schema_t s, char *name)
 
 	assert (s != NULL);
 
-	for (attr = s; attr != NULL; attr = attr->next)
+	for (attr = s->attrlist; attr != NULL; attr = attr->next)
 		if (strcasecmp(name, attr->name) == 0)
 			return attr->bt;
 
@@ -99,7 +131,7 @@ schema_print(schema_t s)
 	assert (s != NULL);
 
 	printf("[");
-	for (attr = s; attr != NULL; attr = attr->next) {
+	for (attr = s->attrlist; attr != NULL; attr = attr->next) {
 		schema_attribute_print(attr);
 		if (attr->next != NULL)
 			printf(",");

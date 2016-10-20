@@ -2,6 +2,8 @@
 #define __SCHEMA_H
 
 
+#include "enum.h"
+
 #define ATTR_NAME_MAXLEN	256
 
 /* Base types */
@@ -25,18 +27,24 @@ struct attribute {
 	struct attribute *next;
 };
 
+struct schema {
+	struct attribute *attrlist;
+	enum_list_t el;
+};
+
 typedef enum base_types base_types_t;
 typedef struct attribute *attribute_t;
-typedef struct attribute *schema_t;
+typedef struct schema *schema_t;
 
 extern char *base_types_str[];
 extern int base_types_len[];
 
 void schema_attribute_init(attribute_t attr, enum base_types bt, char *name);
 void schema_attribute_print(attribute_t attr);
+void schema_attribute_insert(schema_t s, attribute_t attr);
+void schema_attribute_remove(schema_t s, attribute_t attr);
 
-void schema_attribute_insert(schema_t *s, attribute_t attr);
-void schema_attribute_remove(schema_t *s, attribute_t attr);
+void schema_init(schema_t *s);
 int schema_size(schema_t s);
 base_types_t schema_find_type_by_name(schema_t s, char *name);
 void schema_print(schema_t s);

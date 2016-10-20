@@ -79,11 +79,11 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 {
 	char type[BUFSIZE];
 	char name[BUFSIZE];
-	int i, old_schema_size;
+	int i, old_schema_size = 0;
 
-	if (st == EDGE)
+	if (st == EDGE && current->se != NULL)
 		old_schema_size = schema_size(current->se);
-	else if (st == VERTEX)
+	else if (st == VERTEX && current->sv != NULL)
 		old_schema_size = schema_size(current->sv);
 
 	/* Attribute type */
@@ -106,15 +106,19 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 				malloc(sizeof(struct attribute));
 			assert(attr != NULL);
 			schema_attribute_init(attr, i, name);
-			if (st == EDGE)
-				schema_attribute_insert(
-					&(current->se), attr);
-			else if (st == VERTEX)
-				schema_attribute_insert(
-					&(current->sv), attr);
+			if (st == EDGE) {
+				if (current->se == NULL)
+					schema_init(&(current->se));
+				schema_attribute_insert(current->se, attr);
+			} else if (st == VERTEX) {
+				if (current->sv == NULL)
+					schema_init(&(current->sv));
+				schema_attribute_insert(current->sv, attr);
+			}
 			break;
 		}
 	}
+	printf("update tuples\n");
 	cli_graph_update_tuples(st, old_schema_size);
 }
 

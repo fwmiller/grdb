@@ -16,7 +16,7 @@ tuple_print(tuple_t t)
 
 	printf("[");
 
-	for (attr = t->s; attr != NULL; attr = attr->next) {
+	for (attr = t->s->attrlist; attr != NULL; attr = attr->next) {
 		offset = tuple_get_offset(t, attr->name);
 		if (offset >= 0) {
 			switch (attr->bt) {
