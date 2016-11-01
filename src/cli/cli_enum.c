@@ -30,6 +30,19 @@ cli_enum_syntax_check(char *s)
 }
 
 void
+cli_enum_print_current()
+{
+	if (current != NULL && current->sv != NULL) {
+
+	}
+/*
+		for (g = graphs; g != NULL; g = g->next)
+			if (g->el != NULL)
+				enum_list_print(g->el);
+*/
+}
+
+void
 cli_enum(char *cmdline, int *pos)
 {
 	graph_t g;
@@ -44,10 +57,7 @@ cli_enum(char *cmdline, int *pos)
 	nextarg(cmdline, pos, " ", s);
 
 	if (strlen(s) == 0) {
-		for (g = graphs; g != NULL; g = g->next)
-			if (g->el != NULL)
-				enum_list_print(g->el);
-
+		cli_enum_print_current();
 		return;
 	}
 	/* Try to create a new enum */
