@@ -36,6 +36,7 @@ struct graph {
 	schema_t sv;		/* Vertex schema */
 	struct edge *e;		/* Edges */
 	schema_t se;		/* Edge schema */
+	enum_list_t el;		/* List of enums */
 
 	struct graph *next;
 };

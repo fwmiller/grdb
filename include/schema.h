@@ -24,7 +24,7 @@ enum base_types
 struct attribute {
 	union {
 		char name[ATTR_NAME_MAXLEN];	/* Name when base type */
-		int idx;			/* List index when enum */
+		enum_t e;			/* Ptr to enum type */
 	} id;
 	enum base_types bt;			/* Base type */
 	struct attribute *next;
@@ -32,7 +32,6 @@ struct attribute {
 
 struct schema {
 	struct attribute *attrlist;		/* Attributes list */
-	enum_list_t el;				/* Enum list */
 };
 
 typedef enum base_types base_types_t;

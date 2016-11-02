@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 #include "enum.h"
 
 
@@ -32,6 +33,23 @@ enum_insert(enum_t *e, char *s)
 	assert (s != NULL);
 
 	string_pool_insert(&((*e)->pool), s);
+}
+
+void
+enum_set_name(enum_t e, char *name)
+{
+	assert (e != NULL);
+	assert (name != NULL);
+
+	strncpy(e->name, name, ENUM_NAME_LEN - 1);
+}
+
+char *
+enum_get_name_ptr(enum_t e)
+{
+	assert (e != NULL);
+
+	return e->name;
 }
 
 void

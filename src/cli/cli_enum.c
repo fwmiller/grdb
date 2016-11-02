@@ -6,6 +6,8 @@
 #include "cli.h"
 #include "enum.h"
 
+extern graph_t current, graphs;
+
 int
 cli_enum_syntax_check(char *s)
 {
@@ -30,6 +32,7 @@ cli_enum_syntax_check(char *s)
 void
 cli_enum(char *cmdline, int *pos)
 {
+	enum_t e;
 	char s[BUFSIZE];
 	int result;
 
@@ -40,7 +43,9 @@ cli_enum(char *cmdline, int *pos)
 	nextarg(cmdline, pos, " ", s);
 
 	if (strlen(s) == 0) {
-		/* Dump list of enums for all graphs */
+		for (graph_t g = graphs; g != NULL; g = g->next)
+			if (g->el != NULL)
+				enum_list_print(g->el);
 
 		return;
 	}
@@ -52,7 +57,15 @@ cli_enum(char *cmdline, int *pos)
 		printf("Enum name illegal syntax\n");
 		return;
 	}
+	printf("enum %s\n", s);
+
 	/* Check whether enum name is a duplicate */
+	if (current != NULL)
+		for (e = current->el; e != NULL; e = e->next)
+			if (strcmp(s, enum_get_name_ptr(e)) == 0) {
+				printf("enum %s already exists\n", s);
+				return;
+			}
 
 	/* Create new enum */
 

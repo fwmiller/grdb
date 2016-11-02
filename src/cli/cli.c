@@ -95,6 +95,11 @@ cli()
 			cli_help();
 			continue;
 
+		} else if (strcmp(cmd, "enum") == 0 ||
+			   strcmp(cmd, "e") == 0) {
+			cli_enum(cmdline, &pos);
+			continue;
+
 		} else if (strcmp(cmd, "graph") == 0 ||
 			   strcmp(cmd, "g") == 0) {
 			cli_graph(cmdline, &pos);

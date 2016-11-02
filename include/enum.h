@@ -3,7 +3,10 @@
 
 #include "string_pool.h"
 
+#define ENUM_NAME_LEN	256
+
 struct grdb_enum {
+	char name[ENUM_NAME_LEN];
 	string_pool_t pool;
 	struct grdb_enum *next;
 };
@@ -14,6 +17,9 @@ typedef enum_t enum_list_t;
 void enum_init(enum_t *e);
 void enum_print(enum_t e);
 void enum_insert(enum_t *e, char *s);
+
+void enum_set_name(enum_t e, char *name);
+char *enum_get_name_ptr(enum_t e);
 
 void enum_list_init(enum_list_t *el);
 void enum_list_print(enum_list_t el);
