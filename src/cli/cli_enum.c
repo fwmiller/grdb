@@ -32,7 +32,7 @@ cli_enum_syntax_check(char *s)
 void
 cli_enum(char *cmdline, int *pos)
 {
-	enum_t e;
+	enum_t e = NULL;
 	char s[BUFSIZE];
 	int result;
 
@@ -68,6 +68,28 @@ cli_enum(char *cmdline, int *pos)
 			}
 
 	/* Create new enum */
+	enum_init(&e);
 
 	/* Add elements to enum */
+	for (;;) {
+		memset(s, 0, BUFSIZE);
+		nextarg(cmdline, pos, " ", s);
+
+		if (strlen(s) == 0)
+			break;
+
+		result = cli_enum_syntax_check(s);
+		if (!result) {
+			printf("Enum element %s illegal syntax\n", s);
+
+			/* XXX Free enum memory */
+
+			return;
+		}
+		enum_insert(&e, s);
+	}
+	/* XXX Check whether enum has any elements in it */
+
+	/* Insert enum in list of enums for current graph */
+	enum_list_insert(&(current->el), e);
 }
