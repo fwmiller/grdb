@@ -32,6 +32,7 @@ cli_enum_syntax_check(char *s)
 void
 cli_enum(char *cmdline, int *pos)
 {
+	graph_t g;
 	enum_t e = NULL;
 	char s[BUFSIZE];
 	int result;
@@ -43,7 +44,7 @@ cli_enum(char *cmdline, int *pos)
 	nextarg(cmdline, pos, " ", s);
 
 	if (strlen(s) == 0) {
-		for (graph_t g = graphs; g != NULL; g = g->next)
+		for (g = graphs; g != NULL; g = g->next)
 			if (g->el != NULL)
 				enum_list_print(g->el);
 
