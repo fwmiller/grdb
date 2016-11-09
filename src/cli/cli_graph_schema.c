@@ -118,7 +118,9 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 			break;
 		}
 	}
+#if _DEBUG
 	printf("update tuples\n");
+#endif
 	cli_graph_update_tuples(st, old_schema_size);
 }
 

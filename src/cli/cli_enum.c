@@ -5,8 +5,11 @@
 #include <string.h>
 #include "cli.h"
 #include "enum.h"
+#include "graph.h"
 
 extern graph_t current, graphs;
+
+int graphs_get_current_index();
 
 int
 cli_enum_syntax_check(char *s)
@@ -32,20 +35,23 @@ cli_enum_syntax_check(char *s)
 void
 cli_enum_print_current()
 {
-	if (current != NULL && current->sv != NULL) {
+	enum_t e;
 
+	if (current != NULL && current->el != NULL) {
+#if _DEBUG
+		printf("graph %d\n", graphs_get_current_index());
+#endif
+		for (e = current->el; e != NULL; e = e->next) {
+			printf("%s (", e->name);
+			string_pool_print(e->pool);
+			printf(")\n");
+		}
 	}
-/*
-		for (g = graphs; g != NULL; g = g->next)
-			if (g->el != NULL)
-				enum_list_print(g->el);
-*/
 }
 
 void
 cli_enum(char *cmdline, int *pos)
 {
-	graph_t g;
 	enum_t e = NULL;
 	char s[BUFSIZE];
 	int result;
@@ -68,8 +74,9 @@ cli_enum(char *cmdline, int *pos)
 		printf("Enum name illegal syntax\n");
 		return;
 	}
+#if _DEBUG
 	printf("enum %s\n", s);
-
+#endif
 	/* Check whether enum name is a duplicate */
 	if (current != NULL)
 		for (e = current->el; e != NULL; e = e->next)
@@ -80,6 +87,9 @@ cli_enum(char *cmdline, int *pos)
 
 	/* Create new enum */
 	enum_init(&e);
+
+	/* Copy name */
+	strncpy(e->name, s, ENUM_NAME_LEN - 1);
 
 	/* Add elements to enum */
 	for (;;) {

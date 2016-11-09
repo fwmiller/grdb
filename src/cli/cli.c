@@ -32,6 +32,18 @@ cli_help()
 	return;
 }
 
+int
+graphs_get_current_index()
+{
+	graph_t g;
+	int cnt;
+
+	for (cnt = 0, g = graphs; g != NULL; cnt++, g = g->next)
+		if (g == current)
+			return cnt;
+	return (-1);
+}
+
 void
 cli()
 {

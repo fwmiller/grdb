@@ -31,19 +31,22 @@ string_pool_print(string_pool_t pool)
 	/* n is the number of entries in the current string pool */
 	n = (int) pool[0];
 	
+#if _DEBUG
 	printf("entries %d", n);
 	if (n > 0)
 		printf(" string pool memory size %d bytes",
 			*((unsigned short *) (pool + 1)));
 	printf("\n");
-
+#endif
 	for (i = 0; i < n; i++) {
 		unsigned short idx;
 		unsigned char *pos;
 
 		idx = *((unsigned short *) (pool + 3 + i * 2));
 		pos = pool + 3 + n * 2;
-		printf("[%s]\n", pos + idx);
+		printf("%s", pos + idx);
+		if (i + 1 < n)
+			printf(" ");
 	}
 }
 
