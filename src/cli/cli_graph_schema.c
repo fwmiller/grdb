@@ -75,11 +75,72 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 }
 
 static void
+cli_graph_schema_add_enum(schema_type_t st, enum_t e)
+{
+	attribute_t attr;
+
+#if _DEBUG
+	printf("add enum %s to schema\n", e->name);
+#endif
+	attr = (attribute_t)
+		malloc(sizeof(struct attribute));
+	assert(attr != NULL);
+	schema_attribute_init(attr, ENUM, e);
+	if (st == EDGE) {
+		if (current->se == NULL)
+			schema_init(&(current->se));
+		schema_attribute_insert(current->se, attr);
+	} else if (st == VERTEX) {
+		if (current->sv == NULL)
+			schema_init(&(current->sv));
+		schema_attribute_insert(current->sv, attr);
+	}
+}
+
+static void
+cli_graph_schema_add_base(schema_type_t st, char *type, char *name)
+{
+	int i;
+
+	for (i = 0; i < BASE_TYPES_MAX; i++) {
+		if (strcasecmp(type, base_types_str[i]) == 0) {
+#if _DEBUG
+			printf("add %s to schema\n", type);
+#endif
+			attribute_t attr;
+	
+			attr = (attribute_t)
+				malloc(sizeof(struct attribute));
+			assert(attr != NULL);
+			schema_attribute_init(attr, i, name);
+			if (st == EDGE) {
+				if (current->se == NULL)
+					schema_init(&(current->se));
+				schema_attribute_insert(
+					current->se, attr);
+			} else if (st == VERTEX) {
+				if (current->sv == NULL)
+					schema_init(&(current->sv));
+				schema_attribute_insert(
+					current->sv, attr);
+			}
+#if _DEBUG
+			printf("update tuples\n");
+#endif
+			// cli_graph_update_tuples(st, old_schema_size);
+
+			break;
+		}
+	}
+}
+
+static void
 cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 {
 	char type[BUFSIZE];
 	char name[BUFSIZE];
 	int i, old_schema_size = 0;
+	enum_t e;
 
 	if (st == EDGE && current->se != NULL)
 		old_schema_size = schema_size(current->se);
@@ -94,34 +155,24 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
         memset(name, 0, BUFSIZE);
         nextarg(cmdline, pos, " ", name);
 
-	for (i = 0; i < BASE_TYPES_MAX; i++) {
-		if (strcasecmp(type, base_types_str[i]) == 0) {
-			attribute_t attr;
+	/* Search enums for type name */
+#if _DEBUG
+	printf("Find enum %s\n", name);
+#endif
+	e = enum_list_find_by_name(current->el, type);
+	if (e != NULL) {
+		cli_graph_schema_add_enum(st, e);
+#if _DEBUG
+		printf("update tuples\n");
+#endif
+		// cli_graph_update_tuples(st, old_schema_size);
 
-			/*
-			 * Create a new schema attribute and insert it
-			 *   in the schema for the edge|vertex
-			 */
-			attr = (attribute_t)
-				malloc(sizeof(struct attribute));
-			assert(attr != NULL);
-			schema_attribute_init(attr, i, name);
-			if (st == EDGE) {
-				if (current->se == NULL)
-					schema_init(&(current->se));
-				schema_attribute_insert(current->se, attr);
-			} else if (st == VERTEX) {
-				if (current->sv == NULL)
-					schema_init(&(current->sv));
-				schema_attribute_insert(current->sv, attr);
-			}
-			break;
-		}
+		return;
 	}
 #if _DEBUG
-	printf("update tuples\n");
+	printf("check for base type %s\n", name);
 #endif
-	cli_graph_update_tuples(st, old_schema_size);
+	cli_graph_schema_add_base(st, type, name);
 }
 
 void

@@ -80,3 +80,22 @@ enum_list_insert(enum_list_t *el, enum_t e)
 		e->next = *el;
 	*el = e;
 }
+
+enum_t
+enum_list_find_by_name(enum_list_t el, char *name)
+{
+	enum_t e;
+
+	for (e = el; e != NULL; e = e->next) {
+#if _DEBUG
+		printf("compare %s to %s\n", name, e->name);
+#endif
+		if (strcasecmp(name, e->name) == 0) {
+#if _DEBUG
+			printf("found %s\n", name);
+#endif
+			return e;
+		}
+	}
+	return NULL;
+}
