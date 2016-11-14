@@ -48,8 +48,11 @@ schema_attribute_print(attribute_t attr)
 {
 	assert (attr != NULL);
 
-	printf("%s:%s", base_types_str[attr->bt],
-	       (attr->bt == ENUM ? attr->id.e->name : attr->id.name));
+	printf("%s:%s",
+	       (attr->bt == ENUM ?
+		attr->id.e->name :
+		base_types_str[attr->bt]),
+	       attr->id.name);
 }
 
 void

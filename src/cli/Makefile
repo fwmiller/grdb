@@ -2,15 +2,17 @@ include ../Makefile.rules
 
 LIBDIRS = -L../db
 
-OBJS =	bufdump.o 		\
-	cli.o			\
-	cli_enum.o		\
-	cli_graph.o		\
-	cli_graph_edge.o	\
-	cli_graph_new.o		\
-	cli_graph_schema.o	\
-	cli_graph_tuple.o	\
-	lex.o			\
+OBJS =	bufdump.o 			\
+	cli.o				\
+	cli_enum.o			\
+	cli_graph.o			\
+	cli_graph_edge.o		\
+	cli_graph_new.o			\
+	cli_graph_schema.o		\
+	cli_graph_schema_add.o		\
+	cli_graph_tuple.o		\
+	cli_graph_update_tuples.o	\
+	lex.o				\
 	main.o
 
 LIBS = -ldb
