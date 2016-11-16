@@ -29,17 +29,19 @@ int base_types_len[] = {
 };
 
 void
-schema_attribute_init(attribute_t attr, enum base_types bt, void *name)
+schema_attribute_init(
+	attribute_t attr,
+	void *name,
+	enum base_types bt,
+	enum_t e)
 {
 	assert (attr != NULL);
 	assert (name != NULL);
 
 	memset(attr, 0, sizeof(struct attribute));
+	strncpy(attr->name, name, ATTR_NAME_MAXLEN - 1);
 	attr->bt = bt;
-	if (bt == ENUM)
-		attr->id.e = name;
-	else
-		strcpy(attr->id.name, name);
+	attr->e = e;
 	attr->next = NULL;
 }
 
@@ -50,9 +52,9 @@ schema_attribute_print(attribute_t attr)
 
 	printf("%s:%s",
 	       (attr->bt == ENUM ?
-		attr->id.e->name :
+		attr->e->name :
 		base_types_str[attr->bt]),
-	       attr->id.name);
+	       attr->name);
 }
 
 void
@@ -126,8 +128,8 @@ schema_find_type_by_name(schema_t s, char *name)
 	for (attr = s->attrlist; attr != NULL; attr = attr->next)
 		if (strcasecmp(name,
 			       (attr->bt == ENUM ?
-				attr->id.e->name :
-				attr->id.name)) == 0)
+				attr->e->name :
+				attr->name)) == 0)
 			return attr->bt;
 
 	return BASE_TYPES_MAX;

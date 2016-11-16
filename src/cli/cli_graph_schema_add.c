@@ -1,4 +1,7 @@
 #include <assert.h>
+#if _DEBUG
+#include <stdio.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include "cli.h"
@@ -15,12 +18,14 @@ cli_graph_schema_add_enum(
 	attribute_t attr;
 
 #if _DEBUG
-	printf("add enum %s to schema\n", e->name);
+	printf("add attribute type enum %s name %s to schema\n",
+	       e->name, name);
 #endif
 	attr = (attribute_t)
 		malloc(sizeof(struct attribute));
 	assert(attr != NULL);
-	schema_attribute_init(attr, ENUM, e);
+	schema_attribute_init(attr, name, ENUM, e);
+	strncpy(attr->name, name, ATTR_NAME_MAXLEN - 1);
 	if (st == EDGE) {
 		if (current->se == NULL)
 			schema_init(&(current->se));
@@ -55,7 +60,7 @@ cli_graph_schema_add_base(
 			attr = (attribute_t)
 				malloc(sizeof(struct attribute));
 			assert(attr != NULL);
-			schema_attribute_init(attr, i, name);
+			schema_attribute_init(attr, name, i, NULL);
 			if (st == EDGE) {
 				if (current->se == NULL)
 					schema_init(&(current->se));
@@ -104,7 +109,7 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 #if _DEBUG
 		printf("add enum %s\n", name);
 #endif
-		cli_graph_schema_add_enum(old_schema_size, st, e);
+		cli_graph_schema_add_enum(old_schema_size, st, e, name);
 		return;
 	}
 	cli_graph_schema_add_base(old_schema_size, st, type, name);

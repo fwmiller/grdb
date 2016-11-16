@@ -22,11 +22,9 @@ enum base_types
 };
 
 struct attribute {
-	union {
-		char name[ATTR_NAME_MAXLEN];	/* Name when base type */
-		enum_t e;			/* Ptr to enum type */
-	} id;
-	enum base_types bt;			/* Base type */
+	char name[ATTR_NAME_MAXLEN];	/* Name */
+	enum_t e;			/* enum_t if ENUM */
+	enum base_types bt;		/* Base type */
 	struct attribute *next;
 };
 
@@ -41,7 +39,12 @@ typedef struct schema *schema_t;
 extern char *base_types_str[];
 extern int base_types_len[];
 
-void schema_attribute_init(attribute_t attr, enum base_types bt, void *name);
+void schema_attribute_init(
+        attribute_t attr,
+        void *name,
+        enum base_types bt,
+        enum_t e);
+
 void schema_attribute_print(attribute_t attr);
 void schema_attribute_insert(schema_t s, attribute_t attr);
 void schema_attribute_remove(schema_t s, attribute_t attr);

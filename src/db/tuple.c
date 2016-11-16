@@ -95,7 +95,7 @@ tuple_get_offset(tuple_t t, char *name)
 	for (attr = t->s->attrlist, offset = 0;
 	     attr != NULL;
 	     offset += base_types_len[attr->bt], attr = attr->next)
-		if (strcmp(name, attr->id.name) == 0)
+		if (strcmp(name, attr->name) == 0)
 			return offset;
 
 	return (-1);
