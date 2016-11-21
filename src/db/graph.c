@@ -86,7 +86,7 @@ graph_print(graph_t g, int with_tuples)
 	for (v = g->v; v != NULL; v = v->next) {
 		vertex_print(v);
 		if (v->tuple != NULL && with_tuples)
-			tuple_print(v->tuple);
+			tuple_print(v->tuple, g->el);
 		if (v->next != NULL)
 			printf(",");
 	}
@@ -96,7 +96,7 @@ graph_print(graph_t g, int with_tuples)
 	for (e = g->e; e != NULL; e = e->next) {
 		edge_print(e);
 		if (e->tuple != NULL && with_tuples)
-			tuple_print(e->tuple);
+			tuple_print(e->tuple, g->el);
 		if (e->next != NULL)
 			printf(",");
 	}

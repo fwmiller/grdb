@@ -17,15 +17,16 @@ char *base_types_str[] = {
 };
 
 int base_types_len[] = {
-	1,
-	256,
-	1,
-	1,
-	sizeof(int),
-	sizeof(float),
-	sizeof(double),
-	10,
-	8
+	1,			/* Single char */
+	256,			/* Max string length */
+	1,			/* Unsigned char 0=FALSE 1=TRUE */
+	2,			/* Two unsigned chars 1) enum index */
+				/*   2) item index */
+	8,			/* For 64-bit */
+	sizeof(float),		/* Should be an IEEE standard length */
+	sizeof(double),		/* Should be an IEEE standard length */
+	10,			/* "MM-DD-YYYY" string no terminator */
+	8			/* "HH:MM:SE" string no terminator */
 };
 
 void

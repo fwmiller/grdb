@@ -43,6 +43,7 @@ tuple_init(tuple_t t, schema_t s)
 			tuple_set_bool(t->buf + offset, 0);
 			break;
 		case ENUM:
+			tuple_set_char(t->buf + offset, 0);
 			break;
 		case INTEGER:
 			tuple_set_int(t->buf + offset, 0);

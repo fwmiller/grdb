@@ -1,10 +1,26 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include "enum.h"
 #include "tuple.h"
 
+static void
+tuple_print_enum(tuple_t t, int offset, enum_list_t el)
+{
+	int eidx, iidx;
+	enum_t e;
+
+	eidx = (int) tuple_get_char(t->buf + offset);
+	iidx = (int) tuple_get_char(t->buf + offset + 1);
+
+	e = enum_list_find_by_idx(el, eidx);
+	if (e == NULL)
+		return;
+
+}
+
 void
-tuple_print(tuple_t t)
+tuple_print(tuple_t t, enum_list_t el)
 {
 	attribute_t attr;
 	int i, offset, val;
@@ -39,6 +55,7 @@ tuple_print(tuple_t t)
 				break;
 
 			case ENUM:
+				tuple_print_enum(t, offset, el);
 				break;
 
 			case INTEGER:
