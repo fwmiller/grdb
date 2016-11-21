@@ -38,6 +38,11 @@ enum_insert(enum_t *e, char *s)
 	string_pool_insert(&((*e)->pool), s);
 }
 
+char *enum_find_by_idx(enum_t e, int idx)
+{
+	return string_pool_find_by_idx(e->pool, idx);
+}
+
 void
 enum_set_name(enum_t e, char *name)
 {
@@ -100,5 +105,18 @@ enum_list_find_by_name(enum_list_t el, char *name)
 			return e;
 		}
 	}
+	return NULL;
+}
+
+enum_t
+enum_list_find_by_idx(enum_list_t el, int idx)
+{
+	enum_t e;
+	int i;
+
+	for (i = 0, e = el; e != NULL; i++, e = e->next)
+		if (i == idx)
+			return e;
+
 	return NULL;
 }

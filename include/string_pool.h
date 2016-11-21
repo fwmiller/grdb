@@ -47,6 +47,7 @@ void bufdump(char *buf, int size);
 void string_pool_init(string_pool_t *pool);
 void string_pool_print(string_pool_t pool);
 void string_pool_insert(string_pool_t *pool, char *s);
+char *string_pool_find_by_idx(string_pool_t pool, int idx);
 
 
 #endif

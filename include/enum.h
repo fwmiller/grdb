@@ -17,6 +17,7 @@ typedef enum_t enum_list_t;
 void enum_init(enum_t *e);
 void enum_print(enum_t e);
 void enum_insert(enum_t *e, char *s);
+char *enum_find_by_idx(enum_t e, int idx);
 
 void enum_set_name(enum_t e, char *name);
 char *enum_get_name_ptr(enum_t e);
