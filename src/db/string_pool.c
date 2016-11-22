@@ -4,11 +4,41 @@
 #include <string.h>
 #include "string_pool.h"
 
-#define STRING_POOL_GET_ENTRIES(POOL) ((POOL)[0])
+static inline int
+string_pool_get_entries(string_pool_t pool)
+{
+	return (int) (((unsigned char *) pool)[0]);
+}
 
-#define STRING_POOL_GET_LEN(POOL) (*((unsigned short *) ((POOL) + 1)))
-#define STRING_POOL_SET_LEN(POOL, LEN) \
-	(*((unsigned short *) ((POOL) + 1)) = (LEN))
+static inline void
+string_pool_set_entries(string_pool_t pool, unsigned char n)
+{
+	pool[0] = n;
+}
+
+static inline int
+string_pool_get_len(string_pool_t pool)
+{
+	return (int) *((unsigned short *) (((unsigned char *) pool) + 1));
+}
+
+static inline void
+string_pool_set_len(string_pool_t pool, unsigned short len)
+{
+	*((unsigned short *) (((unsigned char *) pool) + 1)) = len;
+
+}
+
+static inline char *
+string_pool_get_string(string_pool_t pool, int n, int i)
+{
+	unsigned short idx;
+	unsigned char *pos;
+
+	idx = *((unsigned short *) (pool + 3 + i * 2));
+	pos = pool + 3 + n * 2;
+	return (char *) (pos + idx);
+}
 
 void
 string_pool_init(string_pool_t *pool)
@@ -20,7 +50,7 @@ string_pool_init(string_pool_t *pool)
 
 	*pool = malloc(1);
 	assert(*pool != NULL);
-	(*pool)[0] = 0;
+	string_pool_set_entries(*pool, 0);
 }
 
 void
@@ -35,22 +65,20 @@ string_pool_print(string_pool_t pool)
 		return;
 	}
 	/* n is the number of entries in the current string pool */
-	n = (int) pool[0];
+	n = string_pool_get_entries(pool);
 	
 #if _DEBUG
 	printf("entries %d", n);
 	if (n > 0)
 		printf(" string pool memory size %d bytes",
-			*((unsigned short *) (pool + 1)));
+		       string_pool_get_len(pool));
 	printf("\n");
 #endif
 	for (i = 0; i < n; i++) {
-		unsigned short idx;
-		unsigned char *pos;
+		char *s;
 
-		idx = *((unsigned short *) (pool + 3 + i * 2));
-		pos = pool + 3 + n * 2;
-		printf("%s", pos + idx);
+		s = string_pool_get_string(pool, n, i);
+		printf("%s", s);
 		if (i + 1 < n)
 			printf(" ");
 	}
@@ -59,7 +87,7 @@ string_pool_print(string_pool_t pool)
 void
 string_pool_insert(string_pool_t *pool, char *s)
 {
-	char *buf;
+	unsigned char *buf;
 	int blen, len, n, plen;
 
 	assert(pool != NULL);
@@ -70,12 +98,12 @@ string_pool_insert(string_pool_t *pool, char *s)
 	len = strlen(s);
 
 	/* n is the number of entries in the current string pool */
-	n = STRING_POOL_GET_ENTRIES(*pool);
+	n = string_pool_get_entries(*pool);
 
 	/* plen is the length of the current string pool memory */
 	plen = 0;
 	if (n > 0)
-		plen = STRING_POOL_GET_LEN(*pool);
+		plen = string_pool_get_len(*pool);
 
 #if _DEBUG
 	printf("\nentries %d string pool memory length %d bytes\n", n, plen);
@@ -91,10 +119,10 @@ string_pool_insert(string_pool_t *pool, char *s)
 	memset(buf, 0, blen);
 
 	/* Setup number of entries in new string pool */
-	*buf = (unsigned char) n + 1;
+	string_pool_set_entries(buf, n + 1);
 
 	/* Setup string pool memory length in new string pool */
-	STRING_POOL_SET_LEN(buf, plen + len + 1);
+	string_pool_set_len(buf, (unsigned short) (plen + len + 1));
 
 	/* Copy array of indexes from old to new pool */
 	memcpy(buf + 3, (*pool) + 3, n * 2);
@@ -122,10 +150,10 @@ string_pool_find_by_idx(string_pool_t pool, int idx)
 	assert(pool != NULL);
 
 	/* n is the number of entries in the current string pool */
-	n = STRING_POOL_GET_ENTRIES(pool);
+	n = string_pool_get_entries(pool);
 
 	if (idx >= n)
 		return NULL;
 
-	return NULL;
+	return string_pool_get_string(pool, n, idx);
 }

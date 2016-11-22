@@ -9,6 +9,7 @@ tuple_print_enum(tuple_t t, int offset, enum_list_t el)
 {
 	int eidx, iidx;
 	enum_t e;
+	char *s;
 
 	eidx = (int) tuple_get_char(t->buf + offset);
 	iidx = (int) tuple_get_char(t->buf + offset + 1);
@@ -17,6 +18,8 @@ tuple_print_enum(tuple_t t, int offset, enum_list_t el)
 	if (e == NULL)
 		return;
 
+	s = enum_find_by_idx(e, iidx);
+	printf("%s", s);
 }
 
 void
