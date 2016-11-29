@@ -132,8 +132,16 @@ valid_time(char *val)
 	return 1;
 }
 
+static void
+tuple_set_enum(tuple_t t, char *name, char *val, enum_list_t el)
+{
+#if _DEBUG
+	printf("tuple_set_enum: set enum %s\n", name);
+#endif
+}
+
 int
-tuple_set(tuple_t t, char *name, char *val)
+tuple_set(tuple_t t, char *name, char *val, enum_list_t el)
 {
 	int offset;
 	base_types_t bt;
@@ -171,8 +179,11 @@ tuple_set(tuple_t t, char *name, char *val)
 			tuple_set_bool(t->buf + offset, 0);
 
 		break;
+
 	case ENUM:
+		tuple_set_enum(t, name, val, el);
 		break;
+
 	case INTEGER:
 		{
 			int i = atoi(val);

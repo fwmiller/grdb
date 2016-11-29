@@ -10,7 +10,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 	char s1[BUFSIZE], s2[BUFSIZE], s3[BUFSIZE], s4[BUFSIZE];
 	vertexid_t id1;
 	schema_type_t st;
-	int i;
+	int i, n;
 
 	memset(s1, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s1);
@@ -35,7 +35,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 	id1 = (vertexid_t) atoi(s1);
 
 	/* Figure out if this is for an edge or vertex tuple */
-	for (i = 0, st = EDGE; i < strlen(s2); i++)
+	n = strlen(s2);
+	for (i = 0, st = EDGE; i < n; i++)
 		if (!isdigit(s2[i])) {
 			st = VERTEX;
 			break;

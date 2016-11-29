@@ -126,11 +126,11 @@ schema_find_type_by_name(schema_t s, char *name)
 
 	assert (s != NULL);
 
+#if _DEBUG
+	printf("find schema [%s]\n", name);
+#endif
 	for (attr = s->attrlist; attr != NULL; attr = attr->next)
-		if (strcasecmp(name,
-			       (attr->bt == ENUM ?
-				attr->e->name :
-				attr->name)) == 0)
+		if (strcasecmp(name, attr->name) == 0)
 			return attr->bt;
 
 	return BASE_TYPES_MAX;
