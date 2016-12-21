@@ -48,7 +48,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		/*
 		 * Set the value of a vertex tuple
 		 */
-		if (current->sv == NULL) {
+		if (current == NULL || current->sv == NULL) {
 			printf("Missing vertex schema\n");
 			return;
 		}
@@ -78,7 +78,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("s3=[%s]\n", s3);
 #endif
 		}
-		if (tuple_set(v->tuple, s2, s3) < 0) {
+		if (tuple_set(v->tuple, s2, s3, current->el) < 0) {
 			printf("Set vertex tuple value failed\n");
 			return;
 		}
@@ -91,7 +91,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		/*
 		 * Set the value of an edge tuple
 		 */
-		if (current->se == NULL) {
+		if (current == NULL || current->se == NULL) {
 			printf("Missing edge schema\n");
 			return;
 		}
@@ -122,7 +122,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("s4=[%s]\n", s4);
 #endif
 		}
-		if (tuple_set(e->tuple, s3, s4) < 0) {
+		if (tuple_set(e->tuple, s3, s4, current->el) < 0) {
 			printf("Set edge tuple value failed\n");
 			return;
 		}
