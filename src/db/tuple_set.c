@@ -138,6 +138,11 @@ tuple_set_enum(tuple_t t, char *name, char *val, enum_list_t el)
 #if _DEBUG
 	printf("tuple_set_enum: set enum %s\n", name);
 #endif
+	/* Look for the enum index corresponding to the enum name */
+
+	/* Get the index of the enum value */
+
+	/* Tuple gets the enum index value */
 }
 
 int

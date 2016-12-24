@@ -32,6 +32,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		printf("Missing name or id\n");
 		return;
 	}
+	/* s1 is always a vertex id */
 	id1 = (vertexid_t) atoi(s1);
 
 	/* Figure out if this is for an edge or vertex tuple */
@@ -58,6 +59,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("Illegal vertex id\n");
 			return;
 		}
+		/* s2 is an attribute name from the vertex schema */
+
 		/* Check for a VARCHAR */
 		if (schema_find_type_by_name(v->tuple->s, s2) == VARCHAR) {
 			char *first, *second;
@@ -95,6 +98,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("Missing edge schema\n");
 			return;
 		}
+		/* s2 is a vertex id for an edge */
 		id2 = (vertexid_t) atoi(s2);
 
 		e = graph_find_edge_by_ids(current, id1, id2);
