@@ -18,6 +18,7 @@ void enum_init(enum_t *e);
 void enum_print(enum_t e);
 void enum_insert(enum_t *e, char *s);
 char *enum_find_by_idx(enum_t e, int idx);
+int enum_find_idx_by_name(enum_t e, char *s);
 
 void enum_set_name(enum_t e, char *name);
 char *enum_get_name_ptr(enum_t e);
@@ -26,6 +27,7 @@ void enum_list_init(enum_list_t *el);
 void enum_list_print(enum_list_t el);
 void enum_list_insert(enum_list_t *el, enum_t e);
 enum_t enum_list_find_by_name(enum_list_t el, char *name);
+int enum_list_find_idx_by_name(enum_list_t el, char *name);
 enum_t enum_list_find_by_idx(enum_list_t el, int idx);
 
 #endif

@@ -45,6 +45,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 
 	if (st == VERTEX) {
 		vertex_t v;
+		base_types_t bt;
 
 		/*
 		 * Set the value of a vertex tuple
@@ -62,7 +63,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 		/* s2 is an attribute name from the vertex schema */
 
 		/* Check for a VARCHAR */
-		if (schema_find_type_by_name(v->tuple->s, s2) == VARCHAR) {
+		bt = schema_find_type_by_name(v->tuple->s, s2);
+		if (bt == VARCHAR) {
 			char *first, *second;
 
 			first = strchr(cmdline, '"');
@@ -80,8 +82,27 @@ cli_graph_tuple(char *cmdline, int *pos)
 #if _DEBUG
 			printf("s3=[%s]\n", s3);
 #endif
+		} else if (bt == ENUM) {
+			attribute_t attr;
+
+			attr = schema_find_attr_by_name(v->tuple->s, s2);
+			if (attr == NULL) {
+				printf("Attribute %s not found\n", s2);
+				return;
+			}
+#if _DEBUG
+			printf("set attribute %s with type %s to %s\n",
+			       s2, attr->e->name, s3);
+#endif
+			tuple_set_enum(
+				v->tuple,
+				s2,
+				attr->e->name,
+				s3,
+				current->el);
+			return;
 		}
-		if (tuple_set(v->tuple, s2, s3, current->el) < 0) {
+		if (tuple_set(v->tuple, s2, s3) < 0) {
 			printf("Set vertex tuple value failed\n");
 			return;
 		}
@@ -90,6 +111,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 	} else if (st == EDGE) {
 		edge_t e;
 		vertexid_t id2;
+		base_types_t bt;
 
 		/*
 		 * Set the value of an edge tuple
@@ -107,7 +129,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 			return;
 		}
 		/* Check for a VARCHAR */
-		if (schema_find_type_by_name(e->tuple->s, s3) == VARCHAR) {
+		bt = schema_find_type_by_name(e->tuple->s, s3);
+		if (bt == VARCHAR) {
 			char *first, *second;
 
 			first = strchr(cmdline, '"');
@@ -125,8 +148,18 @@ cli_graph_tuple(char *cmdline, int *pos)
 #if _DEBUG
 			printf("s4=[%s]\n", s4);
 #endif
+		} else if (bt == ENUM) {
+			attribute_t attr;
+
+			attr = schema_find_attr_by_name(e->tuple->s, s3);
+			if (attr != NULL)
+				printf("attribute %s found\n", s3);
+			else
+				printf("attribute %s not found\n", s3);
+
+
 		}
-		if (tuple_set(e->tuple, s3, s4, current->el) < 0) {
+		if (tuple_set(e->tuple, s3, s4) < 0) {
 			printf("Set edge tuple value failed\n");
 			return;
 		}

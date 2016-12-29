@@ -157,3 +157,22 @@ string_pool_find_by_idx(string_pool_t pool, int idx)
 
 	return string_pool_get_string(pool, n, idx);
 }
+
+int
+string_pool_find_idx_by_name(string_pool_t pool, char *s)
+{
+	char *s1;
+	int i, n;
+
+	assert(pool != NULL);
+
+	/* n is the number of entries in the current string pool */
+	n = string_pool_get_entries(pool);
+
+	for (i = 0; i < n; i++) {
+		s1 = string_pool_get_string(pool, n, i);
+		if (strcasecmp(s1, s) == 0)
+			return i;
+	}
+	return (-1);
+}

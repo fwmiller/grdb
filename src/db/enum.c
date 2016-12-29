@@ -1,7 +1,4 @@
 #include <assert.h>
-#if _DEBUG
-#include <stdio.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 #include "enum.h"
@@ -41,6 +38,12 @@ enum_insert(enum_t *e, char *s)
 char *enum_find_by_idx(enum_t e, int idx)
 {
 	return string_pool_find_by_idx(e->pool, idx);
+}
+
+int
+enum_find_idx_by_name(enum_t e, char *s)
+{
+	return string_pool_find_idx_by_name(e->pool, s);
 }
 
 void
@@ -94,18 +97,22 @@ enum_list_find_by_name(enum_list_t el, char *name)
 {
 	enum_t e;
 
-	for (e = el; e != NULL; e = e->next) {
-#if _DEBUG
-		printf("compare %s to %s\n", name, e->name);
-#endif
-		if (strcasecmp(name, e->name) == 0) {
-#if _DEBUG
-			printf("found %s\n", name);
-#endif
+	for (e = el; e != NULL; e = e->next)
+		if (strcasecmp(name, e->name) == 0)
 			return e;
-		}
-	}
 	return NULL;
+}
+
+int
+enum_list_find_idx_by_name(enum_list_t el, char *name)
+{
+	enum_t e;
+	int i;
+
+	for (i = 0, e = el; e != NULL; i++, e = e->next)
+		if (strcasecmp(name, e->name) == 0)
+			return i;
+	return (-1);
 }
 
 enum_t

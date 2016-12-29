@@ -136,6 +136,23 @@ schema_find_type_by_name(schema_t s, char *name)
 	return BASE_TYPES_MAX;
 }
 
+attribute_t
+schema_find_attr_by_name(schema_t s, char *name)
+{
+	attribute_t attr;
+
+	assert (s != NULL);
+
+#if _DEBUG
+	printf("find attribute [%s]\n", name);
+#endif
+	for (attr = s->attrlist; attr != NULL; attr = attr->next)
+		if (strcasecmp(name, attr->name) == 0)
+			return attr;
+
+	return NULL;
+}
+
 void
 schema_print(schema_t s)
 {

@@ -132,21 +132,47 @@ valid_time(char *val)
 	return 1;
 }
 
-static void
-tuple_set_enum(tuple_t t, char *name, char *val, enum_list_t el)
+void tuple_set_enum(
+        tuple_t t,
+        char *attrname,
+        char *type,
+        char *val,
+        enum_list_t el)
 {
-#if _DEBUG
-	printf("tuple_set_enum: set enum %s\n", name);
-#endif
-	/* Look for the enum index corresponding to the enum name */
+	enum_t e;
+	int eidx, iidx, offset;
 
+	eidx = enum_list_find_idx_by_name(el, type);
+	if (eidx < 0) {
+		printf("enum %s index not found\n", type);
+		return;
+	}
+	e = enum_list_find_by_name(el, type);
+	if (e == NULL) {
+		printf("enum %s not found\n", attrname);
+		return;
+	}
 	/* Get the index of the enum value */
+	iidx = enum_find_idx_by_name(e, val);
+#if _DEBUG
+	printf("%s found in enum %s at index %d\n", val, e->name, iidx);
+#endif
 
 	/* Tuple gets the enum index value */
+	offset = tuple_get_offset(t, attrname);
+#if _DEBUG
+	printf("attribute %s offset %d\n", attrname, offset);
+#endif
+	if (offset < 0) {
+		printf("offset of %s not found\n", attrname);
+		return;
+	}
+	tuple_set_char(t->buf + offset, (unsigned char) eidx);
+	tuple_set_char(t->buf + offset + 1, (unsigned char) iidx);
 }
 
 int
-tuple_set(tuple_t t, char *name, char *val, enum_list_t el)
+tuple_set(tuple_t t, char *name, char *val)
 {
 	int offset;
 	base_types_t bt;
@@ -185,9 +211,7 @@ tuple_set(tuple_t t, char *name, char *val, enum_list_t el)
 
 		break;
 
-	case ENUM:
-		tuple_set_enum(t, name, val, el);
-		break;
+	/* case ENUM: handled elsewhere */
 
 	case INTEGER:
 		{
@@ -215,6 +239,9 @@ tuple_set(tuple_t t, char *name, char *val, enum_list_t el)
 		if (valid_time(val))
 			tuple_set_time(t->buf + offset, val);
 		break;
+
+	case ENUM:
+		/* Handled elsewhere */
 	case BASE_TYPES_MAX:
 		break;
 	}

@@ -52,6 +52,7 @@ void schema_attribute_remove(schema_t s, attribute_t attr);
 void schema_init(schema_t *s);
 int schema_size(schema_t s);
 base_types_t schema_find_type_by_name(schema_t s, char *name);
+attribute_t schema_find_attr_by_name(schema_t s, char *name);
 void schema_print(schema_t s);
 
 
