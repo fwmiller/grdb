@@ -70,12 +70,12 @@ send -- "g t\r"
 expect -exact "g t\r
 ({1,2},{(1,2)\[00:00:00\]})\r
 grdb> "
-send -- "g t 1 2 t 25:02:03\r"
-expect -exact "g t 1 2 t 25:02:03\r
+send -- "g t 1 2 t 15:02:03\r"
+expect -exact "g t 1 2 t 15:02:03\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[25:02:03\]})\r
+({1,2},{(1,2)\[15:02:03\]})\r
 grdb> "
 send -- "quit\r"
 expect eof
