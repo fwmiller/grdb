@@ -94,12 +94,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("set attribute %s with type %s to %s\n",
 			       s2, attr->e->name, s3);
 #endif
-			tuple_set_enum(
-				v->tuple,
-				s2,
-				attr->e->name,
-				s3,
-				current->el);
+			tuple_set_enum(v->tuple, s2,
+				attr->e->name, s3, current->el);
 			return;
 		}
 		if (tuple_set(v->tuple, s2, s3) < 0) {
@@ -152,12 +148,17 @@ cli_graph_tuple(char *cmdline, int *pos)
 			attribute_t attr;
 
 			attr = schema_find_attr_by_name(e->tuple->s, s3);
-			if (attr != NULL)
-				printf("attribute %s found\n", s3);
-			else
-				printf("attribute %s not found\n", s3);
-
-
+			if (attr == NULL) {
+				printf("Attribute %s not found\n", s3);
+				return;
+			}
+#if _DEBUG
+			printf("set attribute %s with type %s to %s\n",
+			       s3, attr->e->name, s4);
+#endif
+			tuple_set_enum(e->tuple, s3,
+				attr->e->name, s4, current->el);
+			return;
 		}
 		if (tuple_set(e->tuple, s3, s4) < 0) {
 			printf("Set edge tuple value failed\n");

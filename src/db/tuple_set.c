@@ -154,11 +154,15 @@ void tuple_set_enum(
 	}
 	/* Get the index of the enum value */
 	iidx = enum_find_idx_by_name(e, val);
+	if (iidx < 0) {
+		printf("enum %s does not contain %s\n", type, val);
+		return;
+	}
 #if _DEBUG
 	printf("%s found in enum %s at index %d\n", val, e->name, iidx);
 #endif
 
-	/* Tuple gets the enum index value */
+	/* Offset of where the enum field is in the tuple buffer */
 	offset = tuple_get_offset(t, attrname);
 #if _DEBUG
 	printf("attribute %s offset %d\n", attrname, offset);
@@ -186,12 +190,12 @@ tuple_set(tuple_t t, char *name, char *val)
 	printf("name [%s] offset %d\n", name, offset);
 #endif
 	if (offset < 0) {
-		printf("offset of [%s] not found\n", name);
+		printf("offset of %s not found\n", name);
 		return (-1);
 	}
 	bt = schema_find_type_by_name(t->s, name);
 	if (bt == BASE_TYPES_MAX) {
-		printf("type of [%s] not found\n", name);
+		printf("type of %s not found\n", name);
 		return (-1);
 	}
 	switch (bt) {
