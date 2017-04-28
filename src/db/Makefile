@@ -1,6 +1,9 @@
 include ../Makefile.rules
 
 OBJS =	component.o		\
+	component_project.o	\
+	component_select.o	\
+	component_join.o	\
 	edge.o			\
 	enum.o			\
 	graph.o			\

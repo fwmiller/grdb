@@ -85,6 +85,10 @@ edge_t component_find_edge_by_ids( component_t c, edge_t e);
 void component_insert_edge(component_t c, edge_t e);
 void component_print(component_t c, int with_tuples);
 
+component_t component_project(component_t c, attribute_t attrlist);
+int component_select();
+int component_join();
+
 void graph_init(graph_t g);
 void graph_file_init(int gidx);
 void graph_insert_component(graph_t g, component_t c);
