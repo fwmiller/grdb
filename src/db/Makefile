@@ -1,6 +1,7 @@
 include ../Makefile.rules
 
-OBJS =	edge.o			\
+OBJS =	component.o		\
+	edge.o			\
 	enum.o			\
 	graph.o			\
 	schema.o		\
