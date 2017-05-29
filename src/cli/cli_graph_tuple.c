@@ -24,7 +24,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 	printf("s1=[%s] s2=[%s] s3=[%s], s4=[%s]\n", s1, s2, s3, s4);
 #endif
 	if (strlen(s1) <= 0) {
-		graph_print(current, 1); /* with tuples */
+		component_print(current, 1); /* with tuples */
 		printf("\n");
 		return;
 	}
@@ -55,7 +55,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			return;
 		}
 
-		v = graph_find_vertex_by_id(current, id1);
+		v = component_find_vertex_by_id(current, id1);
 		if (v == NULL) {
 			printf("Illegal vertex id\n");
 			return;
@@ -119,7 +119,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		/* s2 is a vertex id for an edge */
 		id2 = (vertexid_t) atoi(s2);
 
-		e = graph_find_edge_by_ids(current, id1, id2);
+		e = component_find_edge_by_ids(current, id1, id2);
 		if (e == NULL) {
 			printf("Illegal vertex id(s)\n");
 			return;

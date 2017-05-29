@@ -9,7 +9,7 @@ void
 cli_graph_schema(char *cmdline, int *pos)
 {
 	char s[BUFSIZE];
-	graph_t g;
+	component_t g;
 	int cnt;
 
 	memset(s, 0, BUFSIZE);
@@ -28,7 +28,7 @@ cli_graph_schema(char *cmdline, int *pos)
 		if (g->sv != NULL || g->se != NULL) {
 			if (g == current)
 				printf(">");
-			printf("graph %d\n", cnt);
+			printf("component %d\n", cnt);
 			if (g->sv != NULL) {
 				printf("Sv = ");
 				schema_print(g->sv);

@@ -7,7 +7,7 @@
 #include "enum.h"
 #include "graph.h"
 
-extern graph_t current, graphs;
+extern component_t current, graphs;
 
 int graphs_get_current_index();
 
@@ -39,7 +39,7 @@ cli_enum_print_current()
 
 	if (current != NULL && current->el != NULL) {
 #if _DEBUG
-		printf("graph %d\n", graphs_get_current_index());
+		printf("component %d\n", graphs_get_current_index());
 #endif
 		for (e = current->el; e != NULL; e = e->next) {
 			printf("%s (", e->name);
@@ -111,6 +111,6 @@ cli_enum(char *cmdline, int *pos)
 	}
 	/* XXX Check whether enum has any elements in it */
 
-	/* Insert enum in list of enums for current graph */
+	/* Insert enum in list of enums for current component */
 	enum_list_insert(&(current->el), e);
 }

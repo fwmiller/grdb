@@ -14,14 +14,14 @@ void cli_graph_tuple(char *cmdline, int *pos);
 static void
 cli_graph_print()
 {
-	graph_t g;
+	component_t g;
 	int cnt = 0;
 
 	for (g = graphs; g != NULL; g = g->next, cnt++) {
 		if (g == current)
 			printf(">");
 		printf("%d:", cnt);
-		graph_print(g, 0); /* no tuples */
+		component_print(g, 0); /* no tuples */
 		printf("\n");
 	}
 }
@@ -50,7 +50,7 @@ cli_graph(char *cmdline, int *pos)
 		cli_graph_tuple(cmdline, pos);
 
 	else if (isdigit(s[0])) {
-		graph_t g;
+		component_t g;
 		int i, cnt;
 
 		// Change current graph

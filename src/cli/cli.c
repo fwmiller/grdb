@@ -6,8 +6,8 @@
 #include "graph.h"
 
 /* Graphs */
-graph_t graphs = NULL;
-graph_t current = NULL;
+component_t graphs = NULL;
+component_t current = NULL;
 
 char *readline(char *prompt);
 
@@ -35,7 +35,7 @@ cli_help()
 int
 graphs_get_current_index()
 {
-	graph_t g;
+	component_t g;
 	int cnt;
 
 	for (cnt = 0, g = graphs; g != NULL; cnt++, g = g->next)
@@ -120,9 +120,9 @@ cli()
 	}
 }
 
-void cli_graphs_insert(graph_t g)
+void cli_graphs_insert(component_t g)
 {
-	graph_t f;
+	component_t f;
 
 	if (graphs == NULL) {
 		graphs = g;

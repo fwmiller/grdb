@@ -29,11 +29,11 @@ cli_graph_edge(char *cmdline, int *pos)
 	}
 	j = atoi(s);
 
-	v = graph_find_vertex_by_id(current, i);
-	w = graph_find_vertex_by_id(current, j);
+	v = component_find_vertex_by_id(current, i);
+	w = component_find_vertex_by_id(current, j);
 
 	if (v == NULL && w == NULL) {
-		printf("At least one vertex must exist in graph\n");
+		printf("At least one vertex must exist in component\n");
 		return;
 	}
 	if (v == NULL) {
@@ -50,7 +50,7 @@ cli_graph_edge(char *cmdline, int *pos)
 			tuple_init(t, current->sv);
 			v->tuple = t;
 		}
-		graph_insert_vertex(current, v);
+		component_insert_vertex(current, v);
 
 	} else if (w == NULL) {
 		// Create a new vertex with j as its id
@@ -66,7 +66,7 @@ cli_graph_edge(char *cmdline, int *pos)
 			tuple_init(t, current->sv);
 			w->tuple = t;
 		}
-		graph_insert_vertex(current, w);
+		component_insert_vertex(current, w);
 	}
 	e = (edge_t) malloc(sizeof(struct edge));
 	assert (e != NULL);
@@ -80,5 +80,5 @@ cli_graph_edge(char *cmdline, int *pos)
 		tuple_init(t, current->se);
 		e->tuple = t;
 	}
-	graph_insert_edge(current, e);
+	component_insert_edge(current, e);
 }

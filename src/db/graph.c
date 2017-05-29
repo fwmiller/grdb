@@ -4,14 +4,14 @@
 #include "graph.h"
 
 void
-graph_init(graph_t g)
+component_init(component_t g)
 {
 	assert (g != NULL);
-	memset(g, 0, sizeof(struct graph));
+	memset(g, 0, sizeof(struct component));
 }
 
 void
-graph_insert_vertex(graph_t g, vertex_t v)
+component_insert_vertex(component_t g, vertex_t v)
 {
 	vertex_t w;
 
@@ -19,7 +19,7 @@ graph_insert_vertex(graph_t g, vertex_t v)
 	assert (v != NULL);
 
 	if (g->v == NULL) {
-		/* Insert vertex into empty graph */
+		/* Insert vertex into empty component */
 		g->v = v;
 		return;
 	}
@@ -30,7 +30,7 @@ graph_insert_vertex(graph_t g, vertex_t v)
 }
 
 vertex_t
-graph_find_vertex_by_id(graph_t g, vertexid_t id)
+component_find_vertex_by_id(component_t g, vertexid_t id)
 {
 	vertex_t v;
 
@@ -44,7 +44,7 @@ graph_find_vertex_by_id(graph_t g, vertexid_t id)
 }
 
 edge_t
-graph_find_edge_by_ids(graph_t g, vertexid_t id1, vertexid_t id2)
+component_find_edge_by_ids(component_t g, vertexid_t id1, vertexid_t id2)
 {
 	edge_t e;
 
@@ -58,12 +58,12 @@ graph_find_edge_by_ids(graph_t g, vertexid_t id1, vertexid_t id2)
 }
 
 void
-graph_insert_edge(graph_t g, edge_t e)
+component_insert_edge(component_t g, edge_t e)
 {
 	edge_t f;
 
 	if (g->e == NULL) {
-		/* Insert edge into empty graph edge set */
+		/* Insert edge into empty component edge set */
 		g->e = e;
 		return;
 	}
@@ -74,7 +74,7 @@ graph_insert_edge(graph_t g, edge_t e)
 }
 
 void
-graph_print(graph_t g, int with_tuples)
+component_print(component_t g, int with_tuples)
 {
 	vertex_t v;
 	edge_t e;

@@ -5,20 +5,20 @@
 void
 cli_graph_new(char *cmdline, int *pos)
 {
-	graph_t g;
+	component_t g;
 	vertex_t v;
 
-	/* Create first vertex in graph */
+	/* Create first vertex in component */
 	v = (vertex_t) malloc(sizeof(struct vertex));
 	assert (v != NULL);
 	vertex_init(v);
 	v->id = 1;
 
-	/* Create new graph */
-	g = (graph_t) malloc(sizeof(struct graph));
+	/* Create new component */
+	g = (component_t) malloc(sizeof(struct component));
 	assert (g != NULL);
-	graph_init(g);
-	graph_insert_vertex(g, v);
+	component_init(g);
+	component_insert_vertex(g, v);
 
 	if (graphs == NULL)
 		current = g;
