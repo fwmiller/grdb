@@ -24,7 +24,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 	printf("s1=[%s] s2=[%s] s3=[%s], s4=[%s]\n", s1, s2, s3, s4);
 #endif
 	if (strlen(s1) <= 0) {
-		component_print(current, 1); /* with tuples */
+		component_print(current_component, 1); /* with tuples */
 		printf("\n");
 		return;
 	}
@@ -50,12 +50,13 @@ cli_graph_tuple(char *cmdline, int *pos)
 		/*
 		 * Set the value of a vertex tuple
 		 */
-		if (current == NULL || current->sv == NULL) {
+		if (current_component == NULL ||
+		    current_component->sv == NULL) {
 			printf("Missing vertex schema\n");
 			return;
 		}
 
-		v = component_find_vertex_by_id(current, id1);
+		v = component_find_vertex_by_id(current_component, id1);
 		if (v == NULL) {
 			printf("Illegal vertex id\n");
 			return;
@@ -95,7 +96,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			       s2, attr->e->name, s3);
 #endif
 			tuple_set_enum(v->tuple, s2,
-				attr->e->name, s3, current->el);
+				attr->e->name, s3, current_component->el);
 			return;
 		}
 		if (tuple_set(v->tuple, s2, s3) < 0) {
@@ -112,14 +113,15 @@ cli_graph_tuple(char *cmdline, int *pos)
 		/*
 		 * Set the value of an edge tuple
 		 */
-		if (current == NULL || current->se == NULL) {
+		if (current_component == NULL ||
+		    current_component->se == NULL) {
 			printf("Missing edge schema\n");
 			return;
 		}
 		/* s2 is a vertex id for an edge */
 		id2 = (vertexid_t) atoi(s2);
 
-		e = component_find_edge_by_ids(current, id1, id2);
+		e = component_find_edge_by_ids(current_component, id1, id2);
 		if (e == NULL) {
 			printf("Illegal vertex id(s)\n");
 			return;
@@ -157,7 +159,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			       s3, attr->e->name, s4);
 #endif
 			tuple_set_enum(e->tuple, s3,
-				attr->e->name, s4, current->el);
+				attr->e->name, s4, current_component->el);
 			return;
 		}
 		if (tuple_set(e->tuple, s3, s4) < 0) {

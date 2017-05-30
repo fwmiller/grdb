@@ -6,8 +6,9 @@
 #include "graph.h"
 
 /* Graphs */
-component_t graphs = NULL;
-component_t current = NULL;
+graph_t graphs = NULL;
+graph_t current_graph = NULL;
+component_t current_component = NULL;
 
 char *readline(char *prompt);
 
@@ -18,12 +19,6 @@ cli_about()
 {
 	printf("Graph Database\n");
 	printf("(C) Frank W. Miller\n");
-#if 0
-	printf("This program comes with ABSOLUTELY NO WARRANTY\n");
-	printf(
-	 "This is free software. You are welcome to redistribute it under\n");
-	printf("the terms of the GNU General Public License Version 3\n");
-#endif
 }
 
 static void
@@ -35,11 +30,23 @@ cli_help()
 int
 graphs_get_current_index()
 {
-	component_t g;
+	graph_t g;
 	int cnt;
 
 	for (cnt = 0, g = graphs; g != NULL; cnt++, g = g->next)
-		if (g == current)
+		if (g == current_graph)
+			return cnt;
+	return (-1);
+}
+
+int
+components_get_index(graph_t g)
+{
+	component_t c;
+	int cnt;
+
+	for (cnt = 0, c = g->c; c != NULL; cnt++, c = c->next)
+		if (c == current_component)
 			return cnt;
 	return (-1);
 }
@@ -64,12 +71,7 @@ cli()
 
 		// cmdline = readline(PROMPT);
 		memset(prompt, 0, BUFSIZE);
-		if (graphs == NULL)
-			//sprintf(prompt, "> ");
-			sprintf(prompt, "grdb> ");
-		else
-			//sprintf(prompt, "%d> ", graphs_get_current_index());
-			sprintf(prompt, "grdb> ");
+		sprintf(prompt, "grdb> ");
 
 		if (tty)
 			cmdline = readline(prompt);
@@ -118,16 +120,4 @@ cli()
 			continue;
 		}
 	}
-}
-
-void cli_graphs_insert(component_t g)
-{
-	component_t f;
-
-	if (graphs == NULL) {
-		graphs = g;
-		return;
-	}
-	for (f = graphs; f->next != NULL; f = f->next);
-	f->next = g;
 }

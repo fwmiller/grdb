@@ -37,16 +37,16 @@ cli_graph_update_vertex_tuples(int old_schema_size)
 	vertex_t v;
 
 	/* Update all vertices in the graph */
-	for (v = current->v; v != NULL; v = v->next)
+	for (v = current_component->v; v != NULL; v = v->next)
 		if (v->tuple == NULL) {
-			CLI_GRAPH_CREATE_TUPLE(current->sv, v);
+			CLI_GRAPH_CREATE_TUPLE(current_component->sv, v);
 #if _DEBUG
 			printf("create old_schema_size %d\n", old_schema_size);
 			bufdump(v->tuple->buf, v->tuple->len);
 #endif
 		} else {
 			CLI_GRAPH_MODIFY_TUPLE(
-				current->sv, v, old_schema_size);
+				current_component->sv, v, old_schema_size);
 #if _DEBUG
 			printf("modify old_schema_size %d\n", old_schema_size);
 			bufdump(v->tuple->buf, v->tuple->len);
@@ -60,16 +60,16 @@ cli_graph_update_edge_tuples(int old_schema_size)
 	edge_t e;
 
 	/* Update all edges in the graph */
-	for (e = current->e; e != NULL; e = e->next)
+	for (e = current_component->e; e != NULL; e = e->next)
 		if (e->tuple == NULL) {
-			CLI_GRAPH_CREATE_TUPLE(current->se, e);
+			CLI_GRAPH_CREATE_TUPLE(current_component->se, e);
 #if _DEBUG
 			printf("create old_schema_size %d\n", old_schema_size);
 			bufdump(e->tuple->buf, e->tuple->len);
 #endif
 		} else {
 			CLI_GRAPH_MODIFY_TUPLE(
-				current->se, e, old_schema_size);
+				current_component->se, e, old_schema_size);
 #if _DEBUG
 			printf("modify old_schema_size %d\n", old_schema_size);
 			bufdump(e->tuple->buf, e->tuple->len);

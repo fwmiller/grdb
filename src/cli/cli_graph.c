@@ -14,15 +14,20 @@ void cli_graph_tuple(char *cmdline, int *pos);
 static void
 cli_graph_print()
 {
-	component_t g;
-	int cnt = 0;
+	graph_t g;
+	component_t c;
+	int ccnt, gcnt = 0;
 
-	for (g = graphs; g != NULL; g = g->next, cnt++) {
-		if (g == current)
-			printf(">");
-		printf("%d:", cnt);
-		component_print(g, 0); /* no tuples */
-		printf("\n");
+	for (g = graphs; g != NULL; g = g->next, gcnt++) {
+		for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++) {
+
+			if (g == current_graph && c == current_component)
+				printf(">");
+
+			printf("%d.%d:", gcnt, ccnt);
+			component_print(c, 0); /* no tuples */
+			printf("\n");
+		}
 	}
 }
 
@@ -50,6 +55,7 @@ cli_graph(char *cmdline, int *pos)
 		cli_graph_tuple(cmdline, pos);
 
 	else if (isdigit(s[0])) {
+/*
 		component_t g;
 		int i, cnt;
 
@@ -60,7 +66,7 @@ cli_graph(char *cmdline, int *pos)
 				current = g;
 				return;
 			}
-
+*/
 	} else if (strlen(s) == 0)
 		cli_graph_print();
 }

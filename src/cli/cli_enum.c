@@ -7,10 +7,6 @@
 #include "enum.h"
 #include "graph.h"
 
-extern component_t current, graphs;
-
-int graphs_get_current_index();
-
 int
 cli_enum_syntax_check(char *s)
 {
@@ -37,11 +33,12 @@ cli_enum_print_current()
 {
 	enum_t e;
 
-	if (current != NULL && current->el != NULL) {
-#if _DEBUG
-		printf("component %d\n", graphs_get_current_index());
-#endif
-		for (e = current->el; e != NULL; e = e->next) {
+	if (current_component != NULL &&
+	    current_component->el != NULL) {
+		printf(">component %d.%d\n",
+			graphs_get_current_index(),
+			components_get_index(current_graph));
+		for (e = current_component->el; e != NULL; e = e->next) {
 			printf("%s (", e->name);
 			string_pool_print(e->pool);
 			printf(")\n");
@@ -78,8 +75,8 @@ cli_enum(char *cmdline, int *pos)
 	printf("enum %s\n", s);
 #endif
 	/* Check whether enum name is a duplicate */
-	if (current != NULL)
-		for (e = current->el; e != NULL; e = e->next)
+	if (current_component != NULL)
+		for (e = current_component->el; e != NULL; e = e->next)
 			if (strcmp(s, enum_get_name_ptr(e)) == 0) {
 				printf("enum %s already exists\n", s);
 				return;
@@ -112,5 +109,5 @@ cli_enum(char *cmdline, int *pos)
 	/* XXX Check whether enum has any elements in it */
 
 	/* Insert enum in list of enums for current component */
-	enum_list_insert(&(current->el), e);
+	enum_list_insert(&(current_component->el), e);
 }

@@ -38,13 +38,17 @@ struct component {
 	schema_t se;		/* Edge schema */
 	enum_list_t el;		/* List of enums */
 
-	/* Links for graph data structure in memory */
+	/* Links for component data structure in memory */
 	struct component *prev;
 	struct component *next;
 };
 
 struct graph {
 	struct component *c;	/* List of components */
+
+	/* Links for graph data structure in memory */
+	struct graph *prev;
+	struct graph *next;
 };
 
 typedef struct vertex *vertex_t;
@@ -71,7 +75,6 @@ void component_print(component_t c, int with_tuples);
 
 void graph_init(graph_t g);
 void graph_insert_component(graph_t g, component_t c);
-void graph_print(graph_t g);
 
 
 #endif

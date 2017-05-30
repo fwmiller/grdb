@@ -29,8 +29,8 @@ cli_graph_edge(char *cmdline, int *pos)
 	}
 	j = atoi(s);
 
-	v = component_find_vertex_by_id(current, i);
-	w = component_find_vertex_by_id(current, j);
+	v = component_find_vertex_by_id(current_component, i);
+	w = component_find_vertex_by_id(current_component, j);
 
 	if (v == NULL && w == NULL) {
 		printf("At least one vertex must exist in component\n");
@@ -44,13 +44,13 @@ cli_graph_edge(char *cmdline, int *pos)
 		v->id = i;
 
 		/* Create the vertex tuple based on its schema */
-		if (current->sv != NULL) {
+		if (current_component->sv != NULL) {
 			t = (tuple_t) malloc(sizeof(struct tuple));
 			assert (t != NULL);
-			tuple_init(t, current->sv);
+			tuple_init(t, current_component->sv);
 			v->tuple = t;
 		}
-		component_insert_vertex(current, v);
+		component_insert_vertex(current_component, v);
 
 	} else if (w == NULL) {
 		// Create a new vertex with j as its id
@@ -60,13 +60,13 @@ cli_graph_edge(char *cmdline, int *pos)
 		w->id = j;
 
 		/* Create the vertex tuple based on its schema */
-		if (current->sv != NULL) {
+		if (current_component->sv != NULL) {
 			t = (tuple_t) malloc(sizeof(struct tuple));
 			assert (t != NULL);
-			tuple_init(t, current->sv);
+			tuple_init(t, current_component->sv);
 			w->tuple = t;
 		}
-		component_insert_vertex(current, w);
+		component_insert_vertex(current_component, w);
 	}
 	e = (edge_t) malloc(sizeof(struct edge));
 	assert (e != NULL);
@@ -74,11 +74,11 @@ cli_graph_edge(char *cmdline, int *pos)
 	edge_set_vertices(e, i, j);
 
 	/* Create the edge tuple based on its schema */
-	if (current->se != NULL) {
+	if (current_component->se != NULL) {
 		t = (tuple_t) malloc(sizeof(struct tuple));
 		assert (t != NULL);
-		tuple_init(t, current->se);
+		tuple_init(t, current_component->se);
 		e->tuple = t;
 	}
-	component_insert_edge(current, e);
+	component_insert_edge(current_component, e);
 }

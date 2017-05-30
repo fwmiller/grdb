@@ -27,13 +27,13 @@ cli_graph_schema_add_enum(
 	schema_attribute_init(attr, name, ENUM, e);
 	strncpy(attr->name, name, ATTR_NAME_MAXLEN - 1);
 	if (st == EDGE) {
-		if (current->se == NULL)
-			schema_init(&(current->se));
-		schema_attribute_insert(current->se, attr);
+		if (current_component->se == NULL)
+			schema_init(&(current_component->se));
+		schema_attribute_insert(current_component->se, attr);
 	} else if (st == VERTEX) {
-		if (current->sv == NULL)
-			schema_init(&(current->sv));
-		schema_attribute_insert(current->sv, attr);
+		if (current_component->sv == NULL)
+			schema_init(&(current_component->sv));
+		schema_attribute_insert(current_component->sv, attr);
 	}
 #if _DEBUG
 	printf("update tuples with enum values\n");
@@ -62,15 +62,15 @@ cli_graph_schema_add_base(
 			assert(attr != NULL);
 			schema_attribute_init(attr, name, i, NULL);
 			if (st == EDGE) {
-				if (current->se == NULL)
-					schema_init(&(current->se));
+				if (current_component->se == NULL)
+					schema_init(&(current_component->se));
 				schema_attribute_insert(
-					current->se, attr);
+					current_component->se, attr);
 			} else if (st == VERTEX) {
-				if (current->sv == NULL)
-					schema_init(&(current->sv));
+				if (current_component->sv == NULL)
+					schema_init(&(current_component->sv));
 				schema_attribute_insert(
-					current->sv, attr);
+					current_component->sv, attr);
 			}
 #if _DEBUG
 			printf("update tuples\n");
@@ -90,10 +90,10 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 	int old_schema_size = 0;
 	enum_t e;
 
-	if (st == EDGE && current->se != NULL)
-		old_schema_size = schema_size(current->se);
-	else if (st == VERTEX && current->sv != NULL)
-		old_schema_size = schema_size(current->sv);
+	if (st == EDGE && current_component->se != NULL)
+		old_schema_size = schema_size(current_component->se);
+	else if (st == VERTEX && current_component->sv != NULL)
+		old_schema_size = schema_size(current_component->sv);
 
 	/* Attribute type */
         memset(type, 0, BUFSIZE);
@@ -104,7 +104,7 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
         nextarg(cmdline, pos, " ", name);
 
 	/* Search enums for type name */
-	e = enum_list_find_by_name(current->el, type);
+	e = enum_list_find_by_name(current_component->el, type);
 	if (e != NULL) {
 #if _DEBUG
 		printf("add enum %s\n", name);
