@@ -67,6 +67,38 @@ cli_graph(char *cmdline, int *pos)
 				return;
 			}
 */
+		graph_t g;
+		component_t c;
+		int cno, gno, ccnt, gcnt, spos;
+		char s1[BUFSIZE];
+
+printf("s=[%s] ", s);
+
+		spos = 0;
+		memset(s1, 0, BUFSIZE);
+		nextarg(s, &spos, ".", s1);
+printf("s1=[%s] ", s1);
+
+		gno = atoi(s1);
+printf("gno=%d ", gno);
+
+		spos++;
+		memset(s1, 0, BUFSIZE);
+		nextarg(cmdline, pos, " ", s1);
+printf("s1=[%s] ", s1);
+
+		cno = atoi(s1);
+printf("gno=%d\n", cno);
+
+		for (g = graphs, gcnt = 0; g != NULL; g = g->next, gcnt++)
+			for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++)
+				if (gcnt == gno && ccnt == cno) {
+					current_graph = g;
+					current_component = c;
+					return;
+				}
+
+		
 	} else if (strlen(s) == 0)
 		cli_graph_print();
 }

@@ -67,8 +67,6 @@ cli()
 			free(cmdline);
 			cmdline = NULL;
 		}
-
-
 		// cmdline = readline(PROMPT);
 		memset(prompt, 0, BUFSIZE);
 		sprintf(prompt, "grdb> ");
@@ -77,7 +75,6 @@ cli()
 			cmdline = readline(prompt);
 		else
 			cmdline = readline("");
-
 
 		if (cmdline == NULL)
 			continue;
