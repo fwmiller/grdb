@@ -56,14 +56,14 @@ expect -exact "g e 1 2\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
->0:({1,2},{(1,2)})\r
+>0.0:({1,2},{(1,2)})\r
 grdb> "
 send -- "g s e int i\r"
 expect -exact "g s e int i\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
->graph 0\r
+>component 0.0\r
 Se = \[INT:i\]\r
 grdb> "
 send -- "g t\r"

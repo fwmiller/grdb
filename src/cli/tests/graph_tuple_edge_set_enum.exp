@@ -62,7 +62,7 @@ expect -exact "g s e color c\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
->graph 0\r
+>component 0.0\r
 Se = \[color:c\]\r
 grdb> "
 send -- "g t\r"

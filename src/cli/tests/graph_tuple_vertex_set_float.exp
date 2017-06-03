@@ -56,7 +56,7 @@ expect -exact "g s v float f\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
->graph 0\r
+>component 0.0\r
 Sv = \[FLOAT:f\]\r
 grdb> "
 send -- "g t\r"

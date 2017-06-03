@@ -59,7 +59,7 @@ expect -exact "g s v test t\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
->graph 0\r
+>component 0.0\r
 Sv = \[test:t\]\r
 grdb> "
 send -- "g t\r"

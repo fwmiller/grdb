@@ -56,6 +56,7 @@ expect -exact "e color red green blue\r
 grdb> "
 send -- "e\r"
 expect -exact "e\r
+>component 0.0\r
 color (red green blue)\r
 grdb> "
 send -- "g s v color c\r"
@@ -63,7 +64,7 @@ expect -exact "g s v color c\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
->graph 0\r
+>component 0.0\r
 Sv = \[color:c\]\r
 grdb> "
 send -- "g t\r"

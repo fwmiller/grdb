@@ -53,7 +53,7 @@ expect -exact "g n\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
->0:({1},{})\r
+>0.0:({1},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

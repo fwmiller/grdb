@@ -59,42 +59,42 @@ expect -exact "g n\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
->0:({1},{})\r
-1:({1},{})\r
-2:({1},{})\r
+>0.0:({1},{})\r
+1.0:({1},{})\r
+2.0:({1},{})\r
 grdb> "
-send -- "g 1\r"
-expect -exact "g 1\r
+send -- "g 1.0\r"
+expect -exact "g 1.0\r
 grdb> "
-send -- "g 2\r"
-expect -exact "g 2\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
-0:({1},{})\r
-1:({1},{})\r
->2:({1},{})\r
-grdb> "
-send -- "g 1\r"
-expect -exact "g 1\r
+send -- "g 2.0\r"
+expect -exact "g 2.0\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
-0:({1},{})\r
->1:({1},{})\r
-2:({1},{})\r
+0.0:({1},{})\r
+1.0:({1},{})\r
+>2.0:({1},{})\r
 grdb> "
-send -- "g 0\r"
-expect -exact "g 0\r
+send -- "g 1.0\r"
+expect -exact "g 1.0\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
->0:({1},{})\r
-1:({1},{})\r
-2:({1},{})\r
+0.0:({1},{})\r
+>1.0:({1},{})\r
+2.0:({1},{})\r
 grdb> "
-send -- "g 3\r"
-expect -exact "g 3\r
+send -- "g 0.0\r"
+expect -exact "g 0.0\r
+grdb> "
+send -- "g\r"
+expect -exact "g\r
+>0.0:({1},{})\r
+1.0:({1},{})\r
+2.0:({1},{})\r
+grdb> "
+send -- "g 3.0\r"
+expect -exact "g 3.0\r
 grdb> "
 send -- "quit\r"
 expect eof

@@ -56,7 +56,7 @@ expect -exact "g s e date d\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
->graph 0\r
+>component 0.0\r
 Se = \[DATE:d\]\r
 grdb> "
 send -- "g e 1 2\r"

@@ -56,7 +56,7 @@ expect -exact "g s v varchar s\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
->graph 0\r
+>component 0.0\r
 Sv = \[VARCHAR:s\]\r
 grdb> "
 send -- "g t\r"

@@ -71,25 +71,30 @@ cli_graph(char *cmdline, int *pos)
 		component_t c;
 		int cno, gno, ccnt, gcnt, spos;
 		char s1[BUFSIZE];
-
-printf("s=[%s] ", s);
-
+#if _DEBUG
+		printf("s=[%s] ", s);
+#endif
 		spos = 0;
 		memset(s1, 0, BUFSIZE);
 		nextarg(s, &spos, ".", s1);
-printf("s1=[%s] ", s1);
-
+#if _DEBUG
+		printf("s1=[%s] ", s1);
+#endif
 		gno = atoi(s1);
-printf("gno=%d ", gno);
-
+#if _DEBUG
+		printf("gno=%d ", gno);
+#endif
 		spos++;
 		memset(s1, 0, BUFSIZE);
 		nextarg(cmdline, pos, " ", s1);
-printf("s1=[%s] ", s1);
+#if _DEBUG
+		printf("s1=[%s] ", s1);
+#endif
 
 		cno = atoi(s1);
+#if _DEBUG
 printf("gno=%d\n", cno);
-
+#endif
 		for (g = graphs, gcnt = 0; g != NULL; g = g->next, gcnt++)
 			for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++)
 				if (gcnt == gno && ccnt == cno) {

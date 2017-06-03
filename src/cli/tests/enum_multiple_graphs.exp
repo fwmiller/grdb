@@ -56,6 +56,7 @@ expect -exact "e test one two three\r
 grdb> "
 send -- "e\r"
 expect -exact "e\r
+>component 0.0\r
 test (one two three)\r
 grdb> "
 send -- "g n\r"
@@ -63,10 +64,11 @@ expect -exact "g n\r
 grdb> "
 send -- "e\r"
 expect -exact "e\r
+>component 0.0\r
 test (one two three)\r
 grdb> "
-send -- "g 1\r"
-expect -exact "g 1\r
+send -- "g 1.0\r"
+expect -exact "g 1.0\r
 grdb> "
 send -- "e\r"
 expect -exact "e\r
@@ -76,18 +78,20 @@ expect -exact "e color red green blue\r
 grdb> "
 send -- "e\r"
 expect -exact "e\r
+>component 1.0\r
 color (red green blue)\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
-0:({1},{})\r
->1:({1},{})\r
+0.0:({1},{})\r
+>1.0:({1},{})\r
 grdb> "
-send -- "g 0\r"
-expect -exact "g 0\r
+send -- "g 0.0\r"
+expect -exact "g 0.0\r
 grdb> "
 send -- "e\r"
 expect -exact "e\r
+>component 0.0\r
 test (one two three)\r
 grdb> "
 send -- "quit\r"
