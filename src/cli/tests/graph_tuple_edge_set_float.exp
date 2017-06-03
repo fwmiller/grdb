@@ -64,14 +64,14 @@ Se = \[FLOAT:f\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[0.00\]})\r
+>0.0:({1,2},{(1,2)\[0.00\]})\r
 grdb> "
 send -- "g t 1 2 f 1.23\r"
 expect -exact "g t 1 2 f 1.23\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[1.23\]})\r
+>0.0:({1,2},{(1,2)\[1.23\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

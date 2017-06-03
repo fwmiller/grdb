@@ -56,56 +56,56 @@ expect -exact "g s v time t\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[00:00:00\]},{})\r
+>0.0:({1\[00:00:00\]},{})\r
 grdb> "
 send -- "g t 1 t 01:02:03\r"
 expect -exact "g t 1 t 01:02:03\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01:02:03\]},{})\r
+>0.0:({1\[01:02:03\]},{})\r
 grdb> "
 send -- "g t 1 t 1:02:04\r"
 expect -exact "g t 1 t 1:02:04\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01:02:03\]},{})\r
+>0.0:({1\[01:02:03\]},{})\r
 grdb> "
 send -- "g t 1 t 02:3:04\r"
 expect -exact "g t 1 t 02:3:04\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01:02:03\]},{})\r
+>0.0:({1\[01:02:03\]},{})\r
 grdb> "
 send -- "g t 1 t 02:03:4\r"
 expect -exact "g t 1 t 02:03:4\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01:02:03\]},{})\r
+>0.0:({1\[01:02:03\]},{})\r
 grdb> "
 send -- "g t 1 t 25:02:05\r"
 expect -exact "g t 1 t 25:02:05\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01:02:03\]},{})\r
+>0.0:({1\[01:02:03\]},{})\r
 grdb> "
 send -- "g t 1 t 12:60:15\r"
 expect -exact "g t 1 t 12:60:15\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01:02:03\]},{})\r
+>0.0:({1\[01:02:03\]},{})\r
 grdb> "
 send -- "g t 1 t 12:30:60\r"
 expect -exact "g t 1 t 12:30:60\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01:02:03\]},{})\r
+>0.0:({1\[01:02:03\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

@@ -56,56 +56,56 @@ expect -exact "g s v date d\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[08-27-2016\]},{})\r
+>0.0:({1\[08-27-2016\]},{})\r
 grdb> "
 send -- "g t 1 d 01-01-0001\r"
 expect -exact "g t 1 d 01-01-0001\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01-01-0001\]},{})\r
+>0.0:({1\[01-01-0001\]},{})\r
 grdb> "
 send -- "g t 1 d 1-01-0001\r"
 expect -exact "g t 1 d 1-01-0001\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01-01-0001\]},{})\r
+>0.0:({1\[01-01-0001\]},{})\r
 grdb> "
 send -- "g t 1 d 2-01-0001\r"
 expect -exact "g t 1 d 2-01-0001\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01-01-0001\]},{})\r
+>0.0:({1\[01-01-0001\]},{})\r
 grdb> "
 send -- "g t 1 d 02-2-0002\r"
 expect -exact "g t 1 d 02-2-0002\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01-01-0001\]},{})\r
+>0.0:({1\[01-01-0001\]},{})\r
 grdb> "
 send -- "g t 1 d 00-02-0002\r"
 expect -exact "g t 1 d 00-02-0002\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01-01-0001\]},{})\r
+>0.0:({1\[01-01-0001\]},{})\r
 grdb> "
 send -- "g t 1 d 13-02-0002\r"
 expect -exact "g t 1 d 13-02-0002\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01-01-0001\]},{})\r
+>0.0:({1\[01-01-0001\]},{})\r
 grdb> "
 send -- "g t 1 d 02-30-0002\r"
 expect -exact "g t 1 d 02-30-0002\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[01-01-0001\]},{})\r
+>0.0:({1\[01-01-0001\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

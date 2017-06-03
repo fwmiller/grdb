@@ -67,14 +67,14 @@ Se = \[color:c\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[red\]})\r
+>0.0:({1,2},{(1,2)\[red\]})\r
 grdb> "
 send -- "g t 1 2 c blue\r"
 expect -exact "g t 1 2 c blue\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[blue\]})\r
+>0.0:({1,2},{(1,2)\[blue\]})\r
 grdb> "
 send -- "g t 1 2 c purple\r"
 expect -exact "g t 1 2 c purple\r
@@ -82,7 +82,7 @@ enum color does not contain purple\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[blue\]})\r
+>0.0:({1,2},{(1,2)\[blue\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

@@ -69,7 +69,7 @@ Sv = \[color:c\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[red\]},{})\r
+>0.0:({1\[red\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

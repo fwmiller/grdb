@@ -61,14 +61,14 @@ Sv = \[CHAR:ch\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[''\]},{})\r
+>0.0:({1\[''\]},{})\r
 grdb> "
 send -- "g t 1 ch x\r"
 expect -exact "g t 1 ch x\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\['x'\]},{})\r
+>0.0:({1\['x'\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

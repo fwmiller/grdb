@@ -64,14 +64,14 @@ Se = \[CHAR:ch\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[''\]})\r
+>0.0:({1,2},{(1,2)\[''\]})\r
 grdb> "
 send -- "g t 1 2 ch x\r"
 expect -exact "g t 1 2 ch x\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\['x'\]})\r
+>0.0:({1,2},{(1,2)\['x'\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

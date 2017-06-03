@@ -68,14 +68,14 @@ Se = \[INT:i\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[0\]})\r
+>0.0:({1,2},{(1,2)\[0\]})\r
 grdb> "
 send -- "g t 1 2 i 3\r"
 expect -exact "g t 1 2 i 3\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[3\]})\r
+>0.0:({1,2},{(1,2)\[3\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

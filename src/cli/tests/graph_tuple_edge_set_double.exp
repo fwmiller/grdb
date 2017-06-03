@@ -63,7 +63,7 @@ expect -exact "g s e double d\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[0.00\]})\r
+>0.0:({1,2},{(1,2)\[0.00\]})\r
 grdb> "
 send -- "g s\r"
 expect -exact "g s\r
@@ -75,7 +75,7 @@ expect -exact "g t 1 2 d -4.56\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[-4.56\]})\r
+>0.0:({1,2},{(1,2)\[-4.56\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

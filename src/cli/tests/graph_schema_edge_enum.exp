@@ -80,7 +80,7 @@ Se = \[test:t\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[one\]})\r
+>0.0:({1,2},{(1,2)\[one\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

@@ -64,14 +64,14 @@ Sv = \[test:t\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[one\]},{})\r
+>0.0:({1\[one\]},{})\r
 grdb> "
 send -- "g t 1 t three\r"
 expect -exact "g t 1 t three\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[three\]},{})\r
+>0.0:({1\[three\]},{})\r
 grdb> "
 send -- "g t 1 t four\r"
 expect -exact "g t 1 t four\r
@@ -79,7 +79,7 @@ enum test does not contain four\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[three\]},{})\r
+>0.0:({1\[three\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

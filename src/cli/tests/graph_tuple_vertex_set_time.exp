@@ -61,14 +61,14 @@ Sv = \[TIME:t\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[00:00:00\]},{})\r
+>0.0:({1\[00:00:00\]},{})\r
 grdb> "
 send -- "g t 1 t 15:02:03\r"
 expect -exact "g t 1 t 15:02:03\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[15:02:03\]},{})\r
+>0.0:({1\[15:02:03\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

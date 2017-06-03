@@ -4,6 +4,24 @@
 #include <string.h>
 #include "cli.h"
 
+static void
+cli_graph_print_components(graph_t g, int idx)
+{
+	component_t c;
+	int cnt;
+
+	if (g == NULL)
+		return;
+
+	for (c = g->c, cnt = 0; c != NULL; c = c->next, cnt++) {
+		if (g == current_graph && c == current_component)
+			printf(">");
+		printf("%d.%d:", idx, cnt);
+		component_print(c, 1); /* with tuples */
+		printf("\n");
+	}
+}
+
 void
 cli_graph_tuple(char *cmdline, int *pos)
 {
@@ -24,8 +42,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 	printf("s1=[%s] s2=[%s] s3=[%s], s4=[%s]\n", s1, s2, s3, s4);
 #endif
 	if (strlen(s1) <= 0) {
-		component_print(current_component, 1); /* with tuples */
-		printf("\n");
+		cli_graph_print_components(current_graph,
+					   graphs_get_current_index());
 		return;
 	}
 	if (strlen(s2) <= 0) {

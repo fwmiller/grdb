@@ -61,14 +61,14 @@ Sv = \[BOOL:result\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[FALSE\]},{})\r
+>0.0:({1\[FALSE\]},{})\r
 grdb> "
 send -- "g t 1 result true\r"
 expect -exact "g t 1 result true\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[TRUE\]},{})\r
+>0.0:({1\[TRUE\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

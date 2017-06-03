@@ -61,14 +61,14 @@ Sv = \[DATE:d\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[08-27-2016\]},{})\r
+>0.0:({1\[08-27-2016\]},{})\r
 grdb> "
 send -- "g t 1 d 08-07-0605\r"
 expect -exact "08-07-0605\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[08-07-0605\]},{})\r
+>0.0:({1\[08-07-0605\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

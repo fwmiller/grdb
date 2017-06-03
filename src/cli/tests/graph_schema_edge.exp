@@ -82,14 +82,14 @@ Se = \[CHAR:ch,VARCHAR:s,BOOL:result,INT:i,FLOAT:f,DOUBLE:g,DATE:d,TIME:t\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1},{})\r
+>0.0:({1},{})\r
 grdb> "
 send -- "g e 1 2\r"
 expect -exact "g e 1 2\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\['',\"\",FALSE,0,0.00,0.00,08-27-2016,00:00:00\]})\r
+>0.0:({1,2},{(1,2)\['',\"\",FALSE,0,0.00,0.00,08-27-2016,00:00:00\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

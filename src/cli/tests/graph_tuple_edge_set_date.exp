@@ -64,14 +64,14 @@ expect -exact "g e 1 2\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[08-27-2016\]})\r
+>0.0:({1,2},{(1,2)\[08-27-2016\]})\r
 grdb> "
 send -- "g t 1 2 d 08-07-0605\r"
 expect -exact "g t 1 2 d 08-07-0605\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[08-07-0605\]})\r
+>0.0:({1,2},{(1,2)\[08-07-0605\]})\r
 grdb> "
 send -- "quit\r"
 expect eof

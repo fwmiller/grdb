@@ -61,14 +61,14 @@ Sv = \[VARCHAR:s\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[\"\"\]},{})\r
+>0.0:({1\[\"\"\]},{})\r
 grdb> "
 send -- "g t 1 s \"this is a test\"\r"
 expect -exact "g t 1 s \"this is a test\"\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1\[\"this is a test\"\]},{})\r
+>0.0:({1\[\"this is a test\"\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof

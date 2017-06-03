@@ -64,14 +64,14 @@ Se = \[BOOL:result\]\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[FALSE\]})\r
+>0.0:({1,2},{(1,2)\[FALSE\]})\r
 grdb> "
 send -- "g t 1 2 result true\r"
 expect -exact "g t 1 2 result true\r
 grdb> "
 send -- "g t\r"
 expect -exact "g t\r
-({1,2},{(1,2)\[TRUE\]})\r
+>0.0:({1,2},{(1,2)\[TRUE\]})\r
 grdb> "
 send -- "quit\r"
 expect eof
