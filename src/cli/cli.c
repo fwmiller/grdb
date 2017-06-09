@@ -111,11 +111,6 @@ cli()
 			cli_enum(cmdline, &pos);
 			continue;
 
-		} else if (strcmp(cmd, "component") == 0 ||
-			   strcmp(cmd, "c") == 0) {
-			cli_component(cmdline, &pos);
-			continue;
-
 		} else if (strcmp(cmd, "graph") == 0 ||
 			   strcmp(cmd, "g") == 0) {
 			cli_graph(cmdline, &pos);

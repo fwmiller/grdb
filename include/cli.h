@@ -19,7 +19,6 @@ void nextarg(char *ln, int *pos, char *sep, char *arg);
 
 void cli_enum(char *cmdline, int *pos);
 void cli_graph(char *cmdline, int *pos);
-void cli_component(char *cmdline, int *pos);
 
 int graphs_get_current_index();
 int components_get_index(graph_t g);

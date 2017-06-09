@@ -7,28 +7,35 @@
 #include "graph.h"
 
 void cli_graph_new(char *cmdline, int *pos);
+void cli_graph_component(char *cmdline, int *pos);
 void cli_graph_edge(char *cmdline, int *pos);
 void cli_graph_schema(char *cmdline, int *pos);
 void cli_graph_tuple(char *cmdline, int *pos);
 
 static void
+cli_components_print(graph_t g, int gno)
+{
+	component_t c;
+	int ccnt = 0;
+
+	for (c = g->c; c != NULL; c = c->next, ccnt++) {
+		if (g == current_graph && c == current_component)
+			printf(">");
+
+		printf("%d.%d:", gno, ccnt);
+		component_print(c, 0); /* no tuples */
+		printf("\n");
+	}
+}
+
+static void
 cli_graph_print()
 {
 	graph_t g;
-	component_t c;
-	int ccnt, gcnt = 0;
+	int gcnt = 0;
 
-	for (g = graphs; g != NULL; g = g->next, gcnt++) {
-		for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++) {
-
-			if (g == current_graph && c == current_component)
-				printf(">");
-
-			printf("%d.%d:", gcnt, ccnt);
-			component_print(c, 0); /* no tuples */
-			printf("\n");
-		}
-	}
+	for (g = graphs; g != NULL; g = g->next, gcnt++)
+		cli_components_print(g, gcnt);
 }
 
 void
@@ -45,6 +52,9 @@ cli_graph(char *cmdline, int *pos)
 	if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0)
 		cli_graph_new(cmdline, pos);
 
+	else if (strcmp(s, "component") == 0 || strcmp(s, "c") == 0)
+		cli_graph_component(cmdline, pos);
+
 	else if (strcmp(s, "edge") == 0 || strcmp(s, "e") == 0)
 		cli_graph_edge(cmdline, pos);
 
@@ -55,18 +65,6 @@ cli_graph(char *cmdline, int *pos)
 		cli_graph_tuple(cmdline, pos);
 
 	else if (isdigit(s[0])) {
-/*
-		component_t g;
-		int i, cnt;
-
-		// Change current graph
-		i = atoi(s);
-		for (g = graphs, cnt = 0; g != NULL; g = g->next, cnt++)
-			if (cnt == i) {
-				current = g;
-				return;
-			}
-*/
 		graph_t g;
 		component_t c;
 		int cno, gno, ccnt, gcnt, spos;
