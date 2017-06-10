@@ -17,10 +17,13 @@ extern component_t current_component;
 
 void nextarg(char *ln, int *pos, char *sep, char *arg);
 
+int graphs_get_current_index();
+int components_get_index(graph_t g);
+
 void cli_enum(char *cmdline, int *pos);
 void cli_graph(char *cmdline, int *pos);
 
-int graphs_get_current_index();
-int components_get_index(graph_t g);
+void cli_components_print(graph_t g, int gno);
+
 
 #endif

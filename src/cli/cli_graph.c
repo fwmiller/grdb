@@ -12,7 +12,7 @@ void cli_graph_edge(char *cmdline, int *pos);
 void cli_graph_schema(char *cmdline, int *pos);
 void cli_graph_tuple(char *cmdline, int *pos);
 
-static void
+void
 cli_components_print(graph_t g, int gno)
 {
 	component_t c;
