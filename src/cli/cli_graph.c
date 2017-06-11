@@ -84,14 +84,13 @@ cli_graph(char *cmdline, int *pos)
 #endif
 		spos++;
 		memset(s1, 0, BUFSIZE);
-		nextarg(cmdline, pos, " ", s1);
+		nextarg(s, &spos, " ", s1);
 #if _DEBUG
 		printf("s1=[%s] ", s1);
 #endif
-
 		cno = atoi(s1);
 #if _DEBUG
-printf("gno=%d\n", cno);
+		printf("cno=%d\n", cno);
 #endif
 		for (g = graphs, gcnt = 0; g != NULL; g = g->next, gcnt++)
 			for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++)
