@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "graph.h"
+#include "tuple.h"
 
 /* Clear the vertex data structure */
 void
@@ -39,16 +41,21 @@ vertex_print(vertex_t v)
 
 /*
  * Read the tuple associated with the vertex id from secondary storage.
- * Assume the id is set and the tuple data structure is allocated but
- * not initialized.
+ * Assume the id and the tuple schema are set.
  */
 ssize_t
-vertex_read(vertex_t v)
+vertex_read(vertex_t v, int fd)
 {
+	off_t off;
+	ssize_t size;
+
 	assert(v != NULL);
 	assert(v->tuple != NULL);
 
-	return 0;
+	size = schema_size(v->tuple->s);
+	off = v->id * size;
+	lseek(fd, off, SEEK_SET);
+	return read(fd, v->tuple->buf, size);
 }
 
 /*
@@ -56,10 +63,16 @@ vertex_read(vertex_t v)
  * Assume the id and tuple are set to be written.
  */
 ssize_t
-vertex_write(vertex_t v)
+vertex_write(vertex_t v, int fd)
 {
+	off_t off;
+	ssize_t size;
+
 	assert(v != NULL);
 	assert(v->tuple != NULL);
 
-	return 0;
+	size = schema_size(v->tuple->s);
+	off = v->id * size;
+	lseek(fd, off, SEEK_SET);
+	return write(fd, v->tuple->buf, size);
 }
