@@ -2,6 +2,7 @@
 #define __GRAPH_H
 
 
+#include <stdlib.h>
 #include "schema.h"
 #include "tuple.h"
 #include "vertexid.h"
@@ -60,6 +61,9 @@ typedef struct graph *graph_t;
 void vertex_init(vertex_t v);
 void vertex_set_id(vertex_t v, vertexid_t id);
 void vertex_print(vertex_t v);
+ssize_t vertex_read(vertex_t v);
+ssize_t vertex_write(vertex_t v);
+
 
 void edge_init(edge_t e);
 void edge_set_vertices(edge_t e, vertexid_t id1, vertexid_t id2);
