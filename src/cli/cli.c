@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include "cli.h"
 #include "graph.h"
+
+/* Home directory for user */
+const char *homedir;
+char grdbdir[BUFSIZE];
 
 /* Graphs */
 graph_t graphs = NULL;
@@ -57,11 +62,33 @@ cli()
 	char *cmdline = NULL;
 	char cmd[BUFSIZE], prompt[BUFSIZE];
 	int pos;
+	struct stat sb;
 
 	tty = isatty(STDIN_FILENO);
 	if (tty)
 		cli_about();
 
+
+	/* Setup to load databases */
+	homedir = getenv("HOME");
+#if _DEBUG
+	printf("Home directory: %s\n", homedir);
+#endif
+	memset(grdbdir, 0, BUFSIZE);
+	strcpy(grdbdir, homedir);
+	strcat(grdbdir, "/.grdb/");
+#if _DEBUG
+	printf("grdb directory: %s\n", grdbdir);
+#endif
+	/* Check for existence of grdb directory */
+	if (stat(grdbdir, &sb) != 0 || !S_ISDIR(sb.st_mode)) {
+#if _DEBUG
+		printf("creating grdb directory\n");
+#endif
+		mkdir(grdbdir, 0755);
+	}
+
+	/* Main command line loop */
 	for (;;) {
 		if (cmdline != NULL) {
 			free(cmdline);
