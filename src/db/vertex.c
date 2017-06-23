@@ -39,40 +39,89 @@ vertex_print(vertex_t v)
 	printf("%llu", v->id);
 }
 
+
 /*
- * Read the tuple associated with the vertex id from secondary storage.
- * Assume the id and the tuple schema are set.
+ * The vertex file is arranged as a packed list of vertex records.  Each
+ * record contains a 64-bit vertex id followed by the vertex tuple.
  */
+
 ssize_t
 vertex_read(vertex_t v, int fd)
 {
 	off_t off;
-	ssize_t size;
+	ssize_t len, size;
+	vertexid_t id;
 
 	assert(v != NULL);
 	assert(v->tuple != NULL);
 
 	size = schema_size(v->tuple->s);
-	off = v->id * size;
-	lseek(fd, off, SEEK_SET);
-	return read(fd, v->tuple->buf, size);
+
+	/* Search for vertex id in current component */
+	for (off = 0;; off += sizeof(vertexid_t) + size) {
+		/*
+		 * Use the tuple buffer for temporary storage to hold the
+		 * read vertex id bytes.
+		 */
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, v->tuple->buf, sizeof(vertexid_t));
+		if (len != sizeof(vertexid_t))
+			return (-1);
+
+		id = *((vertexid_t *) v->tuple->buf);
+		if (id == v->id) {
+			memset(v->tuple->buf, 0, size);
+			return read(fd, v->tuple->buf, size);
+		}
+	}
+	return (-1);
 }
 
 /*
- * Write the tuple associated with the vertex id to secondary storage.
- * Assume the id and tuple are set to be written.
+ * Write the tuple record to secondary storage.  The record contains a
+ * 64-bit vertex id followed by the vertex tuple.  Assume the id and tuple
+ * are set to be written.
  */
 ssize_t
 vertex_write(vertex_t v, int fd)
 {
 	off_t off;
-	ssize_t size;
+	ssize_t len, size;
+	vertexid_t id;
 
 	assert(v != NULL);
 	assert(v->tuple != NULL);
 
 	size = schema_size(v->tuple->s);
-	off = v->id * size;
-	lseek(fd, off, SEEK_SET);
+
+	/* Search for vertex id in current component */
+	for (off = 0;; off += sizeof(vertexid_t) + size) {
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, v->tuple->buf, sizeof(vertexid_t));
+		if (len == 0)
+			/* EOF reached */
+			break;
+
+		if (len != sizeof(vertexid_t))
+			return (-1);
+
+		id = *((vertexid_t *) v->tuple->buf);
+		if (id == v->id) {
+			/*
+			 * The vertex id is already on secondary storage
+			 * so just "drop the head" and update the tuple
+			 */
+			memset(v->tuple->buf, 0, size);
+			return write(fd, v->tuple->buf, size);
+		}
+	}
+	/*
+	 * The vertex id was not found in the search so "drop the head"
+	 * and write the vertex id and tuple buffer.
+	 */
+	len = write(fd, &(v->id), sizeof(vertexid_t));
+	if (len != sizeof(vertexid_t))
+		return (-1);
+
 	return write(fd, v->tuple->buf, size);
 }
