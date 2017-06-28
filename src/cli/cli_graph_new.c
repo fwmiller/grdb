@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <errno.h>
+#include <fcntl.h>
 #if _DEBUG
 #include <stdio.h>
 #endif
@@ -51,27 +53,32 @@ cli_graph_new(char *cmdline, int *pos)
 
 	cli_graphs_insert(g);
 
-	/* XXX Persistence... */
-
+	/* Persistence... */
 	gidx = graphs_get_current_index();
 	cidx = components_get_index(current_graph);
 
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d", grdbdir, gidx);
-#if _DEBUG
-	printf("cli_graph_new: create graph directory %s\n", s);
-#endif
 	mkdir(s, 0755);
 
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/%d", grdbdir, gidx, cidx);
-#if _DEBUG
-	printf("cli_graph_new: create component directory %s\n", s);
-#endif
 	mkdir(s, 0755);
 
 	/* Create component vertex file */
-
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/v", grdbdir, gidx, cidx);
+#if _DEBUG
+	printf("cli_graph_new: open vertex file %s\n", s);
+#endif
+	c->vfd = open(s, O_RDWR | O_CREAT, 0644);
+	if (c->vfd < 0) {
+#if _DEBUG
+		printf("cli_graph_new: open vertex file failed (%s)\n",
+			strerror(errno));
+#endif
+		return;
+	}
 	/* Write first vertex tuple */
 	vertex_write(v, c->vfd);
 }

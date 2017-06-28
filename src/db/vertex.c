@@ -98,23 +98,26 @@ vertex_write(vertex_t v, int fd)
 	off_t off;
 	ssize_t len, size;
 	vertexid_t id;
+	char buf[sizeof(vertexid_t)];
 
 	assert(v != NULL);
-	assert(v->tuple != NULL);
-
 #if _DEBUG
 	printf("vertex_write: write vertex %llu\n", v->id);
 #endif
-	size = schema_size(v->tuple->s);
+	if (v->tuple == NULL)
+		size = 0;
+	else
+		size = schema_size(v->tuple->s);
 #if _DEBUG
 	printf("vertex_write: schema size = %lu bytes\n", size);
 #endif
+
 	/* Search for vertex id in current component */
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
 		lseek(fd, off, SEEK_SET);
-		len = read(fd, v->tuple->buf, sizeof(vertexid_t));
+		len = read(fd, buf, sizeof(vertexid_t));
 #if _DEBUG
-		printf("vertex_write: read %lu bytes to tuple buffer\n", len);
+		printf("vertex_write: read %lu bytes of vertex id\n", len);
 #endif
 		if (len == 0)
 			/* EOF reached */
@@ -123,19 +126,23 @@ vertex_write(vertex_t v, int fd)
 		if (len != sizeof(vertexid_t))
 			return (-1);
 
-		id = *((vertexid_t *) v->tuple->buf);
+		id = *((vertexid_t *) buf);
 		if (id == v->id) {
 			/*
 			 * The vertex id is already on secondary storage
 			 * so just "drop the head" and update the tuple
 			 */
-			memset(v->tuple->buf, 0, size);
-			len = write(fd, v->tuple->buf, size);
+			if (size > 0) {
+				memset(v->tuple->buf, 0, size);
+				len = write(fd, v->tuple->buf, size);
 #if _DEBUG
-			printf("vertex_write: ");
-			printf("write %lu bytes to tuple buffer\n", len);
+				printf("vertex_write: ");
+				printf("write %lu bytes to tuple buffer\n",
+					len);
 #endif
-			return len;
+				return len;
+			}
+			return 0;
 		}
 	}
 	/*
@@ -143,12 +150,18 @@ vertex_write(vertex_t v, int fd)
 	 * and write the vertex id and tuple buffer.
 	 */
 	len = write(fd, &(v->id), sizeof(vertexid_t));
+#if _DEBUG
+	printf("vertex_write: wrote %lu bytes of vertex id\n", len);
+#endif
 	if (len != sizeof(vertexid_t))
 		return (-1);
 
-	len = write(fd, v->tuple->buf, size);
+	if (size > 0) {
+		len = write(fd, v->tuple->buf, size);
 #if _DEBUG
-	printf("vertex_write: write %lu bytes to tuple buffer\n", len);
+		printf("vertex_write: write %lu bytes to tuple buffer\n", len);
 #endif
-	return len;
+		return len;
+	}
+	return 0;
 }
