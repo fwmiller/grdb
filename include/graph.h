@@ -42,6 +42,9 @@ struct component {
 	/* Links for component data structure in memory */
 	struct component *prev;
 	struct component *next;
+
+	/* Secondary storage file handles */
+	int vfd;		/* Vertex file */
 };
 
 struct graph {

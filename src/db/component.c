@@ -8,6 +8,9 @@ component_init(component_t c)
 {
 	assert (c != NULL);
 	memset(c, 0, sizeof(struct component));
+
+	/* Initial values for file descriptors */
+	c->vfd = (-1);
 }
 
 void

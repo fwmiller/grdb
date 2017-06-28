@@ -24,12 +24,6 @@ vertex_set_id(vertex_t v, vertexid_t id)
 {
 	assert(v != NULL);
 	v->id = id;
-
-	/*
-	 * Check whether a tuple exists on secondary storage for this id.
-	 * If so, allocate a tuple structure and initialize it if necessary
-	 * and read the tuple from secondary storage.
-	 */
 }
 
 void
@@ -42,7 +36,10 @@ vertex_print(vertex_t v)
 
 /*
  * The vertex file is arranged as a packed list of vertex records.  Each
- * record contains a 64-bit vertex id followed by the vertex tuple.
+ * record contains a 64-bit vertex id followed by the vertex tuple.  If
+ * an error or some sort occurs, the value (-1) is returned.  The value
+ * zero means the end-of-file was reached.  Otherwise, the number of bytes
+ * read in for the vertex tuple are returned.
  */
 
 ssize_t
@@ -55,8 +52,13 @@ vertex_read(vertex_t v, int fd)
 	assert(v != NULL);
 	assert(v->tuple != NULL);
 
+#if _DEBUG
+	printf("vertex_read: read vertex %llu\n", v->id);
+#endif
 	size = schema_size(v->tuple->s);
-
+#if _DEBUG
+	printf("vertex_read: schema size = %lu bytes\n", size);
+#endif
 	/* Search for vertex id in current component */
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
 		/*
@@ -65,16 +67,24 @@ vertex_read(vertex_t v, int fd)
 		 */
 		lseek(fd, off, SEEK_SET);
 		len = read(fd, v->tuple->buf, sizeof(vertexid_t));
+#if _DEBUG
+		printf("vertex_read: read %lu bytes to tuple buffer\n", len);
+#endif
 		if (len != sizeof(vertexid_t))
 			return (-1);
 
 		id = *((vertexid_t *) v->tuple->buf);
 		if (id == v->id) {
 			memset(v->tuple->buf, 0, size);
-			return read(fd, v->tuple->buf, size);
+			len = read(fd, v->tuple->buf, size);
+#if _DEBUG
+			printf("vertex_read: ");
+			printf("read %lu bytes to tuple buffer\n", len);
+#endif
+			return len;
 		}
 	}
-	return (-1);
+	return 0;
 }
 
 /*
@@ -92,12 +102,20 @@ vertex_write(vertex_t v, int fd)
 	assert(v != NULL);
 	assert(v->tuple != NULL);
 
+#if _DEBUG
+	printf("vertex_write: write vertex %llu\n", v->id);
+#endif
 	size = schema_size(v->tuple->s);
-
+#if _DEBUG
+	printf("vertex_write: schema size = %lu bytes\n", size);
+#endif
 	/* Search for vertex id in current component */
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
 		lseek(fd, off, SEEK_SET);
 		len = read(fd, v->tuple->buf, sizeof(vertexid_t));
+#if _DEBUG
+		printf("vertex_write: read %lu bytes to tuple buffer\n", len);
+#endif
 		if (len == 0)
 			/* EOF reached */
 			break;
@@ -112,7 +130,12 @@ vertex_write(vertex_t v, int fd)
 			 * so just "drop the head" and update the tuple
 			 */
 			memset(v->tuple->buf, 0, size);
-			return write(fd, v->tuple->buf, size);
+			len = write(fd, v->tuple->buf, size);
+#if _DEBUG
+			printf("vertex_write: ");
+			printf("write %lu bytes to tuple buffer\n", len);
+#endif
+			return len;
 		}
 	}
 	/*
@@ -123,5 +146,9 @@ vertex_write(vertex_t v, int fd)
 	if (len != sizeof(vertexid_t))
 		return (-1);
 
-	return write(fd, v->tuple->buf, size);
+	len = write(fd, v->tuple->buf, size);
+#if _DEBUG
+	printf("vertex_write: write %lu bytes to tuple buffer\n", len);
+#endif
+	return len;
 }

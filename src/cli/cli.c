@@ -71,9 +71,6 @@ cli()
 
 	/* Setup to load databases */
 	homedir = getenv("HOME");
-#if _DEBUG
-	printf("Home directory: %s\n", homedir);
-#endif
 	memset(grdbdir, 0, BUFSIZE);
 	strcpy(grdbdir, homedir);
 	strcat(grdbdir, "/.grdb/");
