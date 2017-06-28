@@ -1,5 +1,10 @@
 #include <assert.h>
+#if _DEBUG
+#include <stdio.h>
+#endif
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
 #include "cli.h"
 
 static void
@@ -23,7 +28,6 @@ cli_graph_new(char *cmdline, int *pos)
 	graph_t g;
 	component_t c;
 	vertex_t v;
-	ssize_t len;
 	int gidx, cidx;
 	char s[BUFSIZE];
 
@@ -49,17 +53,22 @@ cli_graph_new(char *cmdline, int *pos)
 
 	/* XXX Persistence... */
 
-	/* Check for graph directory */
-
-	//  XXX   gidx = graphs_get_current_index();
+	gidx = graphs_get_current_index();
+	cidx = components_get_index(current_graph);
 
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d", grdbdir, gidx);
 #if _DEBUG
-	printf("cli_graph_new: graph directory %s\n", s);
+	printf("cli_graph_new: create graph directory %s\n", s);
 #endif
+	mkdir(s, 0755);
 
-	/* Check for existing component vertex file */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", grdbdir, gidx, cidx);
+#if _DEBUG
+	printf("cli_graph_new: create component directory %s\n", s);
+#endif
+	mkdir(s, 0755);
 
 	/* Create component vertex file */
 

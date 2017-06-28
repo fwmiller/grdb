@@ -73,7 +73,7 @@ cli()
 	homedir = getenv("HOME");
 	memset(grdbdir, 0, BUFSIZE);
 	strcpy(grdbdir, homedir);
-	strcat(grdbdir, "/.grdb/");
+	strcat(grdbdir, "/.grdb");
 #if _DEBUG
 	printf("grdb directory: %s\n", grdbdir);
 #endif

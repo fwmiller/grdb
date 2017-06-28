@@ -15,6 +15,8 @@ typedef enum schema_type schema_type_t;
 extern graph_t graphs, current_graph;
 extern component_t current_component;
 
+extern char grdbdir[];
+
 void nextarg(char *ln, int *pos, char *sep, char *arg);
 
 int graphs_get_current_index();
