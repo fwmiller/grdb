@@ -43,7 +43,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 #endif
 	if (strlen(s1) <= 0) {
 		cli_graph_print_components(current_graph,
-					   graphs_get_current_index());
+					   graphs_get_index(current_graph));
 		return;
 	}
 	if (strlen(s2) <= 0) {

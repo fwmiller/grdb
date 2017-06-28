@@ -32,5 +32,5 @@ cli_graph_component(char *cmdline, int *pos)
 
 	} else if (strlen(s) == 0)
 		cli_components_print(current_graph,
-				     graphs_get_current_index());
+				     graphs_get_index(current_graph));
 }

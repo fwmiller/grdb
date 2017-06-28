@@ -33,25 +33,25 @@ cli_help()
 }
 
 int
-graphs_get_current_index()
+graphs_get_index(graph_t g)
 {
-	graph_t g;
+	graph_t h;
 	int cnt;
 
-	for (cnt = 0, g = graphs; g != NULL; cnt++, g = g->next)
-		if (g == current_graph)
+	for (cnt = 0, h = graphs; h != NULL; cnt++, h = h->next)
+		if (h == g)
 			return cnt;
 	return (-1);
 }
 
 int
-components_get_index(graph_t g)
+components_get_index(graph_t g, component_t c)
 {
-	component_t c;
+	component_t d;
 	int cnt;
 
-	for (cnt = 0, c = g->c; c != NULL; cnt++, c = c->next)
-		if (c == current_component)
+	for (cnt = 0, d = g->c; d != NULL; cnt++, d = d->next)
+		if (d == c)
 			return cnt;
 	return (-1);
 }

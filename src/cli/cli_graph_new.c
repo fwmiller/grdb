@@ -54,8 +54,8 @@ cli_graph_new(char *cmdline, int *pos)
 	cli_graphs_insert(g);
 
 	/* Persistence... */
-	gidx = graphs_get_current_index();
-	cidx = components_get_index(current_graph);
+	gidx = graphs_get_index(g);
+	cidx = components_get_index(g, c);
 
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d", grdbdir, gidx);
