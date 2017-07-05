@@ -71,6 +71,8 @@ ssize_t vertex_write(vertex_t v, int fd);
 void edge_init(edge_t e);
 void edge_set_vertices(edge_t e, vertexid_t id1, vertexid_t id2);
 void edge_print(edge_t e);
+ssize_t edge_read(edge_t e, int fd);
+ssize_t edge_write(edge_t e, int fd);
 
 void component_init(component_t c);
 void component_insert_vertex(component_t c, vertex_t v);

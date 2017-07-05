@@ -41,17 +41,16 @@ vertex_print(vertex_t v)
  * zero means the end-of-file was reached.  Otherwise, the number of bytes
  * read in for the vertex tuple are returned.
  */
-
 ssize_t
 vertex_read(vertex_t v, int fd)
 {
 	off_t off;
 	ssize_t len, size;
 	vertexid_t id;
+	char buf[sizeof(vertexid_t)];
 
 	assert(v != NULL);
 	assert(v->tuple != NULL);
-
 #if _DEBUG
 	printf("vertex_read: read vertex %llu\n", v->id);
 #endif
@@ -61,19 +60,16 @@ vertex_read(vertex_t v, int fd)
 #endif
 	/* Search for vertex id in current component */
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
-		/*
-		 * Use the tuple buffer for temporary storage to hold the
-		 * read vertex id bytes.
-		 */
 		lseek(fd, off, SEEK_SET);
-		len = read(fd, v->tuple->buf, sizeof(vertexid_t));
+		len = read(fd, buf, sizeof(vertexid_t));
+		if (len != sizeof(vertexid_t)) {
 #if _DEBUG
-		printf("vertex_read: read %lu bytes to tuple buffer\n", len);
+			printf("vertex_read: ");
+			printf("read %lu bytes to tuple buffer\n", len);
 #endif
-		if (len != sizeof(vertexid_t))
 			return (-1);
-
-		id = *((vertexid_t *) v->tuple->buf);
+		}
+		id = *((vertexid_t *) buf);
 		if (id == v->id) {
 			memset(v->tuple->buf, 0, size);
 			len = read(fd, v->tuple->buf, size);
