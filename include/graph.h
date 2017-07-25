@@ -45,6 +45,7 @@ struct component {
 
 	/* Secondary storage file handles */
 	int vfd;		/* Vertex file */
+	int efd;		/* Edge file */
 };
 
 struct graph {
@@ -76,9 +77,8 @@ ssize_t edge_write(edge_t e, int fd);
 
 void component_init(component_t c);
 void component_insert_vertex(component_t c, vertex_t v);
-vertex_t component_find_vertex_by_id(component_t c, vertexid_t id);
-edge_t component_find_edge_by_ids(
-	component_t c, vertexid_t id1, vertexid_t id2);
+vertex_t component_find_vertex_by_id(component_t c, vertex_t v);
+edge_t component_find_edge_by_ids( component_t c, edge_t e);
 void component_insert_edge(component_t c, edge_t e);
 void component_print(component_t c, int with_tuples);
 

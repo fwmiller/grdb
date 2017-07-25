@@ -11,51 +11,49 @@ component_init(component_t c)
 
 	/* Initial values for file descriptors */
 	c->vfd = (-1);
+	c->efd = (-1);
+}
+
+vertex_t
+component_find_vertex_by_id(component_t c, vertex_t v)
+{
+	int len;
+
+	assert (c != NULL);
+	assert (v != NULL);
+
+	/* Assume v was allocated and v->id was set by the caller */
+	len = vertex_read(v, c->vfd);
+	if (len > 0)
+		return v;
+
+	return NULL;
 }
 
 void
 component_insert_vertex(component_t c, vertex_t v)
 {
-	vertex_t w;
-
 	assert (c != NULL);
 	assert (v != NULL);
 
-	if (c->v == NULL) {
-		/* Insert vertex into empty component */
-		c->v = v;
-		return;
-	}
-	/* Insert at the end of the double linked list */
-	for (w = c->v; w->next != NULL; w = w->next);
-	w->next = v;
-	v->prev = w;
-}
-
-vertex_t
-component_find_vertex_by_id(component_t c, vertexid_t id)
-{
-	vertex_t v;
-
-	assert (c != NULL);
-
-	for (v = c->v; v != NULL; v = v->next)
-		if (v->id == id)
-			return v;
-
-	return NULL;
+	vertex_write(v, c->vfd);
 }
 
 edge_t
-component_find_edge_by_ids(component_t c, vertexid_t id1, vertexid_t id2)
+component_find_edge_by_ids(component_t c, edge_t e)
 {
-	edge_t e;
+	int len;
 
 	assert (c != NULL);
+	assert (e != NULL);
 
-	for (e = c->e; e != NULL; e = e->next)
-		if (e->id1 == id1 && e->id2 == id2)
-			return e;
+	/*
+	 * Assume e was allocated and e->id1 and e->id2 were set by
+	 * the caller
+	 */
+	len = edge_read(e, c->efd);
+	if (len > 0)
+		return e;
 
 	return NULL;
 }
@@ -63,17 +61,10 @@ component_find_edge_by_ids(component_t c, vertexid_t id1, vertexid_t id2)
 void
 component_insert_edge(component_t c, edge_t e)
 {
-	edge_t f;
+	assert (c != NULL);
+	assert (e != NULL);
 
-	if (c->e == NULL) {
-		/* Insert edge into empty component edge set */
-		c->e = e;
-		return;
-	}
-	/* Insert at the end of the double linked list */
-	for (f = c->e; f->next != NULL; f = f->next);
-	f->next = e;
-	e->prev = f;
+	edge_write(e, c->efd);
 }
 
 void
