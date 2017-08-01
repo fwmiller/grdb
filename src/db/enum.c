@@ -1,6 +1,10 @@
 #include <assert.h>
+#include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include "config.h"
 #include "enum.h"
 
 
@@ -17,6 +21,27 @@ enum_init(enum_t *e)
 
 	string_pool_init(&((*e)->pool));
 	(*e)->next = NULL;
+}
+
+int
+enum_file_init(int gidx, int cidx)
+{
+	char s[BUFSIZE];
+	int fd;
+
+	/* Create component enum file */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/enum", GRDBDIR, gidx, cidx);
+#if _DEBUG
+	printf("enum_file_init: open enum file %s\n", s);
+#endif
+	fd = open(s, O_RDWR | O_CREAT, 0644);
+#if _DEBUG
+	if (fd < 0)
+		printf("enum_file_init: open enum file failed (%s)\n",
+			strerror(errno));
+#endif
+	return fd;
 }
 
 void

@@ -1,7 +1,10 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include "config.h"
 #include "graph.h"
 #include "tuple.h"
 
@@ -14,6 +17,17 @@ component_init(component_t c)
 	/* Initial values for file descriptors */
 	c->vfd = (-1);
 	c->efd = (-1);
+}
+
+void
+component_file_init(int gidx, int cidx)
+{
+	char s[BUFSIZE];
+
+	/* Assume graph file initialization is done */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", GRDBDIR, gidx, cidx);
+	mkdir(s, 0755);
 }
 
 vertex_t
@@ -84,6 +98,7 @@ component_print(component_t c, int with_tuples)
 
 	/* Vertices */
 	size = schema_size(c->sv);
+	buf = malloc((sizeof(vertexid_t) << 1) + size);
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
 		lseek(c->vfd, off, SEEK_SET);
 		len = read(c->vfd, buf, sizeof(vertexid_t) + size);

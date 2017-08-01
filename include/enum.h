@@ -15,6 +15,7 @@ typedef struct grdb_enum *enum_t;
 typedef enum_t enum_list_t;
 
 void enum_init(enum_t *e);
+int enum_file_init(int gidx, int cidx);
 void enum_print(enum_t e);
 void enum_insert(enum_t *e, char *s);
 char *enum_find_by_idx(enum_t e, int idx);
