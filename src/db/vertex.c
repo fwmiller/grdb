@@ -1,8 +1,11 @@
 #include <assert.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include "config.h"
 #include "graph.h"
 #include "tuple.h"
 
@@ -12,6 +15,37 @@ vertex_init(vertex_t v)
 {
 	assert(v != NULL);
 	memset(v, 0, sizeof(struct vertex));
+}
+
+/* Initialize the vertex file */
+int
+vertex_file_init(component_t c, int gidx, int cidx)
+{
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d", GRDBDIR, gidx);
+	mkdir(s, 0755);
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", GRDBDIR, gidx, cidx);
+	mkdir(s, 0755);
+
+	/* Create component vertex file */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/v", GRDBDIR, gidx, cidx);
+#if _DEBUG
+	printf("vertex_file_init: open vertex file %s\n", s);
+#endif
+	c->vfd = open(s, O_RDWR | O_CREAT, 0644);
+	if (c->vfd < 0) {
+#if _DEBUG
+		printf("vertex_file_init: open vertex file failed (%s)\n",
+			strerror(errno));
+#endif
+		return c->vfd;
+	}
+	return 0;
 }
 
 /*
