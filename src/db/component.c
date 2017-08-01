@@ -1,7 +1,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "graph.h"
+#include "tuple.h"
 
 void
 component_init(component_t c)
@@ -70,29 +72,52 @@ component_insert_edge(component_t c, edge_t e)
 void
 component_print(component_t c, int with_tuples)
 {
-	vertex_t v;
-	edge_t e;
+	off_t off;
+	ssize_t len, size;
+	vertexid_t id, id1, id2;
+	tuple_t tuple;
+	char *buf;
 
 	assert (c != NULL);
 
 	printf("({");
+
 	/* Vertices */
-	for (v = c->v; v != NULL; v = v->next) {
-		vertex_print(v);
-		if (v->tuple != NULL && with_tuples)
-			tuple_print(v->tuple, c->el);
-		if (v->next != NULL)
+	size = schema_size(c->sv);
+	for (off = 0;; off += sizeof(vertexid_t) + size) {
+		lseek(c->vfd, off, SEEK_SET);
+		len = read(c->vfd, buf, sizeof(vertexid_t) + size);
+		if (len <= 0)
+			break;
+
+		if (off > 0)
 			printf(",");
+
+		id = *((vertexid_t *) buf);
+		tuple = (tuple_t) (buf + sizeof(vertexid_t));
+		printf("%llu", id);
+		tuple_print(tuple, c->el);
 	}
 
 	printf("},{");
+
 	/* Edges */
-	for (e = c->e; e != NULL; e = e->next) {
-		edge_print(e);
-		if (e->tuple != NULL && with_tuples)
-			tuple_print(e->tuple, c->el);
-		if (e->next != NULL)
+	size = schema_size(c->se);
+	for (off = 0;; off += (sizeof(vertexid_t) << 1) + size) {
+		lseek(c->efd, off, SEEK_SET);
+		len = read(c->efd, buf, (sizeof(vertexid_t) << 1) + size);
+		if (len <= 0)
+			break;
+
+		if (off > 0)
 			printf(",");
+
+		id1 = *((vertexid_t *) buf);
+		id2 = *((vertexid_t *) (buf + sizeof(vertexid_t)));
+		tuple = (tuple_t) (buf + (sizeof(vertexid_t) << 1));
+		printf("(%llu,%llu)", id1, id2);
+		tuple_print(tuple, c->el);
 	}
+
 	printf("})");
 }
