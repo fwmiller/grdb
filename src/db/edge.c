@@ -1,8 +1,11 @@
 #include <assert.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include "config.h"
 #include "graph.h"
 
 void
@@ -10,6 +13,37 @@ edge_init(edge_t e)
 {
 	assert(e != NULL);
 	memset(e, 0, sizeof(struct edge));
+}
+
+/* Initialize the edge file */
+int
+edge_file_init(component_t c, int gidx, int cidx)
+{
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d", GRDBDIR, gidx);
+	mkdir(s, 0755);
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", GRDBDIR, gidx, cidx);
+	mkdir(s, 0755);
+
+	/* Create component edge file */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/e", GRDBDIR, gidx, cidx);
+#if _DEBUG
+	printf("edge_file_init: open edge file %s\n", s);
+#endif
+	c->efd = open(s, O_RDWR | O_CREAT, 0644);
+	if (c->efd < 0) {
+#if _DEBUG
+		printf("edge_file_init: open edge file failed (%s)\n",
+			strerror(errno));
+#endif
+		return c->efd;
+	}
+	return 0;
 }
 
 void
