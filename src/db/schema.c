@@ -1,7 +1,9 @@
 #include <assert.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "config.h"
 #include "schema.h"
 
 char *base_types_str[] = {
@@ -104,6 +106,27 @@ schema_init(schema_t *s)
 
 	*s = malloc(sizeof(struct schema));
 	memset(*s, 0, sizeof(struct schema));
+}
+
+int
+schema_file_init(int gidx, int cidx, char *name)
+{
+	char s[BUFSIZE];
+	int fd;
+
+	/* Create component schema file */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/%s", GRDBDIR, gidx, cidx, name);
+#if _DEBUG
+	printf("schema_file_init: open schema file %s\n", s);
+#endif
+	fd = open(s, O_RDWR | O_CREAT, 0644);
+#if _DEBUG
+	if (fd < 0)
+		printf("schema_file_init: open schema file failed (%s)\n",
+			strerror(errno));
+#endif
+	return fd;
 }
 
 int
