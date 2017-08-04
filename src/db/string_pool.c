@@ -84,6 +84,21 @@ string_pool_print(string_pool_t pool)
 	}
 }
 
+int
+string_pool_overall_len(string_pool_t pool)
+{
+	int blen, n, plen;
+
+	n = string_pool_get_entries(pool);
+	plen = 0;
+	if (n > 0)
+		plen = string_pool_get_len(pool);
+
+	blen = 3 + (n << 1) + plen;
+
+	return blen;
+}
+
 void
 string_pool_insert(string_pool_t *pool, char *s)
 {
