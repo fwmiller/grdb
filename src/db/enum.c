@@ -185,28 +185,26 @@ enum_list_read(int fd)
 	len = read(fd, &n, sizeof(u64_t));
 	if (len < sizeof(u64_t))
 		return NULL;
-
+	off += sizeof(u64_t);
 #if _DEBUG
 	printf("enum_list_read: enum list has %llu entries\n", n);
 #endif
-	off += sizeof(u64_t);
 
 	/* Read each enum in the list */
-	for (i = 0, el = NULL; i < n; i++) {
+	for (i = 0, el = NULL; i < n; i++, e = NULL) {
 		char *buf = NULL;
 		unsigned char entries;
 		unsigned short memlen;
 		int poollen;
 
 		/* Read enum name */
-		enum_init(e);
+		enum_init(&e);
 		len = read(fd, &(e->name), ENUM_NAME_LEN);
 		off += ENUM_NAME_LEN;
 #if _DEBUG
 		printf("enum_list_read: enum name [%s]\n", e->name);
 #endif
-
-		/* Read enum string pool */
+		/*** Read enum string pool ***/
 
 		/* Read number of entries */
 		lseek(fd, off, SEEK_SET);
@@ -240,8 +238,8 @@ enum_list_read(int fd)
 			return NULL;
 		off += poollen;
 
-		/* Insert new enum into enum list */
-
+		e->pool = (string_pool_t) buf;
+		enum_list_insert(&el, e);
 	}
 	return el;
 }
@@ -256,6 +254,9 @@ enum_list_write(enum_list_t el, int fd)
 	ssize_t len;
 
 	n = enum_list_count(el);
+#if _DEBUG
+	printf("enum_list_write: enum list has %llu entries\n", n);
+#endif
 
 	/* Write number of enums in enum list */
 	off = 0;
@@ -269,17 +270,24 @@ enum_list_write(enum_list_t el, int fd)
 	/* Write each enum in the list */
 	for (e = el; e != NULL; e = e->next) {
 		/* Write enum name */
+#if _DEBUG
+		printf("enum_list_write: enum name [%s]\n", e->name);
+#endif
 		len = write(fd, e->name, ENUM_NAME_LEN);
 		if (len < ENUM_NAME_LEN)
 			return NULL;
 		off += ENUM_NAME_LEN;
-		lseek(fd, off, SEEK_SET);
-
+#if _DEBUG
+		printf("enum_list_write: string pool ");
+		string_pool_print(e->pool);
+#endif
 		/* Write enum string pool */
+		lseek(fd, off, SEEK_SET);
 		blen = string_pool_overall_len(e->pool);
 		len = write(fd, e->pool, blen);
 		if (len < blen)
 			return NULL;
+		off += blen;
 	}
 	return el;
 }
