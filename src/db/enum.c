@@ -1,4 +1,7 @@
 #include <assert.h>
+#if _DEBUG
+#include <errno.h>
+#endif
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -167,9 +170,43 @@ enum_list_find_by_idx(enum_list_t el, int idx)
 }
 
 enum_list_t
-enum_list_read()
+enum_list_read(int fd)
 {
-	return NULL;
+	enum_list_t el;
+	enum_t e;
+	off_t off;
+	u64_t n;
+	ssize_t len;
+	int i;
+
+	/* Read number of enums in enum list */
+	off = 0;
+	lseek(fd, off, SEEK_SET);
+	len = read(fd, &n, sizeof(u64_t));
+	if (len < sizeof(u64_t))
+		return NULL;
+
+#if _DEBUG
+	printf("enum_list_read: enum list has %llu entries\n", n);
+#endif
+	off += sizeof(u64_t);
+
+	/* Read each enum in the list */
+	for (i = 0, el = NULL; i < n; i++) {
+		/* Read enum name */
+		e = (enum_t) malloc(sizeof(struct grdb_enum));
+		memset(e, 0, sizeof(struct grdb_enum));
+		len = read(fd, e, ENUM_NAME_LEN);
+#if _DEBUG
+		printf("enum_list_read: enum name [%s]\n", e->name);
+#endif
+
+		/* Read enum string pool */
+
+		/* Insert new enum into enum list */
+
+	}
+	return el;
 }
 
 enum_list_t
