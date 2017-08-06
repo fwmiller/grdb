@@ -193,15 +193,52 @@ enum_list_read(int fd)
 
 	/* Read each enum in the list */
 	for (i = 0, el = NULL; i < n; i++) {
+		char *buf = NULL;
+		unsigned char entries;
+		unsigned short memlen;
+		int poollen;
+
 		/* Read enum name */
-		e = (enum_t) malloc(sizeof(struct grdb_enum));
-		memset(e, 0, sizeof(struct grdb_enum));
-		len = read(fd, e, ENUM_NAME_LEN);
+		enum_init(e);
+		len = read(fd, &(e->name), ENUM_NAME_LEN);
+		off += ENUM_NAME_LEN;
 #if _DEBUG
 		printf("enum_list_read: enum name [%s]\n", e->name);
 #endif
 
 		/* Read enum string pool */
+
+		/* Read number of entries */
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, &entries, 1);
+		if (len < 1)
+			return NULL;
+		off += 1;
+#if _DEBUG
+		printf("enum_list_read: ");
+		printf("string pool entries %u\n", entries);
+#endif
+		if (entries == 0)
+			return NULL;
+
+		/* Read string pool memory length */
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, &memlen, 2);
+		if (len < 2)
+			return NULL;
+		off += 2;
+#if _DEBUG
+		printf("enum_list_read: ");
+		printf("memory length %u\n", memlen);
+#endif
+		/* Read string pool entries array and pool memory */
+		poollen = (entries << 1) + memlen;
+		buf = malloc(poollen);
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, buf, poollen);
+		if (len < poollen)
+			return NULL;
+		off += poollen;
 
 		/* Insert new enum into enum list */
 
