@@ -31,5 +31,8 @@ void enum_list_insert(enum_list_t *el, enum_t e);
 enum_t enum_list_find_by_name(enum_list_t el, char *name);
 int enum_list_find_idx_by_name(enum_list_t el, char *name);
 enum_t enum_list_find_by_idx(enum_list_t el, int idx);
+enum_list_t enum_list_read(int fd);
+enum_list_t enum_list_write(enum_list_t el, int fd);
+
 
 #endif
