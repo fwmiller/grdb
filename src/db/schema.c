@@ -6,8 +6,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "config.h"
 #include "schema.h"
+#include "types.h"
 
 char *base_types_str[] = {
 	"CHAR",
@@ -133,6 +135,21 @@ schema_file_init(int gidx, int cidx, char *name)
 }
 
 int
+schema_count(schema_t s)
+{
+	attribute_t attr;
+	int cnt;
+
+	assert(s != NULL);
+
+	for (attr = s->attrlist, cnt = 0;
+	     attr != NULL;
+	     attr = attr->next, cnt++);
+
+	return cnt;
+}
+
+int
 schema_size(schema_t s)
 {
 	attribute_t attr;
@@ -195,4 +212,51 @@ schema_print(schema_t s)
 	printf("]");
 
 	/* XXX Print enum list */
+}
+
+schema_t
+schema_read(int fd)
+{
+	off_t off;
+	ssize_t len;
+	u64_t n;
+
+	/* Read number of attributes in schema */
+	off = 0;
+	lseek(fd, off, SEEK_SET);
+	len = read(fd, &n, sizeof(u64_t));
+	if (len < sizeof(u64_t))
+		return NULL;
+	off += sizeof(u64_t);
+#if _DEBUG
+	printf("enum_list_read: enum list has %llu entries\n", n);
+#endif
+
+	return NULL;
+}
+
+schema_t
+schema_write(schema_t s, int fd)
+{
+	off_t off;
+	ssize_t len;
+	u64_t n;
+
+	n = (u64_t) schema_count(s);
+	if (n == 0)
+		return NULL;
+
+#if _DEBUG
+	printf("schema_write: schema has %llu attributes\n", n);
+#endif
+	/* Write number of attributes in schema */
+	off = 0;
+	lseek(fd, off, SEEK_SET);
+	len = write(fd, &n, sizeof(u64_t));
+	if (len < sizeof(u64_t))
+		return NULL;
+
+	off += sizeof(u64_t);
+
+	return NULL;
 }
