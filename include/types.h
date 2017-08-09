@@ -2,7 +2,8 @@
 #define __GRAPHDB_TYPES_H
 
 
-typedef unsigned long long u64_t;
+typedef unsigned char		u8_t;
+typedef unsigned long long	u64_t;
 
 
 #endif

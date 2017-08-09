@@ -229,7 +229,7 @@ schema_read(int fd)
 		return NULL;
 	off += sizeof(u64_t);
 #if _DEBUG
-	printf("enum_list_read: enum list has %llu entries\n", n);
+	printf("schema_read: schema has %llu attributes\n", n);
 #endif
 
 	return NULL;
@@ -238,9 +238,13 @@ schema_read(int fd)
 schema_t
 schema_write(schema_t s, int fd)
 {
+	attribute_t attr;
 	off_t off;
 	ssize_t len;
 	u64_t n;
+	u8_t ch;
+
+	assert (s != NULL);
 
 	n = (u64_t) schema_count(s);
 	if (n == 0)
@@ -255,8 +259,41 @@ schema_write(schema_t s, int fd)
 	len = write(fd, &n, sizeof(u64_t));
 	if (len < sizeof(u64_t))
 		return NULL;
-
 	off += sizeof(u64_t);
 
-	return NULL;
+	/* Write each attribute in the list */
+	for (attr = s->attrlist; attr != NULL; attr = attr->next) {
+		/* Write attribute name */
+#if _DEBUG
+		printf("schema_write: attribute name [%s]\n", attr->name);
+#endif
+		len = write(fd, attr->name, ATTR_NAME_MAXLEN);
+		if (len < ATTR_NAME_MAXLEN)
+			return NULL;
+		off += ATTR_NAME_MAXLEN;
+
+		/* Write attribute base type */
+#if _DEBUG
+		printf("schema_write: ");
+		printf("attribute base type [%s]\n",
+			base_types_str[attr->bt]);
+#endif
+		ch = (unsigned char) attr->bt;
+		len = write(fd, &ch, 1);
+		if (len < 1)
+			return NULL;
+		off += 1;
+
+		/* Write enum name if attribute is an enum */
+		if (attr->bt == ENUM) {
+#if _DEBUG
+			printf("schema_write: enum name [%s]\n", attr->e->name);
+#endif
+			len = write(fd, attr->e->name, ENUM_NAME_LEN);
+			if (len < ENUM_NAME_LEN)
+				return NULL;
+			off += ENUM_NAME_LEN;
+		}
+	}
+	return s;
 }
