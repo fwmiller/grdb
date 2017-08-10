@@ -217,9 +217,13 @@ schema_print(schema_t s)
 schema_t
 schema_read(int fd)
 {
+	schema_t s = NULL;
+	attribute_t attr = NULL;
 	off_t off;
 	ssize_t len;
 	u64_t n;
+	u8_t ch;
+	int i;
 
 	/* Read number of attributes in schema */
 	off = 0;
@@ -231,7 +235,37 @@ schema_read(int fd)
 #if _DEBUG
 	printf("schema_read: schema has %llu attributes\n", n);
 #endif
+	schema_init(&s);
 
+	/* Read each attribute in the schema */
+	for (i = 0; i < n; i++) {
+		attr = (attribute_t) malloc(sizeof(struct attribute));
+		if (attr == NULL)
+			return NULL;
+
+		/* Read attribute name */
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, &(attr->name), ATTR_NAME_MAXLEN);
+		if (len < ATTR_NAME_MAXLEN)
+			return NULL;
+		off += ATTR_NAME_MAXLEN;
+#if _DEBUG
+		printf("schema_read: attribute name [%s]\n", attr->name);
+#endif
+
+		/* Read attribute base type */
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, &ch, 1);
+		if (len < 1)
+			return NULL;
+		off += 1;
+		attr->bt = (enum base_types) ch;
+#if _DEBUG
+		printf("schema_read: attribute base type [%s]\n",
+			base_types_str[attr->bt]);
+#endif
+		
+	}
 	return NULL;
 }
 
