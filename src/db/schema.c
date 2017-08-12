@@ -264,9 +264,22 @@ schema_read(int fd)
 		printf("schema_read: attribute base type [%s]\n",
 			base_types_str[attr->bt]);
 #endif
-		
+		/* Read enum name if attribute is an enum */
+		if (attr->bt == ENUM) {
+			len = read(fd, attr->e->name, ENUM_NAME_LEN);
+			if (len < ENUM_NAME_LEN)
+				return NULL;
+			off += ENUM_NAME_LEN;
+#if _DEBUG
+			printf("schema_read: ");
+			printf("enum name [%s]\n", attr->e->name);
+#endif
+		}
+		/* Insert attribute in schema */
+		schema_attribute_insert(s, attr);
+		attr = NULL;
 	}
-	return NULL;
+	return s;
 }
 
 schema_t
