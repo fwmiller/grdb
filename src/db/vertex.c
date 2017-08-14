@@ -138,16 +138,14 @@ vertex_write(vertex_t v, int fd)
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
 		lseek(fd, off, SEEK_SET);
 		len = read(fd, buf, sizeof(vertexid_t));
-#if _DEBUG
-		printf("vertex_write: read %lu bytes of vertex id\n", len);
-#endif
 		if (len == 0)
 			/* EOF reached */
 			break;
-
 		if (len != sizeof(vertexid_t))
 			return (-1);
-
+#if _DEBUG
+		printf("vertex_write: read %lu bytes of vertex id\n", len);
+#endif
 		id = *((vertexid_t *) buf);
 		if (id == v->id) {
 			/*

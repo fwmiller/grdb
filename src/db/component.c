@@ -97,7 +97,10 @@ component_print(component_t c, int with_tuples)
 	printf("({");
 
 	/* Vertices */
-	size = schema_size(c->sv);
+	if (c->sv == NULL)
+		size = 0;
+	else
+		size = schema_size(c->sv);
 	buf = malloc((sizeof(vertexid_t) << 1) + size);
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
 		lseek(c->vfd, off, SEEK_SET);
@@ -117,7 +120,10 @@ component_print(component_t c, int with_tuples)
 	printf("},{");
 
 	/* Edges */
-	size = schema_size(c->se);
+	if (c->se == NULL)
+		size = 0;
+	else
+		size = schema_size(c->se);
 	for (off = 0;; off += (sizeof(vertexid_t) << 1) + size) {
 		lseek(c->efd, off, SEEK_SET);
 		len = read(c->efd, buf, (sizeof(vertexid_t) << 1) + size);
