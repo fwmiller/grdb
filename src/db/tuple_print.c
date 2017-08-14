@@ -31,6 +31,7 @@ tuple_print(tuple_t t, enum_list_t el)
 	double dval;
 
 	assert (t != NULL);
+	assert (t->s != NULL);
 	assert (t->buf != NULL);
 
 	printf("[");

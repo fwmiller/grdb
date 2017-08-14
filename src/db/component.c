@@ -101,22 +101,25 @@ component_print(component_t c, int with_tuples)
 		size = 0;
 	else
 		size = schema_size(c->sv);
+
 	buf = malloc((sizeof(vertexid_t) << 1) + size);
+
 	for (off = 0;; off += sizeof(vertexid_t) + size) {
 		lseek(c->vfd, off, SEEK_SET);
 		len = read(c->vfd, buf, sizeof(vertexid_t) + size);
 		if (len <= 0)
 			break;
 
+		id = *((vertexid_t *) buf);
+		printf("%llu", id);
 		if (off > 0)
 			printf(",");
 
-		id = *((vertexid_t *) buf);
-		tuple = (tuple_t) (buf + sizeof(vertexid_t));
-		printf("%llu", id);
-		tuple_print(tuple, c->el);
+		if (c->sv != NULL) {
+			tuple = (tuple_t) (buf + sizeof(vertexid_t));
+			tuple_print(tuple, c->el);
+		}
 	}
-
 	printf("},{");
 
 	/* Edges */
@@ -124,21 +127,23 @@ component_print(component_t c, int with_tuples)
 		size = 0;
 	else
 		size = schema_size(c->se);
+
 	for (off = 0;; off += (sizeof(vertexid_t) << 1) + size) {
 		lseek(c->efd, off, SEEK_SET);
 		len = read(c->efd, buf, (sizeof(vertexid_t) << 1) + size);
 		if (len <= 0)
 			break;
 
+		id1 = *((vertexid_t *) buf);
+		id2 = *((vertexid_t *) (buf + sizeof(vertexid_t)));
+		printf("(%llu,%llu)", id1, id2);
 		if (off > 0)
 			printf(",");
 
-		id1 = *((vertexid_t *) buf);
-		id2 = *((vertexid_t *) (buf + sizeof(vertexid_t)));
-		tuple = (tuple_t) (buf + (sizeof(vertexid_t) << 1));
-		printf("(%llu,%llu)", id1, id2);
-		tuple_print(tuple, c->el);
+		if (c->se != NULL) {
+			tuple = (tuple_t) (buf + (sizeof(vertexid_t) << 1));
+			tuple_print(tuple, c->el);
+		}
 	}
-
 	printf("})");
 }
