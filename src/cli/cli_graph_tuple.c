@@ -62,7 +62,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 		}
 
 	if (st == VERTEX) {
-		vertex_t v;
+		struct vertex v;
+		vertex_t v1;
 		base_types_t bt;
 
 		/*
@@ -74,15 +75,17 @@ cli_graph_tuple(char *cmdline, int *pos)
 			return;
 		}
 
-		v = component_find_vertex_by_id(current_component, id1);
-		if (v == NULL) {
+		vertex_init(&v);
+		v.id = id1;
+		v1 = component_find_vertex_by_id(current_component, &v);
+		if (v1 == NULL) {
 			printf("Illegal vertex id\n");
 			return;
 		}
 		/* s2 is an attribute name from the vertex schema */
 
 		/* Check for a VARCHAR */
-		bt = schema_find_type_by_name(v->tuple->s, s2);
+		bt = schema_find_type_by_name(v1->tuple->s, s2);
 		if (bt == VARCHAR) {
 			char *first, *second;
 
@@ -104,7 +107,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		} else if (bt == ENUM) {
 			attribute_t attr;
 
-			attr = schema_find_attr_by_name(v->tuple->s, s2);
+			attr = schema_find_attr_by_name(v1->tuple->s, s2);
 			if (attr == NULL) {
 				printf("Attribute %s not found\n", s2);
 				return;
@@ -113,18 +116,19 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("set attribute %s with type %s to %s\n",
 			       s2, attr->e->name, s3);
 #endif
-			tuple_set_enum(v->tuple, s2,
+			tuple_set_enum(v1->tuple, s2,
 				attr->e->name, s3, current_component->el);
 			return;
 		}
-		if (tuple_set(v->tuple, s2, s3) < 0) {
+		if (tuple_set(v1->tuple, s2, s3) < 0) {
 			printf("Set vertex tuple value failed\n");
 			return;
 		}
 
 
 	} else if (st == EDGE) {
-		edge_t e;
+		struct edge e;
+		edge_t e1;
 		vertexid_t id2;
 		base_types_t bt;
 
@@ -139,13 +143,15 @@ cli_graph_tuple(char *cmdline, int *pos)
 		/* s2 is a vertex id for an edge */
 		id2 = (vertexid_t) atoi(s2);
 
-		e = component_find_edge_by_ids(current_component, id1, id2);
-		if (e == NULL) {
+		edge_init(&e);
+		edge_set_vertices(&e, id1, id2);
+		e1 = component_find_edge_by_ids(current_component, &e);
+		if (e1 == NULL) {
 			printf("Illegal vertex id(s)\n");
 			return;
 		}
 		/* Check for a VARCHAR */
-		bt = schema_find_type_by_name(e->tuple->s, s3);
+		bt = schema_find_type_by_name(e1->tuple->s, s3);
 		if (bt == VARCHAR) {
 			char *first, *second;
 
@@ -167,7 +173,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		} else if (bt == ENUM) {
 			attribute_t attr;
 
-			attr = schema_find_attr_by_name(e->tuple->s, s3);
+			attr = schema_find_attr_by_name(e1->tuple->s, s3);
 			if (attr == NULL) {
 				printf("Attribute %s not found\n", s3);
 				return;
@@ -176,11 +182,11 @@ cli_graph_tuple(char *cmdline, int *pos)
 			printf("set attribute %s with type %s to %s\n",
 			       s3, attr->e->name, s4);
 #endif
-			tuple_set_enum(e->tuple, s3,
+			tuple_set_enum(e1->tuple, s3,
 				attr->e->name, s4, current_component->el);
 			return;
 		}
-		if (tuple_set(e->tuple, s3, s4) < 0) {
+		if (tuple_set(e1->tuple, s3, s4) < 0) {
 			printf("Set edge tuple value failed\n");
 			return;
 		}

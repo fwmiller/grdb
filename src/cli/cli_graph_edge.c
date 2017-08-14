@@ -7,12 +7,14 @@
 void
 cli_graph_edge(char *cmdline, int *pos)
 {
-	vertex_t v, w;
+	struct vertex v, w;
+	vertex_t v1, w1;
 	edge_t e;
 	tuple_t t;
 	char s[BUFSIZE];
 	int i, j;
 
+	/* Get the vertex id arguments */
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
 	if (strlen(s) == 0) {
@@ -29,44 +31,49 @@ cli_graph_edge(char *cmdline, int *pos)
 	}
 	j = atoi(s);
 
-	v = component_find_vertex_by_id(current_component, i);
-	w = component_find_vertex_by_id(current_component, j);
+	vertex_init(&v);
+	vertex_init(&w);
+	v.id = i;
+	w.id = j;
 
-	if (v == NULL && w == NULL) {
+	v1 = component_find_vertex_by_id(current_component, &v);
+	w1 = component_find_vertex_by_id(current_component, &w);
+
+	if (v1 == NULL && w1 == NULL) {
 		printf("At least one vertex must exist in component\n");
 		return;
 	}
-	if (v == NULL) {
+	if (v1 == NULL) {
 		// Create a new vertex with i as its id
-		v = (vertex_t) malloc(sizeof(struct vertex));
-		assert (v != NULL);
-		vertex_init(v);
-		v->id = i;
+		v1 = (vertex_t) malloc(sizeof(struct vertex));
+		assert (v1 != NULL);
+		vertex_init(v1);
+		v1->id = i;
 
 		/* Create the vertex tuple based on its schema */
 		if (current_component->sv != NULL) {
 			t = (tuple_t) malloc(sizeof(struct tuple));
 			assert (t != NULL);
 			tuple_init(t, current_component->sv);
-			v->tuple = t;
+			v1->tuple = t;
 		}
-		component_insert_vertex(current_component, v);
+		component_insert_vertex(current_component, v1);
 
-	} else if (w == NULL) {
+	} else if (w1 == NULL) {
 		// Create a new vertex with j as its id
-		w = (vertex_t) malloc(sizeof(struct vertex));
-		assert (w != NULL);
-		vertex_init(w);
-		w->id = j;
+		w1 = (vertex_t) malloc(sizeof(struct vertex));
+		assert (w1 != NULL);
+		vertex_init(w1);
+		w1->id = j;
 
 		/* Create the vertex tuple based on its schema */
 		if (current_component->sv != NULL) {
 			t = (tuple_t) malloc(sizeof(struct tuple));
 			assert (t != NULL);
 			tuple_init(t, current_component->sv);
-			w->tuple = t;
+			w1->tuple = t;
 		}
-		component_insert_vertex(current_component, w);
+		component_insert_vertex(current_component, w1);
 	}
 	e = (edge_t) malloc(sizeof(struct edge));
 	assert (e != NULL);

@@ -33,16 +33,16 @@ cli_enum_print_current()
 {
 	enum_t e;
 
-	if (current_component != NULL &&
-	    current_component->el != NULL) {
-		printf(">component %d.%d\n",
-			graphs_get_index(current_graph),
-			components_get_index(current_graph, current_component));
-		for (e = current_component->el; e != NULL; e = e->next) {
-			printf("%s (", e->name);
-			string_pool_print(e->pool);
-			printf(")\n");
-		}
+	if (current_component == NULL || current_component->el == NULL)
+		return;
+
+	printf(">component %d.%d\n",
+		graphs_get_index(current_graph),
+		components_get_index(current_graph, current_component));
+	for (e = current_component->el; e != NULL; e = e->next) {
+		printf("%s (", e->name);
+		string_pool_print(e->pool);
+		printf(")\n");
 	}
 }
 
@@ -64,7 +64,10 @@ cli_enum(char *cmdline, int *pos)
 		return;
 	}
 	/* Try to create a new enum */
-
+	if (current_component == NULL) {
+		printf("Missing component\n");
+		return;
+	}
 	/* Check syntax of enum name */
 	result = cli_enum_syntax_check(s);
 	if (!result) {
@@ -75,12 +78,11 @@ cli_enum(char *cmdline, int *pos)
 	printf("enum %s\n", s);
 #endif
 	/* Check whether enum name is a duplicate */
-	if (current_component != NULL)
-		for (e = current_component->el; e != NULL; e = e->next)
-			if (strcmp(s, enum_get_name_ptr(e)) == 0) {
-				printf("enum %s already exists\n", s);
-				return;
-			}
+	for (e = current_component->el; e != NULL; e = e->next)
+		if (strcmp(s, enum_get_name_ptr(e)) == 0) {
+			printf("enum %s already exists\n", s);
+			return;
+		}
 
 	/* Create new enum */
 	enum_init(&e);
