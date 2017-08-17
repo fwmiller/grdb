@@ -15,8 +15,8 @@ tuple_init(tuple_t t, schema_t s)
 	attribute_t attr;
 	int offset;
 
-	assert (t != NULL);
-	assert (s != NULL);
+	if (t == NULL || s == NULL)
+		return;
 
 	memset(t, 0, sizeof(struct tuple));
 	t->s = s;

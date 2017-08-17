@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <ctype.h>
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,29 +14,65 @@ void cli_graph_schema(char *cmdline, int *pos);
 void cli_graph_tuple(char *cmdline, int *pos);
 
 void
-cli_components_print(graph_t g, int gno)
+cli_components_print(char *gname)
 {
-	component_t c;
-	int ccnt = 0;
+	char s[BUFSIZE];
+	DIR *fd;
+	struct dirent *de;
 
-	for (c = g->c; c != NULL; c = c->next, ccnt++) {
-		if (g == current_graph && c == current_component)
-			printf(">");
-
-		printf("%d.%d:", gno, ccnt);
-		component_print(c, 0); /* no tuples */
-		printf("\n");
+	/*
+	 * Loop over directories in the graph to display each
+	 * component
+	 */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%s", grdbdir, gname);
+	fd = opendir(s);
+	if (fd < 0) {
+#if _DEBUG
+		printf("cli_components_print: missing graph directory\n");
+#endif
+		return;
 	}
+	for (;;) {
+		memset(&de, 0, sizeof(struct dirent));
+		de = readdir(fd);
+		if (de == NULL)
+			break;
+#if _DEBUG
+		printf("cli_components_print: component %s\n", de->d_name);
+#endif
+	}
+	closedir(fd);
 }
 
-static void
-cli_graph_print()
+void
+cli_graphs_print()
 {
-	graph_t g;
-	int gcnt = 0;
+	DIR *fd;
+	struct dirent *de;
 
-	for (g = graphs; g != NULL; g = g->next, gcnt++)
-		cli_components_print(g, gcnt);
+	/*
+	 * Loop over directories in the grdb directory to display each
+	 * graph
+	 */
+	fd = opendir(grdbdir);
+	if (fd < 0) {
+#if _DEBUG
+		printf("cli_graphs_print: missing grdb directory\n");
+#endif
+		return;
+	}
+	for (;;) {
+		memset(&de, 0, sizeof(struct dirent));
+		de = readdir(fd);
+		if (de == NULL)
+			break;
+#if _DEBUG
+		printf("cli_graphs_print: graph %s\n", de->d_name);
+#endif
+		cli_components_print(de->d_name);
+	}
+	closedir(fd);
 }
 
 void
@@ -65,9 +102,7 @@ cli_graph(char *cmdline, int *pos)
 		cli_graph_tuple(cmdline, pos);
 
 	else if (isdigit(s[0])) {
-		graph_t g;
-		component_t c;
-		int cno, gno, ccnt, gcnt, spos;
+		int cidx, gidx, spos;
 		char s1[BUFSIZE];
 #if _DEBUG
 		printf("s=[%s] ", s);
@@ -78,9 +113,9 @@ cli_graph(char *cmdline, int *pos)
 #if _DEBUG
 		printf("s1=[%s] ", s1);
 #endif
-		gno = atoi(s1);
+		gidx = atoi(s1);
 #if _DEBUG
-		printf("gno=%d ", gno);
+		printf("gidx=%d ", gidx);
 #endif
 		spos++;
 		memset(s1, 0, BUFSIZE);
@@ -88,19 +123,20 @@ cli_graph(char *cmdline, int *pos)
 #if _DEBUG
 		printf("s1=[%s] ", s1);
 #endif
-		cno = atoi(s1);
+		cidx = atoi(s1);
 #if _DEBUG
-		printf("cno=%d\n", cno);
+		printf("cidx=%d\n", cidx);
 #endif
+/*
 		for (g = graphs, gcnt = 0; g != NULL; g = g->next, gcnt++)
 			for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++)
-				if (gcnt == gno && ccnt == cno) {
+				if (gcnt == gidx && ccnt == cidx) {
 					current_graph = g;
 					current_component = c;
 					return;
 				}
-
+*/
 		
 	} else if (strlen(s) == 0)
-		cli_graph_print();
+		cli_graphs_print();
 }

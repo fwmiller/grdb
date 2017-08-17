@@ -10,9 +10,10 @@
 const char *homedir;
 char grdbdir[BUFSIZE];
 
-/* Graphs */
-graph_t graphs = NULL;
-graph_t current_graph = NULL;
+/* Current graph and component numbers */
+int gno = (-1), cno = (-1);
+
+/* Current component cache of schema and enums */
 component_t current_component = NULL;
 
 char *readline(char *prompt);
@@ -30,30 +31,6 @@ static void
 cli_help()
 {
 	return;
-}
-
-int
-graphs_get_index(graph_t g)
-{
-	graph_t h;
-	int cnt;
-
-	for (cnt = 0, h = graphs; h != NULL; cnt++, h = h->next)
-		if (h == g)
-			return cnt;
-	return (-1);
-}
-
-int
-components_get_index(graph_t g, component_t c)
-{
-	component_t d;
-	int cnt;
-
-	for (cnt = 0, d = g->c; d != NULL; cnt++, d = d->next)
-		if (d == c)
-			return cnt;
-	return (-1);
 }
 
 void

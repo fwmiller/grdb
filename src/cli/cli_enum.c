@@ -36,9 +36,7 @@ cli_enum_print_current()
 	if (current_component == NULL || current_component->el == NULL)
 		return;
 
-	printf(">component %d.%d\n",
-		graphs_get_index(current_graph),
-		components_get_index(current_graph, current_component));
+	printf(">component %d.%d\n", gno, cno);
 	for (e = current_component->el; e != NULL; e = e->next) {
 		printf("%s (", e->name);
 		string_pool_print(e->pool);

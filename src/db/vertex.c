@@ -76,11 +76,13 @@ vertex_read(vertex_t v, int fd)
 	char buf[sizeof(vertexid_t)];
 
 	assert(v != NULL);
-	assert(v->tuple != NULL);
 #if _DEBUG
 	printf("vertex_read: read vertex %llu\n", v->id);
 #endif
-	size = schema_size(v->tuple->s);
+	if (v->tuple == NULL || v->tuple->s == NULL)
+		size = 0;
+	else
+		size = schema_size(v->tuple->s);
 #if _DEBUG
 	printf("vertex_read: schema size = %lu bytes\n", size);
 #endif
@@ -97,12 +99,15 @@ vertex_read(vertex_t v, int fd)
 		}
 		id = *((vertexid_t *) buf);
 		if (id == v->id) {
-			memset(v->tuple->buf, 0, size);
-			len = read(fd, v->tuple->buf, size);
+			if (v->tuple != NULL && v->tuple->s != NULL) {
+				memset(v->tuple->buf, 0, size);
+				len = read(fd, v->tuple->buf, size);
 #if _DEBUG
-			printf("vertex_read: ");
-			printf("read %lu bytes to tuple buffer\n", len);
+				printf("vertex_read: ");
+				printf("read %lu bytes to tuple buffer\n",
+					len);
 #endif
+			}
 			return len;
 		}
 	}
