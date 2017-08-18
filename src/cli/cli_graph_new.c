@@ -15,6 +15,11 @@ cli_graph_new(char *cmdline, int *pos)
 	char s[BUFSIZE];
 	int fd;
 
+	/* Initialize global graph and component numbers if necessary */
+	if (gno < 0 && cno < 0) {
+		gno = 0;
+		cno = 0;
+	}
 	/* Create first vertex in component */
 	vertex_init(&v);
 	vertex_set_id(&v, 1);
@@ -30,7 +35,7 @@ cli_graph_new(char *cmdline, int *pos)
 
 	/* Create component vertex file */
 	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/%d/v", grdbdir, cno, cno);
+	sprintf(s, "%s/%d/%d/v", grdbdir, gno, cno);
 #if _DEBUG
 	printf("cli_graph_new: open vertex file %s\n", s);
 #endif

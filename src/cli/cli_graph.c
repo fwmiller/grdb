@@ -25,21 +25,24 @@ cli_components_print(char *gname)
 	 */
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%s", grdbdir, gname);
-	fd = opendir(s);
-	if (fd < 0) {
 #if _DEBUG
-		printf("cli_components_print: missing graph directory\n");
+	printf("cli_components_print: directory %s\n", s);
 #endif
+	if ((fd = opendir(s)) == NULL)
 		return;
-	}
+
 	for (;;) {
-		memset(&de, 0, sizeof(struct dirent));
 		de = readdir(fd);
 		if (de == NULL)
 			break;
+
+		if (strcmp(de->d_name, ".") != 0 &&
+		    strcmp(de->d_name, "..") != 0) {
 #if _DEBUG
-		printf("cli_components_print: component %s\n", de->d_name);
+			printf("cli_components_print: ");
+			printf("component %s\n", de->d_name);
 #endif
+		}
 	}
 	closedir(fd);
 }
@@ -54,22 +57,24 @@ cli_graphs_print()
 	 * Loop over directories in the grdb directory to display each
 	 * graph
 	 */
-	fd = opendir(grdbdir);
-	if (fd < 0) {
 #if _DEBUG
-		printf("cli_graphs_print: missing grdb directory\n");
+	printf("cli_graphs_print: directory %s\n", grdbdir);
 #endif
+	if ((fd = opendir(grdbdir)) == NULL)
 		return;
-	}
+
 	for (;;) {
-		memset(&de, 0, sizeof(struct dirent));
 		de = readdir(fd);
 		if (de == NULL)
 			break;
+
+		if (strcmp(de->d_name, ".") != 0 &&
+		    strcmp(de->d_name, "..") != 0) {
 #if _DEBUG
-		printf("cli_graphs_print: graph %s\n", de->d_name);
+			printf("cli_graphs_print: graph %s\n", de->d_name);
 #endif
-		cli_components_print(de->d_name);
+			cli_components_print(de->d_name);
+		}
 	}
 	closedir(fd);
 }
@@ -129,6 +134,7 @@ cli_graph(char *cmdline, int *pos)
 		gno = gidx;
 		cno = cidx;
 		
-	} else if (strlen(s) == 0)
+	}
+	if (strlen(s) == 0)
 		cli_graphs_print();
 }
