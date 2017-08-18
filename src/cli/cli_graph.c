@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "cli.h"
 #include "graph.h"
@@ -127,15 +126,8 @@ cli_graph(char *cmdline, int *pos)
 #if _DEBUG
 		printf("cidx=%d\n", cidx);
 #endif
-/*
-		for (g = graphs, gcnt = 0; g != NULL; g = g->next, gcnt++)
-			for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++)
-				if (gcnt == gidx && ccnt == cidx) {
-					current_graph = g;
-					current_component = c;
-					return;
-				}
-*/
+		gno = gidx;
+		cno = cidx;
 		
 	} else if (strlen(s) == 0)
 		cli_graphs_print();

@@ -25,6 +25,7 @@ cli_graph_schema(char *cmdline, int *pos)
 		return;
 	}
 	/* Display all graph schemas */
+/*
 	for (g = graphs; g != NULL; g = g->next, gcnt++) {
 		for (c = g->c, ccnt = 0; c != NULL; c = c->next, ccnt++) {
 			if (c->sv != NULL || c->se != NULL) {
@@ -45,4 +46,5 @@ cli_graph_schema(char *cmdline, int *pos)
 			}
 		}
 	}
+*/
 }
