@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,6 +46,11 @@ cli()
 	if (tty)
 		cli_about();
 
+
+	/* Initialize current component */
+	current_component = (component_t) malloc(sizeof(struct component));
+	assert(current_component != NULL);
+	component_init(current_component);
 
 	/* Setup to load databases */
 	homedir = getenv("HOME");

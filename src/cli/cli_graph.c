@@ -16,8 +16,9 @@ void
 cli_components_print(char *gname)
 {
 	char s[BUFSIZE];
-	DIR *fd;
+	DIR *dirfd;
 	struct dirent *de;
+	struct component c;
 
 	/*
 	 * Loop over directories in the graph to display each
@@ -28,11 +29,11 @@ cli_components_print(char *gname)
 #if _DEBUG
 	printf("cli_components_print: directory %s\n", s);
 #endif
-	if ((fd = opendir(s)) == NULL)
+	if ((dirfd = opendir(s)) == NULL)
 		return;
 
 	for (;;) {
-		de = readdir(fd);
+		de = readdir(dirfd);
 		if (de == NULL)
 			break;
 
@@ -42,15 +43,33 @@ cli_components_print(char *gname)
 			printf("cli_components_print: ");
 			printf("component %s\n", de->d_name);
 #endif
+			printf("%s.%s:", gname, de->d_name);
+
+			component_init(&c);
+
+			/* XXX Load vertex schema */
+
+			/* XXX Load edge schema */
+
+			/* XXX Load enums schema if any */
+
+			/* Open vertex file */
+
+			/* Open edge file */
+
+			component_print(&c, 0); /* no tuples */
+			printf("\n");
+
+			/* Close files */
 		}
 	}
-	closedir(fd);
+	closedir(dirfd);
 }
 
 void
 cli_graphs_print()
 {
-	DIR *fd;
+	DIR *dirfd;
 	struct dirent *de;
 
 	/*
@@ -60,11 +79,11 @@ cli_graphs_print()
 #if _DEBUG
 	printf("cli_graphs_print: directory %s\n", grdbdir);
 #endif
-	if ((fd = opendir(grdbdir)) == NULL)
+	if ((dirfd = opendir(grdbdir)) == NULL)
 		return;
 
 	for (;;) {
-		de = readdir(fd);
+		de = readdir(dirfd);
 		if (de == NULL)
 			break;
 
@@ -76,7 +95,7 @@ cli_graphs_print()
 			cli_components_print(de->d_name);
 		}
 	}
-	closedir(fd);
+	closedir(dirfd);
 }
 
 void
