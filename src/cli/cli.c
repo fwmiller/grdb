@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +27,38 @@ cli_about()
 {
 	printf("Graph Database\n");
 	printf("(C) Frank W. Miller\n");
+}
+
+static void
+cli_clear_database()
+{
+	DIR *dirfd;
+	struct dirent *de;
+
+	if ((dirfd = opendir(grdbdir)) == NULL)
+		return;
+
+	for (;;) {
+		de = readdir(dirfd);
+		if (de == NULL)
+			break;
+
+		if (strcmp(de->d_name, ".") != 0 &&
+		    strcmp(de->d_name, "..") != 0) {
+			if (fork() == 0) {
+				char s[BUFSIZE];
+
+				memset(s, 0, BUFSIZE);
+				sprintf(s, "%s/%s", grdbdir, de->d_name);
+#if _DEBUG
+				printf("cli_clear_database: ");
+				printf("remove directory: %s\n", s);
+#endif
+				execl("/bin/rm", "/bin/rm", "-fr", s, NULL);
+			}
+		}
+	}
+	closedir(dirfd);
 }
 
 static void
@@ -106,6 +139,12 @@ cli()
 
 		if (strcmp(cmd, "about") == 0 || strcmp(cmd, "a") == 0) {
 			cli_about();
+			continue;
+
+		} else if (strcmp(cmd, "clear") == 0 ||
+			   strcmp(cmd, "h") == 0) {
+			printf("clear database\n");
+			cli_clear_database();
 			continue;
 
 		} else if (strcmp(cmd, "help") == 0 ||
