@@ -25,8 +25,8 @@ cli_graph_next_gno()
 {
 	DIR *dirfd;
 	struct dirent *de;
-	int n = gno;
-	int i;
+	int n = (-1);
+	int i = 0;
 
 	/* Search the grdb directory for the highest gno */
 	if ((dirfd = opendir(grdbdir)) == NULL)
@@ -42,7 +42,7 @@ cli_graph_next_gno()
 
 		i = atoi(de->d_name);
 		if (i > n)
-			i = n;
+			n = i;
 	}
 	closedir(dirfd);
 #if _DEBUG

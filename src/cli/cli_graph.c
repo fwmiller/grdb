@@ -28,7 +28,7 @@ cli_components_print(char *gname)
 	 */
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%s", grdbdir, gname);
-#if _DEBUG
+#if 0
 	printf("cli_components_print: directory %s\n", s);
 #endif
 	if ((dirfd = opendir(s)) == NULL)
@@ -41,7 +41,7 @@ cli_components_print(char *gname)
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-#if _DEBUG
+#if 0
 			printf("cli_components_print: ");
 			printf("component %s\n", de->d_name);
 #endif
@@ -86,7 +86,7 @@ cli_graphs_print()
 	 * Loop over directories in the grdb directory to display each
 	 * graph
 	 */
-#if _DEBUG
+#if 0
 	printf("cli_graphs_print: directory %s\n", grdbdir);
 #endif
 	if ((dirfd = opendir(grdbdir)) == NULL)
@@ -99,7 +99,7 @@ cli_graphs_print()
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-#if _DEBUG
+#if 0
 			printf("cli_graphs_print: graph %s\n", de->d_name);
 #endif
 			cli_components_print(de->d_name);
