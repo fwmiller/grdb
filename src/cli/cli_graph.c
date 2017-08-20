@@ -1,8 +1,10 @@
 #include <assert.h>
+#include <fcntl.h>
 #include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "cli.h"
 #include "graph.h"
 
@@ -54,13 +56,21 @@ cli_components_print(char *gname)
 			/* XXX Load enums schema if any */
 
 			/* Open vertex file */
+			memset(s, 0, BUFSIZE);
+			sprintf(s, "%s/%s/%s/v", grdbdir, gname, de->d_name);
+			c.vfd = open(s, O_RDWR);
 
 			/* Open edge file */
+			memset(s, 0, BUFSIZE);
+			sprintf(s, "%s/%s/%s/e", grdbdir, gname, de->d_name);
+			c.efd = open(s, O_RDWR);
 
 			component_print(&c, 0); /* no tuples */
 			printf("\n");
 
 			/* Close files */
+			close(c.efd);
+			close(c.vfd);
 		}
 	}
 	closedir(dirfd);
