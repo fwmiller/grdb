@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include "cli.h"
 
-static int
+int
 numbers_only(const char *s)
 {
 	while (*s) {
@@ -45,10 +45,11 @@ cli_graph_next_gno()
 			n = i;
 	}
 	closedir(dirfd);
+	n++;
 #if _DEBUG
-	printf("cli_graph_next_gno: next gno %d\n", n + 1);
+	printf("cli_graph_next_gno: next gno %d\n", n);
 #endif
-	return n + 1;
+	return n;
 }
 
 void
@@ -67,7 +68,7 @@ cli_graph_new(char *cmdline, int *pos)
 	}
 	/* Initialize global graph and component numbers if necessary */
 	if (gno < 0 && cno < 0) {
-		gno = 0;
+		gno = n;
 		cno = 0;
 	}
 	/* Create first vertex in component */
@@ -90,13 +91,9 @@ cli_graph_new(char *cmdline, int *pos)
 	printf("cli_graph_new: open vertex file %s\n", s);
 #endif
 	fd = open(s, O_RDWR | O_CREAT, 0644);
-	if (fd < 0) {
-#if _DEBUG
-		printf("cli_graph_new: open vertex file failed (%s)\n",
-			strerror(errno));
-#endif
+	if (fd < 0)
 		return;
-	}
+
 	/* Write first vertex tuple */
 	vertex_write(&v, fd);
 	close(fd);
