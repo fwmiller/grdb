@@ -61,6 +61,20 @@ cli_clear_database()
 	closedir(dirfd);
 }
 
+static int
+cli_find_low_gno()
+{
+	/* XXX This needs to be fancier */
+	return 0;
+}
+
+static int
+cli_find_low_cno(int gno)
+{
+	/* XXX This needs to be fancier */
+	return 0;
+}
+
 static void
 cli_help()
 {
@@ -78,7 +92,6 @@ cli()
 	tty = isatty(STDIN_FILENO);
 	if (tty)
 		cli_about();
-
 
 	/* Initialize current component */
 	current_component = (component_t) malloc(sizeof(struct component));
@@ -100,6 +113,10 @@ cli()
 #endif
 		mkdir(grdbdir, 0755);
 	}
+
+	/* Initalize gno and cno */
+	gno = cli_find_low_gno();
+	cno = cli_find_low_cno(gno);
 
 	/* Main command line loop */
 	for (;;) {

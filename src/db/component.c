@@ -135,11 +135,12 @@ component_print(component_t c, int with_tuples)
 		if (len <= 0)
 			break;
 
+		if (off > 0)
+			printf(",");
+
 		id1 = *((vertexid_t *) buf);
 		id2 = *((vertexid_t *) (buf + sizeof(vertexid_t)));
 		printf("(%llu,%llu)", id1, id2);
-		if (off > 0)
-			printf(",");
 
 		if (c->se != NULL) {
 			tuple = (tuple_t) (buf + (sizeof(vertexid_t) << 1));

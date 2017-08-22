@@ -99,7 +99,9 @@ vertex_read(vertex_t v, int fd)
 		}
 		id = *((vertexid_t *) buf);
 		if (id == v->id) {
-			if (v->tuple != NULL && v->tuple->s != NULL) {
+			if (v->tuple != NULL &&
+			    v->tuple->s != NULL &&
+			    size > 0) {
 				memset(v->tuple->buf, 0, size);
 				len = read(fd, v->tuple->buf, size);
 #if _DEBUG
