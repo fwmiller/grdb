@@ -89,7 +89,6 @@ void
 cli_graph_component(char *cmdline, int *pos)
 {
 	char s[BUFSIZE];
-	int fd;
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
