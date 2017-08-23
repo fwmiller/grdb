@@ -14,15 +14,9 @@ cli_components_print(char *gname)
 	struct dirent *de;
 	struct component c;
 
-	/*
-	 * Loop over directories in the graph to display each
-	 * component
-	 */
+	/* Loop over directories in graph to display each component */
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%s", grdbdir, gname);
-#if 0
-	printf("cli_components_print: directory %s\n", s);
-#endif
 	if ((dirfd = opendir(s)) == NULL)
 		return;
 
@@ -33,10 +27,9 @@ cli_components_print(char *gname)
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-#if 0
-			printf("cli_components_print: ");
-			printf("component %s\n", de->d_name);
-#endif
+			if (atoi(gname) == gno && atoi(de->d_name) == cno)
+				printf(">");
+
 			printf("%s.%s:", gname, de->d_name);
 
 			component_init(&c);
@@ -45,7 +38,7 @@ cli_components_print(char *gname)
 
 			/* XXX Load edge schema */
 
-			/* XXX Load enums schema if any */
+			/* XXX Load enums if any */
 
 			/* Open vertex file */
 			memset(s, 0, BUFSIZE);
@@ -74,13 +67,7 @@ cli_graphs_print()
 	DIR *dirfd;
 	struct dirent *de;
 
-	/*
-	 * Loop over directories in the grdb directory to display each
-	 * graph
-	 */
-#if 0
-	printf("cli_graphs_print: directory %s\n", grdbdir);
-#endif
+	/* Loop over directories in grdb directory to display each graph */
 	if ((dirfd = opendir(grdbdir)) == NULL)
 		return;
 
@@ -91,9 +78,6 @@ cli_graphs_print()
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-#if 0
-			printf("cli_graphs_print: graph %s\n", de->d_name);
-#endif
 			cli_components_print(de->d_name);
 		}
 	}
