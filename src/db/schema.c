@@ -105,10 +105,11 @@ void
 schema_init(schema_t *s)
 {
 	assert (s != NULL);
-
+#if 0
+	/* XXX Not having something like this could be a memory leak */
 	if (*s != NULL)
 		free(s);
-
+#endif
 	*s = malloc(sizeof(struct schema));
 	memset(*s, 0, sizeof(struct schema));
 }
