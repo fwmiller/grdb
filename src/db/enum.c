@@ -28,7 +28,7 @@ enum_init(enum_t *e)
 }
 
 int
-enum_file_init(char *grdbdir, int gidx, int cidx)
+enum_file_open(char *grdbdir, int gidx, int cidx)
 {
 	char s[BUFSIZE];
 	int fd;
@@ -37,12 +37,12 @@ enum_file_init(char *grdbdir, int gidx, int cidx)
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/%d/enum", grdbdir, gidx, cidx);
 #if _DEBUG
-	printf("enum_file_init: open enum file %s\n", s);
+	printf("enum_file_open: open enum file %s\n", s);
 #endif
 	fd = open(s, O_RDWR | O_CREAT, 0644);
 #if _DEBUG
 	if (fd < 0)
-		printf("enum_file_init: open enum file failed (%s)\n",
+		printf("enum_file_open: open enum file failed (%s)\n",
 			strerror(errno));
 #endif
 	return fd;
@@ -116,8 +116,6 @@ enum_list_print(enum_list_t el)
 {
 	enum_t e;
 
-	assert (el != NULL);
-
 	for (e = el; e != NULL; e = e->next)
 		enum_print(e);
 }
@@ -170,9 +168,8 @@ enum_list_find_by_idx(enum_list_t el, int idx)
 }
 
 enum_list_t
-enum_list_read(int fd)
+enum_list_read(enum_list_t *el, int fd)
 {
-	enum_list_t el;
 	enum_t e;
 	off_t off;
 	u64_t n;
@@ -191,7 +188,7 @@ enum_list_read(int fd)
 #endif
 
 	/* Read each enum in the list */
-	for (i = 0, el = NULL; i < n; i++, e = NULL) {
+	for (i = 0; i < n; i++, e = NULL) {
 		char *buf = NULL;
 		unsigned char entries;
 		unsigned short memlen;
@@ -231,17 +228,20 @@ enum_list_read(int fd)
 #endif
 		/* Read string pool entries array and pool memory */
 		poollen = (entries << 1) + memlen;
-		buf = malloc(poollen);
+		buf = malloc(3 + poollen);
 		lseek(fd, off, SEEK_SET);
-		len = read(fd, buf, poollen);
+		len = read(fd, buf + 3, poollen);
 		if (len < poollen)
 			return NULL;
 		off += poollen;
 
+		*((unsigned char *) buf) = entries;
+		*((unsigned short *) (buf + 1)) = memlen;
 		e->pool = (string_pool_t) buf;
-		enum_list_insert(&el, e);
+
+		enum_list_insert(el, e);
 	}
-	return el;
+	return *el;
 }
 
 enum_list_t
@@ -257,7 +257,6 @@ enum_list_write(enum_list_t el, int fd)
 #if _DEBUG
 	printf("enum_list_write: enum list has %llu entries\n", n);
 #endif
-
 	/* Write number of enums in enum list */
 	off = 0;
 	lseek(fd, off, SEEK_SET);
@@ -291,4 +290,3 @@ enum_list_write(enum_list_t el, int fd)
 	}
 	return el;
 }
-

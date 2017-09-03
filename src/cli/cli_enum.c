@@ -32,7 +32,7 @@ cli_enum_syntax_check(char *s)
 void
 cli_enum_print_current()
 {
-	enum_list_t el, result;
+	enum_list_t el = NULL;
 	int fd;
 
 	if (gno < 0 || cno < 0)
@@ -40,16 +40,15 @@ cli_enum_print_current()
 
 	printf(">component %d.%d\n", gno, cno);
 
-	fd = enum_file_init(grdbdir, gno, cno);
+	fd = enum_file_open(grdbdir, gno, cno);
 	if (fd < 0)
 		return;
 
 	enum_list_init(&el);
-	result = enum_list_read(fd);
+	el = enum_list_read(&el, fd);
 	close(fd);
-	if (result == NULL)
-		return;
-	enum_list_print(el);
+	if (el != NULL)
+		enum_list_print(el);
 }
 
 void
@@ -58,7 +57,6 @@ cli_enum(char *cmdline, int *pos)
 	enum_list_t el = NULL;
 	enum_t e = NULL;
 	char s[BUFSIZE];
-	enum_list_t result;
 	int fd;
 
 	assert(cmdline != NULL);
@@ -84,16 +82,15 @@ cli_enum(char *cmdline, int *pos)
 #if _DEBUG
 	printf("enum %s\n", s);
 #endif
-	fd = enum_file_init(grdbdir, gno, cno);
+	fd = enum_file_open(grdbdir, gno, cno);
 	if (fd < 0)
 		return;
 
 	enum_list_init(&el);
-	result = enum_list_read(fd);
-	close(fd);
-	if (result == NULL)
-		return;
-
+	enum_list_read(&el, fd);
+#if _DEBUG
+	enum_list_print(el);
+#endif
 
 	/* Check whether enum name is a duplicate */
 	for (e = el; e != NULL; e = e->next)
@@ -130,9 +127,6 @@ cli_enum(char *cmdline, int *pos)
 	/* Insert enum in list of enums for current component */
 	enum_list_insert(&el, e);
 
-	fd = enum_file_init(grdbdir, gno, cno);
-	if (fd < 0)
-		return;
-	result = enum_list_write(el, fd);
+	enum_list_write(el, fd);
 	close(fd);
 }
