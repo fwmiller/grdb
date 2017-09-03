@@ -28,14 +28,14 @@ enum_init(enum_t *e)
 }
 
 int
-enum_file_init(int gidx, int cidx)
+enum_file_init(char *grdbdir, int gidx, int cidx)
 {
 	char s[BUFSIZE];
 	int fd;
 
 	/* Create component enum file */
 	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/%d/enum", GRDBDIR, gidx, cidx);
+	sprintf(s, "%s/%d/%d/enum", grdbdir, gidx, cidx);
 #if _DEBUG
 	printf("enum_file_init: open enum file %s\n", s);
 #endif

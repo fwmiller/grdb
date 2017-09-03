@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "cli.h"
 #include "enum.h"
 #include "graph.h"
@@ -31,25 +32,34 @@ cli_enum_syntax_check(char *s)
 void
 cli_enum_print_current()
 {
-	enum_t e;
+	enum_list_t el, result;
+	int fd;
 
-	if (current_component == NULL || current_component->el == NULL)
+	if (gno < 0 || cno < 0)
 		return;
 
 	printf(">component %d.%d\n", gno, cno);
-	for (e = current_component->el; e != NULL; e = e->next) {
-		printf("%s (", e->name);
-		string_pool_print(e->pool);
-		printf(")\n");
-	}
+
+	fd = enum_file_init(grdbdir, gno, cno);
+	if (fd < 0)
+		return;
+
+	enum_list_init(&el);
+	result = enum_list_read(fd);
+	close(fd);
+	if (result == NULL)
+		return;
+	enum_list_print(el);
 }
 
 void
 cli_enum(char *cmdline, int *pos)
 {
+	enum_list_t el = NULL;
 	enum_t e = NULL;
 	char s[BUFSIZE];
-	int result;
+	enum_list_t result;
+	int fd;
 
 	assert(cmdline != NULL);
 	assert(pos != NULL);
@@ -62,21 +72,31 @@ cli_enum(char *cmdline, int *pos)
 		return;
 	}
 	/* Try to create a new enum */
-	if (current_component == NULL) {
+	if (gno < 0 || cno < 0) {
 		printf("Missing component\n");
 		return;
 	}
 	/* Check syntax of enum name */
-	result = cli_enum_syntax_check(s);
-	if (!result) {
+	if (!cli_enum_syntax_check(s)) {
 		printf("Enum name illegal syntax\n");
 		return;
 	}
 #if _DEBUG
 	printf("enum %s\n", s);
 #endif
+	fd = enum_file_init(grdbdir, gno, cno);
+	if (fd < 0)
+		return;
+
+	enum_list_init(&el);
+	result = enum_list_read(fd);
+	close(fd);
+	if (result == NULL)
+		return;
+
+
 	/* Check whether enum name is a duplicate */
-	for (e = current_component->el; e != NULL; e = e->next)
+	for (e = el; e != NULL; e = e->next)
 		if (strcmp(s, enum_get_name_ptr(e)) == 0) {
 			printf("enum %s already exists\n", s);
 			return;
@@ -96,8 +116,7 @@ cli_enum(char *cmdline, int *pos)
 		if (strlen(s) == 0)
 			break;
 
-		result = cli_enum_syntax_check(s);
-		if (!result) {
+		if (!cli_enum_syntax_check(s)) {
 			printf("Enum element %s illegal syntax\n", s);
 
 			/* XXX Free enum memory */
@@ -109,5 +128,11 @@ cli_enum(char *cmdline, int *pos)
 	/* XXX Check whether enum has any elements in it */
 
 	/* Insert enum in list of enums for current component */
-	enum_list_insert(&(current_component->el), e);
+	enum_list_insert(&el, e);
+
+	fd = enum_file_init(grdbdir, gno, cno);
+	if (fd < 0)
+		return;
+	result = enum_list_write(el, fd);
+	close(fd);
 }

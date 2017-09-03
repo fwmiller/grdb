@@ -11,13 +11,13 @@ enum schema_type { VERTEX, EDGE };
 
 typedef enum schema_type schema_type_t;
 
+extern char grdbdir[];
+
 /* Current graph and component numbers */
 extern int gno, cno;
 
 /* Current component cache of schema and enums */
 extern component_t current_component;
-
-extern char grdbdir[];
 
 void nextarg(char *ln, int *pos, char *sep, char *arg);
 
