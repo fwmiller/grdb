@@ -47,6 +47,7 @@ cli_enum_print_current()
 	enum_list_init(&el);
 	el = enum_list_read(&el, fd);
 	close(fd);
+
 	if (el != NULL)
 		enum_list_print(el);
 }

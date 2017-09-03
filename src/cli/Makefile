@@ -18,7 +18,7 @@ OBJS =	bufdump.o 			\
 	main.o
 
 LIBS = -ldb
-TGT = grdb
+TGT = db
 
 all: $(OBJS)
 	cd ../db; make;
