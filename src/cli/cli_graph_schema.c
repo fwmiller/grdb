@@ -30,6 +30,11 @@ cli_graph_schemas_print(char *gname)
 		    strcmp(de->d_name, "..") != 0) {
 			schema_t sv, se;
 
+			if (atoi(gname) == gno && atoi(de->d_name) == cno)
+				printf(">");
+
+			printf("component %s.%s\n", gname, de->d_name);
+
 			schema_init(&sv);
 			memset(s, 0, BUFSIZE);
 			sprintf(s, "%s/%s/%s/sv", grdbdir, gname, de->d_name);
@@ -37,8 +42,11 @@ cli_graph_schemas_print(char *gname)
 			if (fd >= 0) {
 				sv = schema_read(fd);
 				close(fd);
-				if (sv != NULL)
+				if (sv != NULL) {
+					printf("Sv = ");
 					schema_print(sv);
+					printf("\n");
+				}
 			}
 			schema_init(&se);
 			memset(s, 0, BUFSIZE);
@@ -47,8 +55,11 @@ cli_graph_schemas_print(char *gname)
 			if (fd >= 0) {
 				se = schema_read(fd);
 				close(fd);
-				if (se != NULL)
+				if (se != NULL) {
+					printf("Se = ");
 					schema_print(se);
+					printf("\n");
+				}
 			}
 
 		}

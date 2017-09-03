@@ -1,8 +1,6 @@
 #include <assert.h>
 #include <fcntl.h>
-#if _DEBUG
 #include <stdio.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
