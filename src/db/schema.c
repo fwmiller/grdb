@@ -54,7 +54,7 @@ schema_attribute_init(
 }
 
 void
-schema_attribute_print(attribute_t attr)
+schema_attribute_print(attribute_t attr, enum_list_t el)
 {
 	assert (attr != NULL);
 
@@ -198,7 +198,7 @@ schema_find_attr_by_name(schema_t s, char *name)
 }
 
 void
-schema_print(schema_t s)
+schema_print(schema_t s, enum_list_t el)
 {
 	attribute_t attr;
 
@@ -206,7 +206,7 @@ schema_print(schema_t s)
 
 	printf("[");
 	for (attr = s->attrlist; attr != NULL; attr = attr->next) {
-		schema_attribute_print(attr);
+		schema_attribute_print(attr, el);
 		if (attr->next != NULL)
 			printf(",");
 	}
@@ -267,6 +267,16 @@ schema_read(int fd)
 #endif
 		/* Read enum name if attribute is an enum */
 		if (attr->bt == ENUM) {
+			memset(attr->name, 0, ATTR_NAME_MAXLEN);
+			len = read(fd, attr->name, ATTR_NAME_MAXLEN);
+			if (len < ATTR_NAME_MAXLEN)
+				return NULL;
+			off += ATTR_NAME_MAXLEN;
+#if _DEBUG
+			printf("schema_read: ");
+			printf("attribute name [%s]\n", attr->name);
+#endif
+			memset(attr->e->name, 0, ENUM_NAME_LEN);
 			len = read(fd, attr->e->name, ENUM_NAME_LEN);
 			if (len < ENUM_NAME_LEN)
 				return NULL;
@@ -332,11 +342,18 @@ schema_write(schema_t s, int fd)
 			return NULL;
 		off += 1;
 
-		/* Write enum name if attribute is an enum */
+		/* Write attribute and enum names if attribute is an enum */
 		if (attr->bt == ENUM) {
 #if _DEBUG
-			printf("schema_write: enum name [%s]\n", attr->e->name);
+			printf("schema_write: ");
+			printf("attr name [%s] enum name [%s]\n",
+				attr->name, attr->e->name);
 #endif
+			len = write(fd, attr->name, ATTR_NAME_MAXLEN);
+			if (len < ATTR_NAME_MAXLEN)
+				return NULL;
+			off += ATTR_NAME_MAXLEN;
+
 			len = write(fd, attr->e->name, ENUM_NAME_LEN);
 			if (len < ENUM_NAME_LEN)
 				return NULL;

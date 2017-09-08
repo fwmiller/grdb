@@ -10,12 +10,15 @@ void cli_graph_update_tuples(schema_type_t st, int old_schema_size);
 
 static void
 cli_graph_schema_add_enum(
+	schema_t schema,
 	int old_schema_size,
 	schema_type_t st,
 	enum_t e,
 	char *name)
 {
 	attribute_t attr;
+
+	assert (schema != NULL);
 
 #if _DEBUG
 	printf("add attribute type enum %s name %s to schema\n",
@@ -26,15 +29,7 @@ cli_graph_schema_add_enum(
 	assert(attr != NULL);
 	schema_attribute_init(attr, name, ENUM, e);
 	strncpy(attr->name, name, ATTR_NAME_MAXLEN - 1);
-	if (st == EDGE) {
-		if (current_component->se == NULL)
-			schema_init(&(current_component->se));
-		schema_attribute_insert(current_component->se, attr);
-	} else if (st == VERTEX) {
-		if (current_component->sv == NULL)
-			schema_init(&(current_component->sv));
-		schema_attribute_insert(current_component->sv, attr);
-	}
+	schema_attribute_insert(schema, attr);
 #if _DEBUG
 	printf("update tuples with enum values\n");
 #endif
@@ -50,6 +45,8 @@ cli_graph_schema_add_base(
 	char *name)
 {
 	int i;
+
+	assert (schema != NULL);
 
 	for (i = 0; i < BASE_TYPES_MAX; i++) {
 		if (strcasecmp(type, base_types_str[i]) == 0) {
@@ -78,12 +75,12 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 {
 	char s[BUFSIZE];
 	schema_t schema = NULL;
-	int fd;
-
 	char type[BUFSIZE];
 	char name[BUFSIZE];
 	int old_schema_size = 0;
+	enum_list_t el = NULL;
 	enum_t e;
+	int fd, efd;
 
 	/* Load the appropriate schema */
 	memset(s, 0, BUFSIZE);
@@ -108,16 +105,32 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
         nextarg(cmdline, pos, " ", name);
 
 	/* Search enums for type name */
-/*
-	e = enum_list_find_by_name(current_component->el, type);
+	efd = enum_file_open(grdbdir, gno, cno);
+	if (efd < 0)
+		return;
+
+	enum_list_init(&el);
+	enum_list_read(&el, efd);
+
+	e = enum_list_find_by_name(el, type);
 	if (e != NULL) {
 #if _DEBUG
 		printf("add enum %s\n", name);
 #endif
-		cli_graph_schema_add_enum(old_schema_size, st, e, name);
+		if (schema == NULL)
+			schema_init(&schema);
+		cli_graph_schema_add_enum(
+			schema, old_schema_size, st, e, name);
+
+		enum_list_write(el, efd);
+		close(efd);
+
+		schema_write(schema, fd);
+		close(fd);
 		return;
 	}
-*/
+	close(efd);
+
 #if _DEBUG
 	printf("add attribute %s with base type %s\n", name, type);
 #endif

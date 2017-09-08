@@ -28,6 +28,7 @@ cli_graph_schemas_print(char *gname)
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
+			enum_list_t el;
 			schema_t sv, se;
 
 			if (atoi(gname) == gno && atoi(de->d_name) == cno)
@@ -35,29 +36,42 @@ cli_graph_schemas_print(char *gname)
 
 			printf("component %s.%s\n", gname, de->d_name);
 
+			/* Load any enums */
+			fd = enum_file_open(grdbdir, gno, cno);
+			if (fd >= 0) {
+				enum_list_init(&el);
+				el = enum_list_read(&el, fd);
+				close(fd);
+			}
+			/* Vertex schema */
 			schema_init(&sv);
 			memset(s, 0, BUFSIZE);
-			sprintf(s, "%s/%s/%s/sv", grdbdir, gname, de->d_name);
+			sprintf(s, "%s/%s/%s/sv",
+				grdbdir, gname, de->d_name);
 			fd = open(s, O_RDWR);
 			if (fd >= 0) {
 				sv = schema_read(fd);
 				close(fd);
+
 				if (sv != NULL) {
 					printf("Sv = ");
-					schema_print(sv);
+					schema_print(sv, el);
 					printf("\n");
 				}
 			}
+			/* Edge schema */
 			schema_init(&se);
 			memset(s, 0, BUFSIZE);
-			sprintf(s, "%s/%s/%s/se", grdbdir, gname, de->d_name);
+			sprintf(s, "%s/%s/%s/se",
+				grdbdir, gname, de->d_name);
 			fd = open(s, O_RDWR);
 			if (fd >= 0) {
 				se = schema_read(fd);
 				close(fd);
+
 				if (se != NULL) {
 					printf("Se = ");
-					schema_print(se);
+					schema_print(se, el);
 					printf("\n");
 				}
 			}
