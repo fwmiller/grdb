@@ -82,6 +82,14 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 	enum_t e;
 	int fd, efd;
 
+	/* Load enums */
+	efd = enum_file_open(grdbdir, gno, cno);
+	if (efd < 0)
+		return;
+
+	enum_list_init(&el);
+	enum_list_read(&el, efd);
+
 	/* Load the appropriate schema */
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/%d/%s",
@@ -90,7 +98,7 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 	if (fd < 0)
 		return;
 
-	schema = schema_read(fd);
+	schema = schema_read(fd, el);
 	if (schema == NULL)
 		old_schema_size = 0;
 	else
@@ -105,13 +113,6 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
         nextarg(cmdline, pos, " ", name);
 
 	/* Search enums for type name */
-	efd = enum_file_open(grdbdir, gno, cno);
-	if (efd < 0)
-		return;
-
-	enum_list_init(&el);
-	enum_list_read(&el, efd);
-
 	e = enum_list_find_by_name(el, type);
 	if (e != NULL) {
 #if _DEBUG

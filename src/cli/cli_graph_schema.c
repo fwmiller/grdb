@@ -50,7 +50,7 @@ cli_graph_schemas_print(char *gname)
 				grdbdir, gname, de->d_name);
 			fd = open(s, O_RDWR);
 			if (fd >= 0) {
-				sv = schema_read(fd);
+				sv = schema_read(fd, el);
 				close(fd);
 
 				if (sv != NULL) {
@@ -66,7 +66,7 @@ cli_graph_schemas_print(char *gname)
 				grdbdir, gname, de->d_name);
 			fd = open(s, O_RDWR);
 			if (fd >= 0) {
-				se = schema_read(fd);
+				se = schema_read(fd, el);
 				close(fd);
 
 				if (se != NULL) {
