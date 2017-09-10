@@ -74,6 +74,7 @@ vertex_read(vertex_t v, int fd)
 	ssize_t len, size;
 	vertexid_t id;
 	char buf[sizeof(vertexid_t)];
+	u64_t tlen;
 
 	assert(v != NULL);
 #if _DEBUG
@@ -87,31 +88,46 @@ vertex_read(vertex_t v, int fd)
 	printf("vertex_read: schema size = %lu bytes\n", size);
 #endif
 	/* Search for vertex id in current component */
-	for (off = 0;; off += sizeof(vertexid_t) + size) {
+	for (off = 0;;) {
 		lseek(fd, off, SEEK_SET);
 		len = read(fd, buf, sizeof(vertexid_t));
 		if (len != sizeof(vertexid_t)) {
 #if _DEBUG
 			printf("vertex_read: ");
-			printf("read %lu bytes to tuple buffer\n", len);
+			printf("read %lu bytes of vertex id\n", len);
 #endif
 			return (-1);
 		}
+		off += sizeof(vertexid_t);
+
 		id = *((vertexid_t *) buf);
-		if (id == v->id) {
-			if (v->tuple != NULL &&
-			    v->tuple->s != NULL &&
-			    size > 0) {
-				memset(v->tuple->buf, 0, size);
-				len = read(fd, v->tuple->buf, size);
+
+		/* Read tuple size first */
+		tlen = 0;
+		lseek(fd, off, SEEK_SET);
+		len = read(fd, &tlen, sizeof(u64_t));
+		if (len != sizeof(u64_t)) {
 #if _DEBUG
-				printf("vertex_read: ");
-				printf("read %lu bytes to tuple buffer\n",
-					len);
+			printf("vertex_read: ");
+			printf("read %lu bytes of tuple length\n", len);
 #endif
-			}
-			return len;
+			return (-1);
 		}
+		off += sizeof(u64_t);
+
+		/* Read tuple buffer if there is one */
+		if (v->tuple != NULL && v->tuple->buf != NULL) {
+			memset(v->tuple->buf, 0, size);
+			lseek(fd, off, SEEK_SET);
+			len = read(fd, v->tuple->buf, size);
+#if _DEBUG
+			printf("vertex_read: ");
+			printf("read %lu bytes to tuple buffer\n", len);
+#endif
+			off += size;
+		}
+		if (id == v->id)
+			return len;
 	}
 	return 0;
 }
@@ -128,6 +144,7 @@ vertex_write(vertex_t v, int fd)
 	ssize_t len, size;
 	vertexid_t id;
 	char buf[sizeof(vertexid_t)];
+	u64_t tlen;
 
 	assert(v != NULL);
 #if _DEBUG
@@ -159,12 +176,17 @@ vertex_write(vertex_t v, int fd)
 			 * The vertex id is already on secondary storage
 			 * so just "drop the head" and update the tuple
 			 */
+
+			/* Write the tuple size first */
+			tlen = (u64_t) size;
+			len = write(fd, &tlen, sizeof(u64_t));
+
+			/* Write the tuple buffer if there is one */
 			if (size > 0) {
-				memset(v->tuple->buf, 0, size);
 				len = write(fd, v->tuple->buf, size);
 #if _DEBUG
 				printf("vertex_write: ");
-				printf("write %lu bytes to tuple buffer\n",
+				printf("write %lu bytes of tuple buffer\n",
 					len);
 #endif
 				return len;
@@ -183,10 +205,16 @@ vertex_write(vertex_t v, int fd)
 	if (len != sizeof(vertexid_t))
 		return (-1);
 
+	/* Write the tuple size first */
+	tlen = (u64_t) size;
+	write(fd, &tlen, sizeof(u64_t));
+
+	/* Write the tuple buffer if there is one */
 	if (size > 0) {
-		len = write(fd, v->tuple->buf, size);
+		write(fd, v->tuple->buf, size);
 #if _DEBUG
-		printf("vertex_write: write %lu bytes to tuple buffer\n", len);
+		printf("vertex_write: ");
+		printf("write %lu bytes of tuple buffer\n", len);
 #endif
 		return len;
 	}
