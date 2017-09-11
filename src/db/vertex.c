@@ -60,6 +60,40 @@ vertex_print(vertex_t v)
 }
 
 
+/* Iterators */
+ssize_t
+vertex_first(vertex_t v, int fd)
+{
+	assert(v != NULL);
+
+	if (v->tuple == NULL || v->tuple->s == NULL)
+		size = 0;
+	else
+		size = schema_size(v->tuple->s);
+#if _DEBUG
+	printf("vertex_first: schema size = %lu bytes\n", size);
+#endif
+	lseek(fd, 0, SEEK_SET);
+	len = read(fd, buf, sizeof(vertexid_t));
+	if (len != sizeof(vertexid_t)) {
+#if _DEBUG
+		printf("vertex_read: ");
+		printf("read %lu bytes of vertex id\n", len);
+#endif
+		return (-1);
+	}
+	off += sizeof(vertexid_t);
+
+	return (-1);
+}
+
+ssize_t
+vertex_next(vertex_t v, int fd)
+{
+	return (-1);
+}
+
+
 /*
  * The vertex file is arranged as a packed list of vertex records.  Each
  * record contains a 64-bit vertex id followed by the vertex tuple.  If
