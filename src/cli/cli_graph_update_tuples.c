@@ -1,9 +1,9 @@
 #include <assert.h>
-#if _DEBUG
+#include <fcntl.h>
 #include <stdio.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "cli.h"
 #include "graph.h"
 
@@ -11,77 +11,83 @@
 void bufdump(char *buf, int size);
 #endif
 
-#define CLI_GRAPH_CREATE_TUPLE(SCHEMA, ELEMENT)				\
-{									\
-	tuple_t t;							\
-	t = (tuple_t) malloc(sizeof(struct tuple));			\
-	assert (t != NULL);						\
-	tuple_init(t, SCHEMA);						\
-	(ELEMENT)->tuple = t;						\
-}
-
-#define CLI_GRAPH_MODIFY_TUPLE(SCHEMA, ELEMENT, OLD_SCHEMA_SIZE)	\
-{									\
-	tuple_t t;							\
-	t = (tuple_t) malloc(sizeof(struct tuple));			\
-	assert (t != NULL);						\
-	tuple_init(t, SCHEMA);						\
-	memcpy(t->buf, (ELEMENT)->tuple->buf, OLD_SCHEMA_SIZE);		\
-	tuple_delete((ELEMENT)->tuple);					\
-	(ELEMENT)->tuple = t;						\
-}
-
-static void
-cli_graph_update_vertex_tuples(int old_schema_size)
-{
-	vertex_t v;
-
-	/* Update all vertices in the graph */
-	for (v = current_component->v; v != NULL; v = v->next)
-		if (v->tuple == NULL) {
-			CLI_GRAPH_CREATE_TUPLE(current_component->sv, v);
-#if _DEBUG
-			printf("create old_schema_size %d\n", old_schema_size);
-			bufdump(v->tuple->buf, v->tuple->len);
-#endif
-		} else {
-			CLI_GRAPH_MODIFY_TUPLE(
-				current_component->sv, v, old_schema_size);
-#if _DEBUG
-			printf("modify old_schema_size %d\n", old_schema_size);
-			bufdump(v->tuple->buf, v->tuple->len);
-#endif
-		}
-}
-
-void
-cli_graph_update_edge_tuples(int old_schema_size)
-{
-	edge_t e;
-
-	/* Update all edges in the graph */
-	for (e = current_component->e; e != NULL; e = e->next)
-		if (e->tuple == NULL) {
-			CLI_GRAPH_CREATE_TUPLE(current_component->se, e);
-#if _DEBUG
-			printf("create old_schema_size %d\n", old_schema_size);
-			bufdump(e->tuple->buf, e->tuple->len);
-#endif
-		} else {
-			CLI_GRAPH_MODIFY_TUPLE(
-				current_component->se, e, old_schema_size);
-#if _DEBUG
-			printf("modify old_schema_size %d\n", old_schema_size);
-			bufdump(e->tuple->buf, e->tuple->len);
-#endif
-		}
-}
-
 void
 cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 {
-	if (st == VERTEX)
-		cli_graph_update_vertex_tuples(old_schema_size);
-	else if (st == EDGE)
-		cli_graph_update_edge_tuples(old_schema_size);
+	int efd, fd, fd1, fd2;
+	int new_schema_size;
+	ssize_t len;
+	enum_list_t el = NULL;
+	schema_t schema = NULL;
+	char s[BUFSIZE];
+
+	/* Load enums */
+	efd = enum_file_open(grdbdir, gno, cno);
+	if (efd < 0)
+		return;
+
+	enum_list_init(&el);
+	enum_list_read(&el, efd);
+
+	/* Load the schema */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/%s",
+		grdbdir, gno, cno, (st == VERTEX ? "sv" : "se"));
+	fd = open(s, O_RDWR | O_CREAT, 0644);
+	if (fd < 0)
+		return;
+
+	schema = schema_read(fd, el);
+	close(fd);
+	if (schema == NULL)
+		new_schema_size = 0;
+	else
+		new_schema_size = schema_size(schema);
+#if _DEBUG
+	printf("cli_graph_update_tuples: ");
+	printf("old schema size %d new schema size %d\n",
+		old_schema_size, new_schema_size);
+#endif
+	if (new_schema_size - old_schema_size <= 0)
+		return;
+
+	/* Open vertex file for reading */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/v", grdbdir, gno, cno);
+	fd1 = open(s, O_RDONLY);
+
+	/* Open new vertex file for writing */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/v.tmp", grdbdir, gno, cno);
+	fd2 = open(s, O_WRONLY | O_CREAT, 0644);
+
+	/* Loop over all the vertices */
+	for (;;) {
+		/* Read vertex id and tuple */
+		memset(s, 0, BUFSIZE);
+		len = read(fd1, s, sizeof(vertexid_t) + old_schema_size);
+		if (len < sizeof(vertexid_t) + old_schema_size) {
+			if (len == 0)
+				break;
+			if (len < 0) {
+				/* XXX Need to close fds */
+				return;
+			}
+		}
+		/* Append the attribute with a default value */
+		memset(s + sizeof(vertexid_t) + old_schema_size, 0,
+			new_schema_size - old_schema_size);
+
+		/* Write the updated tuple to the new vertex file */
+		write(fd2, s, sizeof(vertexid_t) + new_schema_size);
+	}
+	/* Close both files */
+	close(fd1);
+	close(fd2);
+
+	/* Move the vertex to a temporary file name */
+
+	/* Move the new vertex file to the proper vertex file name */
+
+	/* Unlink the old vertex file from its temporary file name */
 }

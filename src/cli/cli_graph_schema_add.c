@@ -30,10 +30,6 @@ cli_graph_schema_add_enum(
 	schema_attribute_init(attr, name, ENUM, e);
 	strncpy(attr->name, name, ATTR_NAME_MAXLEN - 1);
 	schema_attribute_insert(schema, attr);
-#if _DEBUG
-	printf("update tuples with enum values\n");
-#endif
-	cli_graph_update_tuples(st, old_schema_size);
 }
 
 static void
@@ -60,11 +56,7 @@ cli_graph_schema_add_base(
 			assert(attr != NULL);
 			schema_attribute_init(attr, name, i, NULL);
 			schema_attribute_insert(schema, attr);
-#if _DEBUG
-			printf("update tuples\n");
-#endif
 			cli_graph_update_tuples(st, old_schema_size);
-
 			break;
 		}
 	}
@@ -139,5 +131,9 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 		schema_init(&schema);
 	cli_graph_schema_add_base(schema, old_schema_size, st, type, name);
 	schema_write(schema, fd);
+#if _DEBUG
+	printf("update tuples\n");
+#endif
+	cli_graph_update_tuples(st, old_schema_size);
 	close(fd);
 }
