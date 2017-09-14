@@ -91,6 +91,7 @@ component_print(component_t c, int with_tuples)
 	vertexid_t id, id1, id2;
 	tuple_t tuple;
 	char *buf;
+	int readlen;
 
 	assert (c != NULL);
 
@@ -102,11 +103,13 @@ component_print(component_t c, int with_tuples)
 	else
 		size = schema_size(c->sv);
 
-	buf = malloc((sizeof(vertexid_t) << 1) + size);
+	readlen = sizeof(vertexid_t) + size;
 
-	for (off = 0;; off += sizeof(vertexid_t) + size) {
+	buf = malloc(readlen);
+
+	for (off = 0;; off += readlen) {
 		lseek(c->vfd, off, SEEK_SET);
-		len = read(c->vfd, buf, sizeof(vertexid_t) + size);
+		len = read(c->vfd, buf, readlen);
 		if (len <= 0)
 			break;
 
@@ -129,9 +132,11 @@ component_print(component_t c, int with_tuples)
 	else
 		size = schema_size(c->se);
 
-	for (off = 0;; off += (sizeof(vertexid_t) << 1) + size) {
+	readlen = (sizeof(vertexid_t) << 1) + size;
+
+	for (off = 0;; off += readlen) {
 		lseek(c->efd, off, SEEK_SET);
-		len = read(c->efd, buf, (sizeof(vertexid_t) << 1) + size);
+		len = read(c->efd, buf, readlen);
 		if (len <= 0)
 			break;
 

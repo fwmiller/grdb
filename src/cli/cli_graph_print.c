@@ -13,6 +13,7 @@ cli_components_print(char *gname)
 	DIR *dirfd;
 	struct dirent *de;
 	struct component c;
+	int fd;
 
 	/* Loop over directories in graph to display each component */
 	memset(s, 0, BUFSIZE);
@@ -34,11 +35,29 @@ cli_components_print(char *gname)
 
 			component_init(&c);
 
-			/* XXX Load vertex schema */
+			/* Load enums */
+			c.efd = enum_file_open(grdbdir, gno, cno);
+			if (c.efd >= 0) {
+				enum_list_init(&(c.el));
+				enum_list_read(&(c.el), c.efd);
+			}
+			/* Load vertex schema */
+			memset(s, 0, BUFSIZE);
+			sprintf(s, "%s/%d/%d/sv", grdbdir, gno, cno);
+			fd = open(s, O_RDONLY);
+			if (fd >= 0) {
+				c.sv = schema_read(fd, c.el);
+				close(fd);
+			}
 
-			/* XXX Load edge schema */
-
-			/* XXX Load enums if any */
+			/* Load edge schema */
+			memset(s, 0, BUFSIZE);
+			sprintf(s, "%s/%d/%d/se", grdbdir, gno, cno);
+			fd = open(s, O_RDONLY);
+			if (fd >= 0) {
+				c.se = schema_read(fd, c.el);
+				close(fd);
+			}
 
 			/* Open vertex file */
 			memset(s, 0, BUFSIZE);

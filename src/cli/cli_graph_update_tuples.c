@@ -19,7 +19,7 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 	ssize_t len;
 	enum_list_t el = NULL;
 	schema_t schema = NULL;
-	char s[BUFSIZE];
+	char s[BUFSIZE], s1[BUFSIZE];
 
 	/* Load enums */
 	efd = enum_file_open(grdbdir, gno, cno);
@@ -33,7 +33,7 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/%d/%s",
 		grdbdir, gno, cno, (st == VERTEX ? "sv" : "se"));
-	fd = open(s, O_RDWR | O_CREAT, 0644);
+	fd = open(s, O_RDONLY | O_CREAT, 0644);
 	if (fd < 0)
 		return;
 
@@ -58,7 +58,7 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 
 	/* Open new vertex file for writing */
 	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/%d/v.tmp", grdbdir, gno, cno);
+	sprintf(s, "%s/%d/%d/v.new", grdbdir, gno, cno);
 	fd2 = open(s, O_WRONLY | O_CREAT, 0644);
 
 	/* Loop over all the vertices */
@@ -74,11 +74,12 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 				return;
 			}
 		}
-		/* Append the attribute with a default value */
-		memset(s + sizeof(vertexid_t) + old_schema_size, 0,
-			new_schema_size - old_schema_size);
-
-		/* Write the updated tuple to the new vertex file */
+		/*
+		 * Write the updated tuple to the new vertex file.  This
+		 * means picking up additional buffer space to be written
+		 * for this tuple.  The buffer holding this attribute is
+		 * zero which yields a default value depending on the type
+		 */
 		write(fd2, s, sizeof(vertexid_t) + new_schema_size);
 	}
 	/* Close both files */
@@ -86,8 +87,18 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 	close(fd2);
 
 	/* Move the vertex to a temporary file name */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/v", grdbdir, gno, cno);
+	memset(s1, 0, BUFSIZE);
+	sprintf(s1, "%s/%d/%d/v.tmp", grdbdir, gno, cno);
+	rename(s, s1);
 
 	/* Move the new vertex file to the proper vertex file name */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/v.new", grdbdir, gno, cno);
+	memset(s1, 0, BUFSIZE);
+	sprintf(s1, "%s/%d/%d/v", grdbdir, gno, cno);
+	rename(s, s1);
 
 	/* Unlink the old vertex file from its temporary file name */
 }
