@@ -24,7 +24,7 @@ void nextarg(char *ln, int *pos, char *sep, char *arg);
 int graphs_get_index(graph_t g);
 int components_get_index(graph_t g, component_t c);
 
-void cli_components_print(char *gname);
+void cli_components_print(char *gname, int with_tuples);
 void cli_graphs_print();
 
 void cli_enum(char *cmdline, int *pos);

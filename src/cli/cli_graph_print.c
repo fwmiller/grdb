@@ -7,7 +7,7 @@
 #include "graph.h"
 
 void
-cli_components_print(char *gname)
+cli_components_print(char *gname, int with_tuples)
 {
 	char s[BUFSIZE];
 	DIR *dirfd;
@@ -69,7 +69,7 @@ cli_components_print(char *gname)
 			sprintf(s, "%s/%s/%s/e", grdbdir, gname, de->d_name);
 			c.efd = open(s, O_RDWR);
 
-			component_print(&c, 0); /* no tuples */
+			component_print(&c, with_tuples);
 			printf("\n");
 
 			/* Close files */
@@ -97,7 +97,7 @@ cli_graphs_print()
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-			cli_components_print(de->d_name);
+			cli_components_print(de->d_name, 0); /* no tuples */
 		}
 	}
 	closedir(dirfd);

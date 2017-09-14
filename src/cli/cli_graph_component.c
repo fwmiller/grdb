@@ -101,6 +101,6 @@ cli_graph_component(char *cmdline, int *pos)
 
 		memset(s, 0, BUFSIZE);
 		sprintf(s, "%d", gno);
-		cli_components_print(s);
+		cli_components_print(s, 0); /* no tuples */
 	}
 }

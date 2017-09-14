@@ -89,7 +89,7 @@ component_print(component_t c, int with_tuples)
 	off_t off;
 	ssize_t len, size;
 	vertexid_t id, id1, id2;
-	tuple_t tuple;
+	struct tuple tuple;
 	char *buf;
 	int readlen;
 
@@ -104,7 +104,6 @@ component_print(component_t c, int with_tuples)
 		size = schema_size(c->sv);
 
 	readlen = sizeof(vertexid_t) + size;
-
 	buf = malloc(readlen);
 
 	for (off = 0;; off += readlen) {
@@ -119,9 +118,12 @@ component_print(component_t c, int with_tuples)
 		id = *((vertexid_t *) buf);
 		printf("%llu", id);
 
-		if (c->sv != NULL) {
-			tuple = (tuple_t) (buf + sizeof(vertexid_t));
-			tuple_print(tuple, c->el);
+		if (c->sv != NULL && with_tuples) {
+			memset(&tuple, 0, sizeof(struct tuple));
+			tuple.s = c->sv;
+			tuple.len = size;
+			tuple.buf = buf + sizeof(vertexid_t);
+			tuple_print(&tuple, c->el);
 		}
 	}
 	printf("},{");
@@ -133,6 +135,8 @@ component_print(component_t c, int with_tuples)
 		size = schema_size(c->se);
 
 	readlen = (sizeof(vertexid_t) << 1) + size;
+	free(buf);
+	buf = malloc(readlen);
 
 	for (off = 0;; off += readlen) {
 		lseek(c->efd, off, SEEK_SET);
@@ -148,9 +152,14 @@ component_print(component_t c, int with_tuples)
 		printf("(%llu,%llu)", id1, id2);
 
 		if (c->se != NULL) {
-			tuple = (tuple_t) (buf + (sizeof(vertexid_t) << 1));
-			tuple_print(tuple, c->el);
+			memset(&tuple, 0, sizeof(struct tuple));
+			tuple.s = c->se;
+			tuple.len = size;
+			tuple.buf = buf + sizeof(vertexid_t);
+			tuple_print(&tuple, c->el);
 		}
 	}
+	free(buf);
+
 	printf("})");
 }

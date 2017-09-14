@@ -28,7 +28,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 
 		memset(s, 0, BUFSIZE);
 		sprintf(s, "%d", gno);
-		cli_components_print(s);
+		cli_components_print(s, 1); /* with tuples */
 		return;
 	}
 	if (strlen(s2) <= 0) {
