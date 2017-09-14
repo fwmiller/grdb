@@ -60,10 +60,14 @@ vertex_print(vertex_t v)
 }
 
 
+#if 0
 /* Iterators */
 ssize_t
-vertex_first(vertex_t v, int fd)
+vertex_first(vertex_t v, int fd, off_t *off)
 {
+	ssize_t len, size;
+	char buf[sizeof(vertexid_t)];
+
 	assert(v != NULL);
 
 	if (v->tuple == NULL || v->tuple->s == NULL)
@@ -73,7 +77,8 @@ vertex_first(vertex_t v, int fd)
 #if _DEBUG
 	printf("vertex_first: schema size = %lu bytes\n", size);
 #endif
-	lseek(fd, 0, SEEK_SET);
+	*off = 0;
+	lseek(fd, *off, SEEK_SET);
 	len = read(fd, buf, sizeof(vertexid_t));
 	if (len != sizeof(vertexid_t)) {
 #if _DEBUG
@@ -82,7 +87,7 @@ vertex_first(vertex_t v, int fd)
 #endif
 		return (-1);
 	}
-	off += sizeof(vertexid_t);
+	*off += sizeof(vertexid_t);
 
 	return (-1);
 }
@@ -92,7 +97,7 @@ vertex_next(vertex_t v, int fd)
 {
 	return (-1);
 }
-
+#endif
 
 /*
  * The vertex file is arranged as a packed list of vertex records.  Each
@@ -108,7 +113,6 @@ vertex_read(vertex_t v, int fd)
 	ssize_t len, size;
 	vertexid_t id;
 	char buf[sizeof(vertexid_t)];
-	u64_t tlen;
 
 	assert(v != NULL);
 #if _DEBUG
@@ -135,19 +139,6 @@ vertex_read(vertex_t v, int fd)
 		off += sizeof(vertexid_t);
 
 		id = *((vertexid_t *) buf);
-
-		/* Read tuple size first */
-		tlen = 0;
-		lseek(fd, off, SEEK_SET);
-		len = read(fd, &tlen, sizeof(u64_t));
-		if (len != sizeof(u64_t)) {
-#if _DEBUG
-			printf("vertex_read: ");
-			printf("read %lu bytes of tuple length\n", len);
-#endif
-			return (-1);
-		}
-		off += sizeof(u64_t);
 
 		/* Read tuple buffer if there is one */
 		if (v->tuple != NULL && v->tuple->buf != NULL) {
@@ -178,7 +169,6 @@ vertex_write(vertex_t v, int fd)
 	ssize_t len, size;
 	vertexid_t id;
 	char buf[sizeof(vertexid_t)];
-	u64_t tlen;
 
 	assert(v != NULL);
 #if _DEBUG
@@ -211,10 +201,6 @@ vertex_write(vertex_t v, int fd)
 			 * so just "drop the head" and update the tuple
 			 */
 
-			/* Write the tuple size first */
-			tlen = (u64_t) size;
-			len = write(fd, &tlen, sizeof(u64_t));
-
 			/* Write the tuple buffer if there is one */
 			if (size > 0) {
 				len = write(fd, v->tuple->buf, size);
@@ -238,10 +224,6 @@ vertex_write(vertex_t v, int fd)
 #endif
 	if (len != sizeof(vertexid_t))
 		return (-1);
-
-	/* Write the tuple size first */
-	tlen = (u64_t) size;
-	write(fd, &tlen, sizeof(u64_t));
 
 	/* Write the tuple buffer if there is one */
 	if (size > 0) {
