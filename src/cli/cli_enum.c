@@ -38,8 +38,6 @@ cli_enum_print_current()
 	if (gno < 0 || cno < 0)
 		return;
 
-	printf(">component %d.%d\n", gno, cno);
-
 	fd = enum_file_open(grdbdir, gno, cno);
 	if (fd < 0)
 		return;
@@ -48,8 +46,10 @@ cli_enum_print_current()
 	el = enum_list_read(&el, fd);
 	close(fd);
 
-	if (el != NULL)
+	if (el != NULL) {
+		printf(">component %d.%d\n", gno, cno);
 		enum_list_print(el);
+	}
 }
 
 void

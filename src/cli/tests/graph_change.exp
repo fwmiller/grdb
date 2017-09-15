@@ -48,6 +48,10 @@ match_max 100000
 expect -exact "Graph Database\r
 (C) Frank W. Miller\r
 grdb> "
+send -- "clear\r"
+expect -exact "clear\r
+clear database\r
+grdb> "
 send -- "g n\r"
 expect -exact "g n\r
 grdb> "
@@ -59,9 +63,9 @@ expect -exact "g n\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
+2.0:({1},{})\r
 >0.0:({1},{})\r
 1.0:({1},{})\r
-2.0:({1},{})\r
 grdb> "
 send -- "g 1.0\r"
 expect -exact "g 1.0\r
@@ -71,27 +75,27 @@ expect -exact "g 2.0\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
+>2.0:({1},{})\r
 0.0:({1},{})\r
 1.0:({1},{})\r
->2.0:({1},{})\r
 grdb> "
 send -- "g 1.0\r"
 expect -exact "g 1.0\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
+2.0:({1},{})\r
 0.0:({1},{})\r
 >1.0:({1},{})\r
-2.0:({1},{})\r
 grdb> "
 send -- "g 0.0\r"
 expect -exact "g 0.0\r
 grdb> "
 send -- "g\r"
 expect -exact "g\r
+2.0:({1},{})\r
 >0.0:({1},{})\r
 1.0:({1},{})\r
-2.0:({1},{})\r
 grdb> "
 send -- "g 3.0\r"
 expect -exact "g 3.0\r

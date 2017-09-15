@@ -151,7 +151,7 @@ component_print(component_t c, int with_tuples)
 		id2 = *((vertexid_t *) (buf + sizeof(vertexid_t)));
 		printf("(%llu,%llu)", id1, id2);
 
-		if (c->se != NULL) {
+		if (c->se != NULL && with_tuples) {
 			memset(&tuple, 0, sizeof(struct tuple));
 			tuple.s = c->se;
 			tuple.len = size;
