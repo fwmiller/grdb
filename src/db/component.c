@@ -155,7 +155,7 @@ component_print(component_t c, int with_tuples)
 			memset(&tuple, 0, sizeof(struct tuple));
 			tuple.s = c->se;
 			tuple.len = size;
-			tuple.buf = buf + sizeof(vertexid_t);
+			tuple.buf = buf + (sizeof(vertexid_t) << 1);
 			tuple_print(&tuple, c->el);
 		}
 	}

@@ -21,6 +21,7 @@ cli_graph_schema_add_enum(
 	assert (schema != NULL);
 
 #if _DEBUG
+	printf("cli_graph_schema_add_enum: ");
 	printf("add attribute type enum %s name %s to schema\n",
 	       e->name, name);
 #endif
@@ -47,6 +48,7 @@ cli_graph_schema_add_base(
 	for (i = 0; i < BASE_TYPES_MAX; i++) {
 		if (strcasecmp(type, base_types_str[i]) == 0) {
 #if _DEBUG
+			printf("cli_graph_schema_add_base: ");
 			printf("add %s to schema\n", type);
 #endif
 			attribute_t attr;
@@ -56,7 +58,6 @@ cli_graph_schema_add_base(
 			assert(attr != NULL);
 			schema_attribute_init(attr, name, i, NULL);
 			schema_attribute_insert(schema, attr);
-			cli_graph_update_tuples(st, old_schema_size);
 			break;
 		}
 	}
