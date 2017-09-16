@@ -220,21 +220,21 @@ schema_read(int fd, enum_list_t el)
 {
 	schema_t s = NULL;
 	attribute_t attr = NULL;
-	off_t off;
 	ssize_t len;
 	u64_t n;
 	u8_t ch;
 	int i;
 
 	/* Read number of attributes in schema */
-	off = 0;
-	lseek(fd, off, SEEK_SET);
+	lseek(fd, 0, SEEK_SET);
 	len = read(fd, &n, sizeof(u64_t));
 	if (len < sizeof(u64_t))
 		return NULL;
-	off += sizeof(u64_t);
 #if _DEBUG
-	printf("schema_read: schema has %llu attributes\n", n);
+	printf("schema_read: schema has %llu attribute", n);
+	if (n >= 2)
+		printf("s");
+	printf("\n");
 #endif
 	schema_init(&s);
 
@@ -245,21 +245,17 @@ schema_read(int fd, enum_list_t el)
 			return NULL;
 
 		/* Read attribute name */
-		lseek(fd, off, SEEK_SET);
 		len = read(fd, &(attr->name), ATTR_NAME_MAXLEN);
 		if (len < ATTR_NAME_MAXLEN)
 			return NULL;
-		off += ATTR_NAME_MAXLEN;
 #if _DEBUG
 		printf("schema_read: attribute name [%s]\n", attr->name);
 #endif
 
 		/* Read attribute base type */
-		lseek(fd, off, SEEK_SET);
 		len = read(fd, &ch, 1);
 		if (len < 1)
 			return NULL;
-		off += 1;
 		attr->bt = (enum base_types) ch;
 #if _DEBUG
 		printf("schema_read: attribute base type [%s]\n",
@@ -274,7 +270,6 @@ schema_read(int fd, enum_list_t el)
 			len = read(fd, s, ENUM_NAME_LEN);
 			if (len < ENUM_NAME_LEN)
 				return NULL;
-			off += ENUM_NAME_LEN;
 #if _DEBUG
 			printf("schema_read: enum name [%s]\n", s);
 #endif
@@ -282,8 +277,13 @@ schema_read(int fd, enum_list_t el)
 			e = enum_list_find_by_name(el, s);
 
 			/* Hook the enum to the attribute if found */
-			if (e != NULL)
+			if (e == NULL) {
+#if _DEBUG
+				printf("schema_read: enum not found\n");
+#endif
+			} else {
 				attr->e = e;
+			}
 		}
 		/* Insert attribute in schema */
 		schema_attribute_insert(s, attr);
@@ -296,7 +296,6 @@ schema_t
 schema_write(schema_t s, int fd)
 {
 	attribute_t attr;
-	off_t off;
 	ssize_t len;
 	u64_t n;
 	u8_t ch;
@@ -311,12 +310,10 @@ schema_write(schema_t s, int fd)
 	printf("schema_write: schema has %llu attributes\n", n);
 #endif
 	/* Write number of attributes in schema */
-	off = 0;
-	lseek(fd, off, SEEK_SET);
+	lseek(fd, 0, SEEK_SET);
 	len = write(fd, &n, sizeof(u64_t));
 	if (len < sizeof(u64_t))
 		return NULL;
-	off += sizeof(u64_t);
 
 	/* Write each attribute in the list */
 	for (attr = s->attrlist; attr != NULL; attr = attr->next) {
@@ -327,7 +324,6 @@ schema_write(schema_t s, int fd)
 		len = write(fd, attr->name, ATTR_NAME_MAXLEN);
 		if (len < ATTR_NAME_MAXLEN)
 			return NULL;
-		off += ATTR_NAME_MAXLEN;
 
 		/* Write attribute base type */
 #if _DEBUG
@@ -339,7 +335,6 @@ schema_write(schema_t s, int fd)
 		len = write(fd, &ch, 1);
 		if (len < 1)
 			return NULL;
-		off += 1;
 
 		/* Write attribute and enum names if attribute is an enum */
 		if (attr->bt == ENUM) {
@@ -350,7 +345,6 @@ schema_write(schema_t s, int fd)
 			len = write(fd, attr->e->name, ENUM_NAME_LEN);
 			if (len < ENUM_NAME_LEN)
 				return NULL;
-			off += ENUM_NAME_LEN;
 		}
 	}
 	return s;

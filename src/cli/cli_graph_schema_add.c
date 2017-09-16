@@ -82,20 +82,27 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 
 	enum_list_init(&el);
 	enum_list_read(&el, efd);
+	close(efd);
 
 	/* Load the appropriate schema */
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/%d/%s",
 		grdbdir, gno, cno, (st == VERTEX ? "sv" : "se"));
+#if _DEBUG
+	printf("cli_graph_schema_add: read schema file %s\n", s);
+#endif
 	fd = open(s, O_RDWR | O_CREAT, 0644);
 	if (fd < 0)
 		return;
-
 	schema = schema_read(fd, el);
+
 	if (schema == NULL)
 		old_schema_size = 0;
 	else
 		old_schema_size = schema_size(schema);
+#if _DEBUG
+	printf("cli_graph_schema_add: old_schema_size %d\n", old_schema_size);
+#endif
 
 	/* Attribute type */
         memset(type, 0, BUFSIZE);
@@ -109,21 +116,28 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 	e = enum_list_find_by_name(el, type);
 	if (e != NULL) {
 #if _DEBUG
-		printf("add enum %s\n", name);
+		printf("cli_graph_schema_add: add enum %s\n", name);
 #endif
 		if (schema == NULL)
 			schema_init(&schema);
 		cli_graph_schema_add_enum(
 			schema, old_schema_size, st, e, name);
 
-		enum_list_write(el, efd);
-		close(efd);
-
+		memset(s, 0, BUFSIZE);
+		sprintf(s, "%s/%d/%d/%s",
+			grdbdir, gno, cno, (st == VERTEX ? "sv" : "se"));
+#if _DEBUG
+		printf("cli_graph_schema_add: write schema file %s\n", s);
+#endif
 		schema_write(schema, fd);
 		close(fd);
+
+#if _DEBUG
+		printf("update tuples\n");
+#endif
+		cli_graph_update_tuples(st, old_schema_size);
 		return;
 	}
-	close(efd);
 
 #if _DEBUG
 	printf("add attribute %s with base type %s\n", name, type);
@@ -132,9 +146,10 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 		schema_init(&schema);
 	cli_graph_schema_add_base(schema, old_schema_size, st, type, name);
 	schema_write(schema, fd);
+	close(fd);
+
 #if _DEBUG
 	printf("update tuples\n");
 #endif
 	cli_graph_update_tuples(st, old_schema_size);
-	close(fd);
 }
