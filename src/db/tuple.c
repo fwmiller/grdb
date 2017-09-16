@@ -10,20 +10,31 @@ void bufdump(char *buf, int size);
 #endif
 
 void
-tuple_init(tuple_t t, schema_t s)
+tuple_init(tuple_t *t, schema_t s)
 {
 	attribute_t attr;
 	int offset;
 
-	if (t == NULL || s == NULL)
+	if (s == NULL) {
+#if _DEBUG
+		printf("tuple_init: missing schema\n");
+#endif
 		return;
-
-	memset(t, 0, sizeof(struct tuple));
-	t->s = s;
-	t->len = schema_size(s);
-	t->buf = malloc(t->len);
-	assert(t->buf != NULL);
-	memset(t->buf, 0, t->len);
+	}
+	if (t == NULL) {
+#if _DEBUG
+		printf("tuple_init: missing tuple\n");
+#endif
+		return;
+	}
+	if (*t == NULL)
+		*t = malloc(sizeof(struct tuple));
+	memset(*t, 0, sizeof(struct tuple));
+	(*t)->s = s;
+	(*t)->len = schema_size(s);
+	(*t)->buf = malloc((*t)->len);
+	assert((*t)->buf != NULL);
+	memset((*t)->buf, 0, (*t)->len);
 
 	/* Set inital values */
 	for (offset = 0, attr = s->attrlist;
@@ -31,41 +42,41 @@ tuple_init(tuple_t t, schema_t s)
 	     offset += base_types_len[attr->bt], attr = attr->next)
 		switch (attr->bt) {
 		case CHARACTER:
-			tuple_set_char(t->buf + offset, 0);
+			tuple_set_char((*t)->buf + offset, 0);
 			break;
 		case VARCHAR:
 			{
 				char *s = "";
-				tuple_set_varchar(t->buf + offset, s);
+				tuple_set_varchar((*t)->buf + offset, s);
 			}
 			break;
 		case BOOLEAN:
-			tuple_set_bool(t->buf + offset, 0);
+			tuple_set_bool((*t)->buf + offset, 0);
 			break;
 		case ENUM:
-			tuple_set_char(t->buf + offset, 0);
+			tuple_set_char((*t)->buf + offset, 0);
 			break;
 		case INTEGER:
-			tuple_set_int(t->buf + offset, 0);
+			tuple_set_int((*t)->buf + offset, 0);
 			break;
 		case FLOAT:
-			tuple_set_float(t->buf + offset, 0.0);
+			tuple_set_float((*t)->buf + offset, 0.0);
 			break;
 		case DOUBLE:
-			tuple_set_double(t->buf + offset, 0.0);
+			tuple_set_double((*t)->buf + offset, 0.0);
 			break;
 		case DATE:
 			{
 				/* A mark in time */
 				char *date = "08-27-2016";
 				//char *date = "01-01-1970";
-				tuple_set_date(t->buf + offset, date);
+				tuple_set_date((*t)->buf + offset, date);
 			}
 			break;
 		case TIME:
 			{
 				char *time = "00:00:00";
-				tuple_set_time(t->buf + offset, time);
+				tuple_set_time((*t)->buf + offset, time);
 			}
 			break;
 		case BASE_TYPES_MAX:

@@ -39,7 +39,7 @@ component_find_vertex_by_id(component_t c, vertex_t v)
 	assert (v != NULL);
 
 	/* Assume v was allocated and v->id was set by the caller */
-	len = vertex_read(v, c->vfd);
+	len = vertex_read(v, c->sv, c->vfd);
 	if (len > 0)
 		return v;
 

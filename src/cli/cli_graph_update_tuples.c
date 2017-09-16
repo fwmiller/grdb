@@ -156,6 +156,5 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 			s, s1, strerror(errno));
 #endif
 	}
-
-	/* Unlink the old vertex file from its temporary file name */
+	/* XXX Unlink the old vertex file from its temporary file name */
 }

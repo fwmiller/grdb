@@ -67,7 +67,7 @@ vertex_print(vertex_t v)
  * read in for the vertex tuple are returned.
  */
 ssize_t
-vertex_read(vertex_t v, int fd)
+vertex_read(vertex_t v, schema_t schema, int fd)
 {
 	off_t off;
 	ssize_t len, size;
@@ -78,10 +78,10 @@ vertex_read(vertex_t v, int fd)
 #if _DEBUG
 	printf("vertex_read: read vertex %llu\n", v->id);
 #endif
-	if (v->tuple == NULL || v->tuple->s == NULL)
+	if (schema == NULL)
 		size = 0;
 	else
-		size = schema_size(v->tuple->s);
+		size = schema_size(schema);
 #if _DEBUG
 	printf("vertex_read: schema size = %lu bytes\n", size);
 #endif
@@ -101,7 +101,9 @@ vertex_read(vertex_t v, int fd)
 		id = *((vertexid_t *) buf);
 
 		/* Read tuple buffer if there is one */
-		if (v->tuple != NULL && v->tuple->buf != NULL) {
+		if (size > 0) {
+			if (v->tuple == NULL)
+				tuple_init(&(v->tuple), schema);
 			memset(v->tuple->buf, 0, size);
 			lseek(fd, off, SEEK_SET);
 			len = read(fd, v->tuple->buf, size);
