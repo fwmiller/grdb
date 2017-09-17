@@ -81,6 +81,18 @@ schema_attribute_insert(schema_t s, attribute_t attr)
 	t->next = attr;
 }
 
+attribute_t
+schema_attribute_last(schema_t s)
+{
+	attribute_t attr;
+
+	if (s->attrlist == NULL)
+		return NULL;
+
+	for (attr = s->attrlist; attr->next != NULL; attr = attr->next);
+	return attr;
+}
+
 void
 schema_attribute_remove(schema_t s, attribute_t attr)
 {

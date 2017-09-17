@@ -40,48 +40,54 @@ tuple_init(tuple_t *t, schema_t s)
 	for (offset = 0, attr = s->attrlist;
 	     attr != NULL;
 	     offset += base_types_len[attr->bt], attr = attr->next)
-		switch (attr->bt) {
-		case CHARACTER:
-			tuple_set_char((*t)->buf + offset, 0);
-			break;
-		case VARCHAR:
-			{
-				char *s = "";
-				tuple_set_varchar((*t)->buf + offset, s);
-			}
-			break;
-		case BOOLEAN:
-			tuple_set_bool((*t)->buf + offset, 0);
-			break;
-		case ENUM:
-			tuple_set_char((*t)->buf + offset, 0);
-			break;
-		case INTEGER:
-			tuple_set_int((*t)->buf + offset, 0);
-			break;
-		case FLOAT:
-			tuple_set_float((*t)->buf + offset, 0.0);
-			break;
-		case DOUBLE:
-			tuple_set_double((*t)->buf + offset, 0.0);
-			break;
-		case DATE:
-			{
-				/* A mark in time */
-				char *date = "08-27-2016";
-				//char *date = "01-01-1970";
-				tuple_set_date((*t)->buf + offset, date);
-			}
-			break;
-		case TIME:
-			{
-				char *time = "00:00:00";
-				tuple_set_time((*t)->buf + offset, time);
-			}
-			break;
-		case BASE_TYPES_MAX:
-			break;
+		tuple_set_default_value(attr->bt, (*t)->buf, offset);
+}
+
+void
+tuple_set_default_value(enum base_types bt, char *buf, int offset)
+{
+	switch (bt) {
+	case CHARACTER:
+		tuple_set_char(buf + offset, 0);
+		break;
+	case VARCHAR:
+		{
+			char *s = "";
+			tuple_set_varchar(buf + offset, s);
 		}
+		break;
+	case BOOLEAN:
+		tuple_set_bool(buf + offset, 0);
+		break;
+	case ENUM:
+		tuple_set_char(buf + offset, 0);
+		break;
+	case INTEGER:
+		tuple_set_int(buf + offset, 0);
+		break;
+	case FLOAT:
+		tuple_set_float(buf + offset, 0.0);
+		break;
+	case DOUBLE:
+		tuple_set_double(buf + offset, 0.0);
+		break;
+	case DATE:
+		{
+			/* A mark in time */
+			char *date = "08-27-2016";
+			//char *date = "01-01-1970";
+			tuple_set_date(buf + offset, date);
+		}
+		break;
+	case TIME:
+		{
+			char *time = "00:00:00";
+			tuple_set_time(buf + offset, time);
+		}
+		break;
+	case BASE_TYPES_MAX:
+		break;
+	}
 }
 
 void

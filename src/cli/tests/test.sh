@@ -2,6 +2,6 @@
 for f in *.exp
 do
 	echo 
-	echo $f
+	echo "==> " . $f
 	./$f
 done

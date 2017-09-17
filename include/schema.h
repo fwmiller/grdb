@@ -48,6 +48,7 @@ void schema_attribute_init(
 void schema_attribute_print(attribute_t attr, enum_list_t el);
 void schema_attribute_insert(schema_t s, attribute_t attr);
 void schema_attribute_remove(schema_t s, attribute_t attr);
+attribute_t schema_attribute_last(schema_t s);
 
 void schema_init(schema_t *s);
 int schema_file_init(int gidx, int cidx, char *name);

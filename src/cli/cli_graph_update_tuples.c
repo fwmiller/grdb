@@ -23,6 +23,7 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 	ssize_t len;
 	enum_list_t el = NULL;
 	schema_t schema = NULL;
+	attribute_t attr = NULL;
 	char s[BUFSIZE], s1[BUFSIZE];
 
 	/* Load enums */
@@ -48,6 +49,9 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 		new_schema_size = 0;
 	else
 		new_schema_size = schema_size(schema);
+
+	attr = schema_attribute_last(schema);
+
 #if _DEBUG
 	printf("cli_graph_update_tuples: ");
 	printf("old schema size %d new schema size %d\n",
@@ -107,10 +111,21 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 		}
 #endif
 		/*
+		 * Set the default value for the new attribute based on
+		 * its base type
+		 */
+		attr = schema_attribute_last(schema);
+		tuple_set_default_value(
+			attr->bt,
+			s + (st == VERTEX ?
+				sizeof(vertexid_t) :
+				(sizeof(vertexid_t) << 1)),
+			old_schema_size);
+
+		/*
 		 * Write the updated tuple to the new vertex file.  This
 		 * means picking up additional buffer space to be written
-		 * for this tuple.  The buffer holding this attribute is
-		 * zero which yields a default value depending on the type
+		 * for this tuple.
 		 */
 		writelen = new_schema_size +
 			(st == VERTEX ?
