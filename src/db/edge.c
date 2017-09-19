@@ -65,7 +65,7 @@ edge_print(edge_t e)
  * read in for the vertex tuple are returned.
  */
 ssize_t
-edge_read(edge_t e, int fd)
+edge_read(edge_t e, schema_t schema, int fd)
 {
 	off_t off;
 	ssize_t len, size;
@@ -73,11 +73,13 @@ edge_read(edge_t e, int fd)
 	char buf[sizeof(vertexid_t) << 1];
 
 	assert(e != NULL);
-	assert(e->tuple != NULL);
 #if _DEBUG
 	printf("edge_read: read edge (%llu,%llu)\n", e->id1, e->id2);
 #endif
-	size = schema_size(e->tuple->s);
+        if (schema == NULL)
+                size = 0;
+        else
+                size = schema_size(schema);
 #if _DEBUG
 	printf("edge_read: schema size = %lu bytes\n", size);
 #endif
@@ -94,7 +96,11 @@ edge_read(edge_t e, int fd)
 		}
 		id1 = *((vertexid_t *) buf);
 		id2 = *((vertexid_t *) (buf + sizeof(vertexid_t)));
+
 		if (id1 == e->id1 && id2 == e->id2) {
+			if (e->tuple == NULL)
+				tuple_init(&(e->tuple), schema);
+
 			memset(e->tuple->buf, 0, size);
 			len = read(fd, e->tuple->buf, size);
 #if _DEBUG
@@ -154,7 +160,6 @@ edge_write(edge_t e, int fd)
 			 * so just "drop the head" and update the tuple
 			 */
 			if (size > 0) {
-				memset(e->tuple->buf, 0, size);
 				len = write(fd, e->tuple->buf, size);
 #if _DEBUG
 				printf("edge_write: ");

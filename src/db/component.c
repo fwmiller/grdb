@@ -67,7 +67,7 @@ component_find_edge_by_ids(component_t c, edge_t e)
 	 * Assume e was allocated and e->id1 and e->id2 were set by
 	 * the caller
 	 */
-	len = edge_read(e, c->efd);
+	len = edge_read(e, c->se, c->efd);
 	if (len > 0)
 		return e;
 

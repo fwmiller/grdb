@@ -1,8 +1,61 @@
 #include <ctype.h>
+#if _DEBUG
+#include <errno.h>
+#endif
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "cli.h"
+
+static void
+cli_graph_vertex_write(vertex_t v)
+{
+	int fd;
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/v", grdbdir, gno, cno);
+#if _DEBUG
+	printf("cli_graph_vertex_write: open vertex file %s\n", s);
+#endif
+	fd = open(s, O_RDWR);
+	if (fd < 0) {
+#if _DEBUG
+		printf("cli_graph_vertex_write: ");
+		printf("open vertex file failed (%s)\n",
+			strerror(errno));
+#endif
+		return;
+	}
+	vertex_write(v, fd);
+	close(fd);
+}
+
+static void
+cli_graph_edge_write(edge_t e)
+{
+	int fd;
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/e", grdbdir, gno, cno);
+#if _DEBUG
+	printf("cli_graph_edge_write: open edge file %s\n", s);
+#endif
+	fd = open(s, O_RDWR);
+	if (fd < 0) {
+#if _DEBUG
+		printf("cli_graph_edge_write: ");
+		printf("open edge file failed (%s)\n",
+			strerror(errno));
+#endif
+		return;
+	}
+	edge_write(e, fd);
+	close(fd);
+}
 
 void
 cli_graph_tuple(char *cmdline, int *pos)
@@ -47,26 +100,62 @@ cli_graph_tuple(char *cmdline, int *pos)
 		}
 
 	if (st == VERTEX) {
+		struct component c;
 		struct vertex v;
 		vertex_t v1;
 		base_types_t bt;
+		int fd;
+		char s[BUFSIZE];
 
-		/*
-		 * Set the value of a vertex tuple
-		 */
-		if (current_component == NULL ||
-		    current_component->sv == NULL) {
-			printf("Missing vertex schema\n");
+		/* Setup a component for searching */
+		component_init(&c);
+
+		/* Load enums */
+		fd = enum_file_open(grdbdir, gno, cno);
+		if (fd < 0) {
+			printf("Open enum file failed\n");
 			return;
 		}
+		enum_list_init(&(c.el));
+		enum_list_read(&(c.el), fd);
+		close(fd);
 
+		/* Load the vertex schema */
+		memset(s, 0, BUFSIZE);
+		sprintf(s, "%s/%d/%d/sv", grdbdir, gno, cno);
+#if _DEBUG
+		printf("cli_graph_tuple: read vertex schema file %s\n", s);
+#endif
+		fd = open(s, O_RDWR | O_CREAT, 0644);
+		if (fd < 0) {
+			printf("Open vertex schema file failed\n");
+			return;
+		}
+		c.sv = schema_read(fd, c.el);
+		close(fd);
+
+		/* Set the value of a vertex tuple */
 		vertex_init(&v);
 		v.id = id1;
-		v1 = component_find_vertex_by_id(current_component, &v);
-		if (v1 == NULL) {
-			printf("Illegal vertex id\n");
+
+		/* Open the vertex file */
+		memset(s, 0, BUFSIZE);
+		sprintf(s, "%s/%d/%d/v", grdbdir, gno, cno);
+#if _DEBUG
+		printf("cli_graph_tuple: open vertex file %s\n", s);
+#endif
+		c.vfd = open(s, O_RDWR | O_CREAT, 0644);
+		if (c.vfd < 0) {
+			printf("Open vertex file failed\n");
 			return;
 		}
+		v1 = component_find_vertex_by_id(&c, &v);
+		if (v1 == NULL) {
+			printf("Find vertex id %llu failed\n", id1);
+			return;
+		}
+		close(c.vfd);
+
 		/* s2 is an attribute name from the vertex schema */
 
 		/* Check for a VARCHAR */
@@ -103,38 +192,77 @@ cli_graph_tuple(char *cmdline, int *pos)
 #endif
 			tuple_set_enum(v1->tuple, s2,
 				attr->e->name, s3, current_component->el);
+
+			cli_graph_vertex_write(v1);
 			return;
 		}
 		if (tuple_set(v1->tuple, s2, s3) < 0) {
 			printf("Set vertex tuple value failed\n");
 			return;
 		}
+		cli_graph_vertex_write(v1);
 
 
 	} else if (st == EDGE) {
+		struct component c;
 		struct edge e;
 		edge_t e1;
 		vertexid_t id2;
 		base_types_t bt;
+		int fd;
+		char s[BUFSIZE];
 
-		/*
-		 * Set the value of an edge tuple
-		 */
-		if (current_component == NULL ||
-		    current_component->se == NULL) {
-			printf("Missing edge schema\n");
+		/* Setup a component for searching */
+		component_init(&c);
+
+		/* Load enums */
+		fd = enum_file_open(grdbdir, gno, cno);
+		if (fd < 0) {
+			printf("Open enum file failed\n");
 			return;
 		}
+		enum_list_init(&(c.el));
+		enum_list_read(&(c.el), fd);
+		close(fd);
+
+		/* Load the edge schema */
+		memset(s, 0, BUFSIZE);
+		sprintf(s, "%s/%d/%d/se", grdbdir, gno, cno);
+#if _DEBUG
+		printf("cli_graph_tuple: read edge schema file %s\n", s);
+#endif
+		fd = open(s, O_RDWR | O_CREAT, 0644);
+		if (fd < 0) {
+			printf("Open edge schema file failed\n");
+			return;
+		}
+		c.se = schema_read(fd, c.el);
+		close(fd);
+
 		/* s2 is a vertex id for an edge */
 		id2 = (vertexid_t) atoi(s2);
 
-		edge_init(&e);
-		edge_set_vertices(&e, id1, id2);
-		e1 = component_find_edge_by_ids(current_component, &e);
-		if (e1 == NULL) {
-			printf("Illegal vertex id(s)\n");
+		/* Open the edge file */
+		memset(s, 0, BUFSIZE);
+		sprintf(s, "%s/%d/%d/e", grdbdir, gno, cno);
+#if _DEBUG
+		printf("cli_graph_tuple: open edge file %s\n", s);
+#endif
+		c.efd = open(s, O_RDWR | O_CREAT, 0644);
+		if (c.efd < 0) {
+			printf("Find edge ids (%llu,%llu) failed\n",
+				id1, id2);
 			return;
 		}
+		edge_init(&e);
+		edge_set_vertices(&e, id1, id2);
+		e1 = component_find_edge_by_ids(&c, &e);
+		if (e1 == NULL) {
+			printf("Illegal edge id(s)\n");
+			return;
+		}
+		close(c.efd);
+
 		/* Check for a VARCHAR */
 		bt = schema_find_type_by_name(e1->tuple->s, s3);
 		if (bt == VARCHAR) {
@@ -169,11 +297,14 @@ cli_graph_tuple(char *cmdline, int *pos)
 #endif
 			tuple_set_enum(e1->tuple, s3,
 				attr->e->name, s4, current_component->el);
+
+			cli_graph_edge_write(e1);
 			return;
 		}
 		if (tuple_set(e1->tuple, s3, s4) < 0) {
 			printf("Set edge tuple value failed\n");
 			return;
 		}
+		cli_graph_edge_write(e1);
 	}
 }
