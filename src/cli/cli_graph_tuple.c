@@ -191,7 +191,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			       s2, attr->e->name, s3);
 #endif
 			tuple_set_enum(v1->tuple, s2,
-				attr->e->name, s3, current_component->el);
+				attr->e->name, s3, c.el);
 
 			cli_graph_vertex_write(v1);
 			return;
@@ -296,7 +296,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 			       s3, attr->e->name, s4);
 #endif
 			tuple_set_enum(e1->tuple, s3,
-				attr->e->name, s4, current_component->el);
+				attr->e->name, s4, c.el);
 
 			cli_graph_edge_write(e1);
 			return;
