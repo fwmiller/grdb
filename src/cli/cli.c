@@ -15,9 +15,6 @@ char grdbdir[BUFSIZE];
 /* Current graph and component numbers */
 int gno = (-1), cno = (-1);
 
-/* Current component cache of schema and enums */
-component_t current_component = NULL;
-
 char *readline(char *prompt);
 
 static int tty = 0;
@@ -92,11 +89,6 @@ cli()
 	tty = isatty(STDIN_FILENO);
 	if (tty)
 		cli_about();
-
-	/* Initialize current component */
-	current_component = (component_t) malloc(sizeof(struct component));
-	assert(current_component != NULL);
-	component_init(current_component);
 
 	/* Setup to load databases */
 	homedir = getenv("HOME");

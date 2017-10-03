@@ -16,9 +16,6 @@ extern char grdbdir[];
 /* Current graph and component numbers */
 extern int gno, cno;
 
-/* Current component cache of schema and enums */
-extern component_t current_component;
-
 void nextarg(char *ln, int *pos, char *sep, char *arg);
 
 int graphs_get_index(graph_t g);
