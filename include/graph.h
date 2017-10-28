@@ -85,9 +85,45 @@ edge_t component_find_edge_by_ids( component_t c, edge_t e);
 void component_insert_edge(component_t c, edge_t e);
 void component_print(component_t c, int with_tuples);
 
-component_t component_project(component_t c, attribute_t attrlist);
-int component_select();
-int component_join();
+/*
+ * Project a component from the input component c.  The resulting
+ * component has only the attributes listed in the attrlist.
+ */
+component_t
+component_project(component_t c, attribute_t attrlist);
+
+/*
+ * Select a component from the input compnent c.  The resulting
+ * component has only those vertices and edges that are specified.
+ * The v array contains n vertices that should be included in the
+ * output component.  Likewise, the v1 and v2 arrays contain m
+ * edges that should be included.  The elements of v1 and v2 represent
+ * the endpoints for the m edges.
+ * The resulting component must be connected or the select operation
+ * fails.
+ */
+component_t
+component_select(
+	component_t c,
+	vertexid_t n,
+	vertexid_t v[],
+	vertexid_t m,
+	vertexid_t v1[],
+	vertexid_t v2[]
+);
+
+/*
+ * Join two components, c1 and c2, together based on their vertex ids.
+ * The resulting component should contain vertices that are the union
+ * of those in c1 and c2.  It should also contain the edges from both
+ * c1 and c2.  The schema for vertices and the edges should be the
+ * the unions of the vertex schema for c1 and c2 and the edges schema
+ * for c1 and c2, respectively.
+ * The resulting component must be connected or the join operation
+ * fails.
+ */
+component_t
+component_join(component_t c1, component_t c2);
 
 void graph_init(graph_t g);
 void graph_file_init(int gidx);

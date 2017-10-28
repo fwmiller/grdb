@@ -1,7 +1,7 @@
 #include "graph.h"
 
-int
-component_join()
+component_t
+component_join(component_t c1, component_t c2)
 {
-	return 0;
+	return NULL;
 }
