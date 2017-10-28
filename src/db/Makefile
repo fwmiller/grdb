@@ -6,8 +6,10 @@ OBJS =	component.o		\
 	component_join.o	\
 	edge.o			\
 	enum.o			\
+	enum_join.o		\
 	graph.o			\
 	schema.o		\
+	schema_join.o		\
 	string_pool.o		\
 	tuple.o			\
 	tuple_print.o		\
