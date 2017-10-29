@@ -5,17 +5,25 @@ OBJS =	component.o		\
 	component_select.o	\
 	component_join.o	\
 	edge.o			\
+	edge_read.o		\
+	edge_write.o		\
 	enum.o			\
 	enum_join.o		\
+	enum_list_read.o	\
+	enum_list_write.o	\
 	graph.o			\
 	schema.o		\
 	schema_join.o		\
+	schema_read.o		\
+	schema_write.o		\
 	string_pool.o		\
 	tuple.o			\
 	tuple_print.o		\
 	tuple_set.o		\
 	tuple_util.o		\
 	vertex.o		\
+	vertex_read.o		\
+	vertex_write.o		\
 	vertexid.o
 
 TGT = libdb.a
