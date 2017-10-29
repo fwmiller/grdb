@@ -1,15 +1,10 @@
 #include <assert.h>
-#if _DEBUG
-#include <errno.h>
-#endif
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "config.h"
 #include "schema.h"
-#include "types.h"
 
 char *base_types_str[] = {
 	"CHAR",
