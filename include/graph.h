@@ -93,24 +93,13 @@ component_t
 component_project(component_t c, attribute_t attrlist);
 
 /*
- * Select a component from the input compnent c.  The resulting
- * component has only those vertices and edges that are specified.
- * The v array contains n vertices that should be included in the
- * output component.  Likewise, the v1 and v2 arrays contain m
- * edges that should be included.  The elements of v1 and v2 represent
- * the endpoints for the m edges.
+ * Select a component from the input compnent c
+ *
  * The resulting component must be connected or the select operation
  * fails.
  */
 component_t
-component_select(
-	component_t c,
-	vertexid_t n,
-	vertexid_t v[],
-	vertexid_t m,
-	vertexid_t v1[],
-	vertexid_t v2[]
-);
+component_select();
 
 /*
  * Join two components, c1 and c2, together based on their vertex ids.

@@ -12,6 +12,7 @@ OBJS =	component.o		\
 	enum_list_read.o	\
 	enum_list_write.o	\
 	graph.o			\
+	import.o		\
 	schema.o		\
 	schema_join.o		\
 	schema_read.o		\
