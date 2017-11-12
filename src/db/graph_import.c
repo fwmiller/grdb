@@ -4,10 +4,10 @@
 ivertex_t ivertex_select(igraph_t ig);
 ivertex_t ivertex_neighbors(igraph_t ig, ivertex_t v);
 ivertex_t ivertex_gcs(ivertex_t n, ivertex_t v, schema_t *sv, schema_t *se);
-void component_grow(component_t c);
+void component_grow(igraph_t ig, component_t c);
 void igraph_project(igraph_t g, component_t c);
-void igraph_edges();
-void igraph_vertices();
+void igraph_complete_edges();
+void igraph_complete_vertices();
 
 /*
  * This routine will take as input a graph in general form, referred to
@@ -62,7 +62,7 @@ graph_import(igraph_t ig, graph_t g)
 			/* XXX Add edge */
 
 			/* Try to grow the new component */
-			component_grow(c);
+			component_grow(ig, c);
 
 			/* Project new component out of the input graph */
 			igraph_project(ig, c);
@@ -75,11 +75,71 @@ graph_import(igraph_t ig, graph_t g)
 			continue;
 		}
 		/* Complete the edge components */
-		igraph_edges();
+		igraph_complete_edges();
 
 		/* Complete the vertex components */
-		igraph_vertices();
+		igraph_complete_vertices();
 
 		return 0;
 	}
 }
+
+
+/*
+ * This routine picks a vertex from those still contained in the input
+ * graph
+ */
+
+ivertex_t
+ivertex_select(igraph_t ig)
+{
+	return NULL;
+}
+
+
+/*
+ * This routine finds the neighbors of a give vertex in the input graph.
+ * The neighbors are returned as a list of vertices from the input graph.
+ */
+ivertex_t ivertex_neighbors(igraph_t ig, ivertex_t v)
+{
+	return NULL;
+}
+
+
+/*
+ * This routine finds the greatest common schema (gcs) associated with the
+ * neighbors of the specified vertex.  A pointer to the vertex that has
+ * the gcs with the input vertex is returned.  In addition, the common
+ * schemas are placed into the schema reference variables, one for the
+ * vertices and one for the edges.
+ */
+ivertex_t ivertex_gcs(ivertex_t n, ivertex_t v, schema_t *sv, schema_t *se)
+{
+	return NULL;
+}
+
+
+/*
+ * This routine will try to add additional vertices and edges to the
+ * component based on the input graph, and the schemas contained in the
+ * component.
+ */
+void component_grow(igraph_t ig, component_t c)
+{
+	return;
+}
+
+
+/*
+ * This routine will project the subgraph contained in the component
+ * out of the input graph.  Any vertices and edges that are projected
+ * out are reclaimed.
+ */
+void igraph_project(igraph_t g, component_t c)
+{
+	return;
+}
+
+void igraph_complete_edges();
+void igraph_complete_vertices();
