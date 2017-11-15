@@ -1,6 +1,7 @@
 # grdb
 
-grdb is a graph database being developed at the University of Colorado.
+grdb is an open-source graph database being developed at the University of
+Colorado.
 
 __Contact__
 
