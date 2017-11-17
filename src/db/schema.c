@@ -81,7 +81,7 @@ schema_attribute_last(schema_t s)
 {
 	attribute_t attr;
 
-	if (s->attrlist == NULL)
+	if (s == NULL || s->attrlist == NULL)
 		return NULL;
 
 	for (attr = s->attrlist; attr->next != NULL; attr = attr->next);
