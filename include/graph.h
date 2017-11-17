@@ -114,6 +114,22 @@ component_select();
 component_t
 component_join(component_t c1, component_t c2);
 
+/* 
+ * Execute Dijkstra's algorithm on the specified component.  Find the
+ * shortest path from v1 to v2 if it exists in the component c.
+ *
+ * For CSCI 3287:  Assume that the path will have at least one integer
+ * attribute that is the same along the edges connecting the two vertices
+ * if a path exists.  You should be able to find an integer attribute
+ * in the edge schema associated with the component.
+ *
+ * The routine returns a list of vertexid_t values that represent the
+ * ordered list of vertices along the found path.
+ */
+vertexid_t *
+component_sssp(component_t c, vertex_t v1, vertex_t v2);
+
+
 void graph_init(graph_t g);
 void graph_file_init(int gidx);
 void graph_insert_component(graph_t g, component_t c);

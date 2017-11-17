@@ -4,6 +4,7 @@ OBJS =	component.o		\
 	component_project.o	\
 	component_select.o	\
 	component_join.o	\
+	component_sssp.o	\
 	edge.o			\
 	edge_read.o		\
 	edge_write.o		\
