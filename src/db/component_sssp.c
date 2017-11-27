@@ -4,12 +4,15 @@
 /* Place the code for your Dijkstra implementation in this file */
 
 
-vertexid_t *
-component_sssp(component_t c, vertex_t v1, vertex_t v2)
+int
+component_sssp(
+        component_t c,
+        vertexid_t v1,
+        vertexid_t v2,
+        int *n,
+        int *total_weight,
+        vertexid_t **path)
 {
-	vertexid_t * vlist = NULL;
-
-
 	
 	/*
 	 * Figure out which attribute in the component edges schema you will
@@ -26,5 +29,5 @@ component_sssp(component_t c, vertex_t v1, vertex_t v2)
 
 
 	/* Change this as needed */
-	return NULL;
+	return (-1);
 }

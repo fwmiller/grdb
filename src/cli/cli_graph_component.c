@@ -85,6 +85,64 @@ cli_graph_component_new()
 	close(fd);
 }
 
+static void
+cli_graph_component_sssp(char *cmdline, int *pos)
+{
+	struct component c;
+	vertexid_t v1, v2;
+	char s[BUFSIZE];
+	int fd, n, total_weight, result;
+	vertexid_t *path = NULL;
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	v1 = (vertexid_t) atoi(s);
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	v2 = (vertexid_t) atoi(s);
+
+	/* XXX Need to do some error checking on v1 and v2 here */
+
+#if _DEBUG
+	printf("cli_graph_component_sssp: ");
+	printf("execute dijkstra on vertex ids %llu and %llu\n", v1, v2);
+#endif
+
+	/* Initialize component */
+	component_init(&c);
+
+	/* Load enums */
+	fd = enum_file_open(grdbdir, gno, cno);
+	if (fd >= 0) {
+		enum_list_init(&(c.el));
+		enum_list_read(&(c.el), fd);
+		close(fd);
+	}
+	/* Load the edge schema */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/se", grdbdir, gno, cno);
+#if _DEBUG
+	printf("cli_graph_component_sssp: ");
+	printf("read edge schema file %s\n", s);
+#endif
+	fd = open(s, O_RDONLY);
+	if (fd < 0) {
+		printf("Component must have an edge schema\n");
+		return;
+	}
+	c.se = schema_read(fd, c.el);
+	close(fd);
+
+	/* Setup and run Dijkstra */
+	n = (-1);
+	total_weight = (-1);
+	result = component_sssp(&c, v1, v2, &n, &total_weight, &path);
+	if (result < 0) {
+		/* Failure... */
+	}
+}
+
 void
 cli_graph_component(char *cmdline, int *pos)
 {
@@ -95,6 +153,9 @@ cli_graph_component(char *cmdline, int *pos)
 
 	if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0)
 		cli_graph_component_new();
+
+	else if (strcmp(s, "sssp") == 0)
+		cli_graph_component_sssp(cmdline, pos);
 
 	else if (strlen(s) == 0) {
 		char s[BUFSIZE];

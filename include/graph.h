@@ -123,11 +123,23 @@ component_join(component_t c1, component_t c2);
  * if a path exists.  You should be able to find an integer attribute
  * in the edge schema associated with the component.
  *
- * The routine returns a list of vertexid_t values that represent the
- * ordered list of vertices along the found path.
+ * The routine returns the value 0 if the algorithm executes successfully
+ * and the value (-1) otherwise.  If a correct result is obtained an
+ * array is returned through the other parameters.  The reference parameter
+ * n is used to return the number of vertices on the path, including the
+ * two specified endpoints.  The reference parameter total_weight is used 
+ * to return the total_weight of summed along the edges of the path.  The
+ * path reference parameter returns an array of vertex ids that contain
+ * the shortest path, including the two specified endpoints.
  */
-vertexid_t *
-component_sssp(component_t c, vertex_t v1, vertex_t v2);
+int
+component_sssp(
+	component_t c,
+	vertexid_t v1,
+	vertexid_t v2,
+	int *n,
+	int *total_weight,
+	vertexid_t **path);
 
 
 void graph_init(graph_t g);
