@@ -1,4 +1,7 @@
 #include <assert.h>
+#if _DEBUG
+#include <errno.h>
+#endif
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
