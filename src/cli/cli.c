@@ -151,7 +151,7 @@ cli()
 			continue;
 
 		} else if (strcmp(cmd, "clear") == 0 ||
-			   strcmp(cmd, "h") == 0) {
+			   strcmp(cmd, "c") == 0) {
 			printf("clear database\n");
 			cli_clear_database();
 			continue;
