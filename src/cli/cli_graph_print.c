@@ -13,7 +13,7 @@ cli_components_print(char *gname, int with_tuples)
 	DIR *dirfd;
 	struct dirent *de;
 	struct component c;
-	int fd;
+	int fd, gidx, cidx;
 
 	/* Loop over directories in graph to display each component */
 	memset(s, 0, BUFSIZE);
@@ -28,7 +28,10 @@ cli_components_print(char *gname, int with_tuples)
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-			if (atoi(gname) == gno && atoi(de->d_name) == cno)
+			gidx = atoi(gname);
+			cidx = atoi(de->d_name);
+
+			if (gidx == gno && cidx == cno)
 				printf(">");
 
 			printf("%s.%s:", gname, de->d_name);
@@ -36,14 +39,14 @@ cli_components_print(char *gname, int with_tuples)
 			component_init(&c);
 
 			/* Load enums */
-			c.efd = enum_file_open(grdbdir, gno, cno);
+			c.efd = enum_file_open(grdbdir, gidx, cidx);
 			if (c.efd >= 0) {
 				enum_list_init(&(c.el));
 				enum_list_read(&(c.el), c.efd);
 			}
 			/* Load vertex schema */
 			memset(s, 0, BUFSIZE);
-			sprintf(s, "%s/%d/%d/sv", grdbdir, gno, cno);
+			sprintf(s, "%s/%d/%d/sv", grdbdir, gidx, cidx);
 			fd = open(s, O_RDONLY);
 			if (fd >= 0) {
 				c.sv = schema_read(fd, c.el);
@@ -52,7 +55,7 @@ cli_components_print(char *gname, int with_tuples)
 
 			/* Load edge schema */
 			memset(s, 0, BUFSIZE);
-			sprintf(s, "%s/%d/%d/se", grdbdir, gno, cno);
+			sprintf(s, "%s/%d/%d/se", grdbdir, gidx, cidx);
 			fd = open(s, O_RDONLY);
 			if (fd >= 0) {
 				c.se = schema_read(fd, c.el);
