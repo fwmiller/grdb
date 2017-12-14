@@ -16,8 +16,8 @@ component_join_structure(component_t c1, component_t c2)
  * component structure, including tuples, based on the structures of the
  * two input components.
  */
-component_t
-component_join(component_t c1, component_t c2)
+int
+component_join(component_t c1, component_t c2, int *gidx, int *cidx)
 {
 	component_t c = NULL;
 
@@ -40,5 +40,5 @@ component_join(component_t c1, component_t c2)
 
 	/* Assign enums and schemas to new component */
 
-	return c;
+	return (-1);
 }

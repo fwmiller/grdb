@@ -108,11 +108,17 @@ component_select();
  * c1 and c2.  The schema for vertices and the edges should be the
  * the unions of the vertex schema for c1 and c2 and the edges schema
  * for c1 and c2, respectively.
+ *
  * The resulting component must be connected or the join operation
  * fails.
+ *
+ * The routine returns the value 0 if the join was successful and
+ * (-1) if it fails.  If successful, the graph number and component
+ * number of the new component are returned through the gidx and
+ * cidx reference parameters, respectively.
  */
-component_t
-component_join(component_t c1, component_t c2);
+int
+component_join(component_t c1, component_t c2, int *gidx, int *cidx);
 
 /* 
  * Execute Dijkstra's algorithm on the specified component.  Find the

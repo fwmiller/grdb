@@ -143,6 +143,48 @@ cli_graph_component_sssp(char *cmdline, int *pos)
 	}
 }
 
+static void
+cli_graph_component_project(char *cmdline, int *pos)
+{
+	char s[BUFSIZE];
+
+	/* Get list of attributes */
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+}
+
+static void
+cli_graph_component_join(char *cmdline, int *pos)
+{
+	struct component c1, c2;
+	int gidx, cidx, result;
+	char s[BUFSIZE];
+
+	/* Get first component argument */
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+#if _DEBUG
+	printf("cli_graph_component_join: left component %s\n", s);
+#endif
+	/* Get second component argument */
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+#if _DEBUG
+	printf("cli_graph_component_join: right component %s\n", s);
+#endif
+	component_init(&c1);
+	component_init(&c2);
+	gidx = (-1);
+	cidx = (-1);
+	result = component_join(&c1, &c1, &gidx, &cidx);
+	if (result < 0) {
+#if _DEBUG
+		printf("cli_graph_component_join: join failed\n");
+#endif
+	}
+}
+
 void
 cli_graph_component(char *cmdline, int *pos)
 {
@@ -156,6 +198,12 @@ cli_graph_component(char *cmdline, int *pos)
 
 	else if (strcmp(s, "sssp") == 0)
 		cli_graph_component_sssp(cmdline, pos);
+
+	else if (strcmp(s, "project") == 0)
+		cli_graph_component_project(cmdline, pos);
+
+	else if (strcmp(s, "join") == 0)
+		cli_graph_component_join(cmdline, pos);
 
 	else if (strlen(s) == 0) {
 		char s[BUFSIZE];
