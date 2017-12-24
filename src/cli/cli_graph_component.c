@@ -155,6 +155,14 @@ cli_graph_component_project(char *cmdline, int *pos)
 }
 
 static void
+cli_graph_component_select(char *cmdline, int *pos)
+{
+#if _DEBUG
+	printf("cli_graph_component_select: select failed\n");
+#endif
+}
+
+static void
 cli_graph_component_join(char *cmdline, int *pos)
 {
 	struct component c1, c2;
@@ -199,10 +207,13 @@ cli_graph_component(char *cmdline, int *pos)
 	else if (strcmp(s, "sssp") == 0)
 		cli_graph_component_sssp(cmdline, pos);
 
-	else if (strcmp(s, "project") == 0)
+	else if (strcmp(s, "project") == 0 || strcmp(s, "p") == 0)
 		cli_graph_component_project(cmdline, pos);
 
-	else if (strcmp(s, "join") == 0)
+	else if (strcmp(s, "select") == 0 || strcmp(s, "s") == 0)
+		cli_graph_component_select(cmdline, pos);
+
+	else if (strcmp(s, "join") == 0 || strcmp(s, "j") == 0)
 		cli_graph_component_join(cmdline, pos);
 
 	else if (strlen(s) == 0) {
