@@ -9,7 +9,7 @@
 #include "graph.h"
 
 int
-cli_enum_syntax_check(char *s)
+cli_graph_enum_syntax_check(char *s)
 {
 	int i, len;
 	char ch;
@@ -30,7 +30,7 @@ cli_enum_syntax_check(char *s)
 }
 
 void
-cli_enum_print_current()
+cli_graph_enum_print_current()
 {
 	enum_list_t el = NULL;
 	int fd;
@@ -53,7 +53,7 @@ cli_enum_print_current()
 }
 
 void
-cli_enum(char *cmdline, int *pos)
+cli_graph_enum(char *cmdline, int *pos)
 {
 	enum_list_t el = NULL;
 	enum_t e = NULL;
@@ -67,7 +67,7 @@ cli_enum(char *cmdline, int *pos)
 	nextarg(cmdline, pos, " ", s);
 
 	if (strlen(s) == 0) {
-		cli_enum_print_current();
+		cli_graph_enum_print_current();
 		return;
 	}
 	/* Try to create a new enum */
@@ -76,7 +76,7 @@ cli_enum(char *cmdline, int *pos)
 		return;
 	}
 	/* Check syntax of enum name */
-	if (!cli_enum_syntax_check(s)) {
+	if (!cli_graph_enum_syntax_check(s)) {
 		printf("Enum name illegal syntax\n");
 		return;
 	}
@@ -114,7 +114,7 @@ cli_enum(char *cmdline, int *pos)
 		if (strlen(s) == 0)
 			break;
 
-		if (!cli_enum_syntax_check(s)) {
+		if (!cli_graph_enum_syntax_check(s)) {
 			printf("Enum element %s illegal syntax\n", s);
 
 			/* XXX Free enum memory */

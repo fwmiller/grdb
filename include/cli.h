@@ -24,7 +24,7 @@ int components_get_index(graph_t g, component_t c);
 void cli_components_print(char *gname, int with_tuples);
 void cli_graphs_print();
 
-void cli_enum(char *cmdline, int *pos);
+void cli_graph_enum(char *cmdline, int *pos);
 void cli_graph(char *cmdline, int *pos);
 
 

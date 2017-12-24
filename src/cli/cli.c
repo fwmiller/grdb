@@ -150,8 +150,7 @@ cli()
 			cli_about();
 			continue;
 
-		} else if (strcmp(cmd, "clear") == 0 ||
-			   strcmp(cmd, "c") == 0) {
+		} else if (strcmp(cmd, "clear") == 0) {
 			printf("clear database\n");
 			cli_clear_database();
 			continue;
@@ -159,11 +158,6 @@ cli()
 		} else if (strcmp(cmd, "help") == 0 ||
 			   strcmp(cmd, "h") == 0) {
 			cli_help();
-			continue;
-
-		} else if (strcmp(cmd, "enum") == 0 ||
-			   strcmp(cmd, "e") == 0) {
-			cli_enum(cmdline, &pos);
 			continue;
 
 		} else if (strcmp(cmd, "graph") == 0 ||
