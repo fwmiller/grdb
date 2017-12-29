@@ -4,6 +4,7 @@ LIBDIRS = -L../db
 
 OBJS =	bufdump.o 			\
 	cli.o				\
+	cli_component_print.o		\
 	cli_graph.o			\
 	cli_graph_component.o		\
 	cli_graph_edge.o		\

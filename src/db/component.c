@@ -84,7 +84,7 @@ component_insert_edge(component_t c, edge_t e)
 }
 
 void
-component_print(component_t c, int with_tuples)
+component_print(FILE *out, component_t c, int with_tuples)
 {
 	off_t off;
 	ssize_t len, size;
@@ -95,7 +95,7 @@ component_print(component_t c, int with_tuples)
 
 	assert (c != NULL);
 
-	printf("({");
+	fprintf(out, "({");
 
 	/* Vertices */
 	if (c->sv == NULL)
@@ -113,10 +113,10 @@ component_print(component_t c, int with_tuples)
 			break;
 
 		if (off > 0)
-			printf(",");
+			fprintf(out, ",");
 
 		id = *((vertexid_t *) buf);
-		printf("%llu", id);
+		fprintf(out, "%llu", id);
 
 		if (c->sv != NULL && with_tuples) {
 			memset(&tuple, 0, sizeof(struct tuple));
@@ -126,7 +126,7 @@ component_print(component_t c, int with_tuples)
 			tuple_print(&tuple, c->el);
 		}
 	}
-	printf("},{");
+	fprintf(out, "},{");
 
 	/* Edges */
 	if (c->se == NULL)
@@ -145,11 +145,11 @@ component_print(component_t c, int with_tuples)
 			break;
 
 		if (off > 0)
-			printf(",");
+			fprintf(out, ",");
 
 		id1 = *((vertexid_t *) buf);
 		id2 = *((vertexid_t *) (buf + sizeof(vertexid_t)));
-		printf("(%llu,%llu)", id1, id2);
+		fprintf(out, "(%llu,%llu)", id1, id2);
 
 		if (c->se != NULL && with_tuples) {
 			memset(&tuple, 0, sizeof(struct tuple));
@@ -161,5 +161,5 @@ component_print(component_t c, int with_tuples)
 	}
 	free(buf);
 
-	printf("})");
+	fprintf(out, "})");
 }

@@ -2,6 +2,7 @@
 #define __GRAPH_H
 
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "schema.h"
 #include "tuple.h"
@@ -83,7 +84,7 @@ void component_insert_vertex(component_t c, vertex_t v);
 vertex_t component_find_vertex_by_id(component_t c, vertex_t v);
 edge_t component_find_edge_by_ids( component_t c, edge_t e);
 void component_insert_edge(component_t c, edge_t e);
-void component_print(component_t c, int with_tuples);
+void component_print(FILE *out, component_t c, int with_tuples);
 
 /*
  * Project a component from the input component c.  The resulting
