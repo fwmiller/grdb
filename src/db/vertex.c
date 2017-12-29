@@ -52,8 +52,8 @@ vertex_set_id(vertex_t v, vertexid_t id)
 }
 
 void
-vertex_print(vertex_t v)
+vertex_print(FILE *out, vertex_t v)
 {
 	assert(v != NULL);
-	printf("%llu", v->id);
+	fprintf(out, "%llu", v->id);
 }

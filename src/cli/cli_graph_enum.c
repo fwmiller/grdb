@@ -32,12 +32,19 @@ cli_graph_enum_syntax_check(char *s)
 void
 cli_graph_enum_print_current()
 {
+	FILE *out;
 	enum_list_t el = NULL;
 	int fd;
 
 	if (gno < 0 || cno < 0)
 		return;
 
+	out = fopen("/tmp/grdbEnum", "w");
+	if (out == NULL) {
+		printf("cli_graph_enum_print_current ");
+		printf("fopen /tmp/grdbEnum failed\n");
+		return;
+	}
 	fd = enum_file_open(grdbdir, gno, cno);
 	if (fd < 0)
 		return;
@@ -48,8 +55,9 @@ cli_graph_enum_print_current()
 
 	if (el != NULL) {
 		printf(">component %d.%d\n", gno, cno);
-		enum_list_print(el);
+		enum_list_print(out, el);
 	}
+	fclose(out);
 }
 
 void

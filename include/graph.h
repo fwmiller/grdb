@@ -66,7 +66,7 @@ typedef struct graph *graph_t;
 void vertex_init(vertex_t v);
 int vertex_file_init(int gidx, int cidx);
 void vertex_set_id(vertex_t v, vertexid_t id);
-void vertex_print(vertex_t v);
+void vertex_print(FILE *out, vertex_t v);
 ssize_t vertex_read(vertex_t v, schema_t schema, int fd);
 ssize_t vertex_write(vertex_t v, int fd);
 
@@ -74,7 +74,7 @@ ssize_t vertex_write(vertex_t v, int fd);
 void edge_init(edge_t e);
 int edge_file_init(int gidx, int cidx);
 void edge_set_vertices(edge_t e, vertexid_t id1, vertexid_t id2);
-void edge_print(edge_t e);
+void edge_print(FILE *out, edge_t e);
 ssize_t edge_read(edge_t e, schema_t schema, int fd);
 ssize_t edge_write(edge_t e, int fd);
 

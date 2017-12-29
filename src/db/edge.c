@@ -49,10 +49,10 @@ edge_set_vertices(edge_t e, vertexid_t id1, vertexid_t id2)
 }
 
 void
-edge_print(edge_t e)
+edge_print(FILE *out, edge_t e)
 {
 	assert(e != NULL);
 
 	//printf("(%04llx,%04llx)", e->id1, e->id2);
-	printf("(%llu,%llu)", e->id1, e->id2);
+	fprintf(out, "(%llu,%llu)", e->id1, e->id2);
 }
