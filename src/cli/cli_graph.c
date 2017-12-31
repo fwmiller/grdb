@@ -22,25 +22,31 @@ cli_graph(char *cmdline, int *pos)
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
 
-	if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0)
+	if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0) {
 		cli_graph_new(cmdline, pos);
+		return;
 
-	else if (strcmp(s, "component") == 0 || strcmp(s, "c") == 0)
+	} else if (strcmp(s, "component") == 0 || strcmp(s, "c") == 0) {
 		cli_graph_component(cmdline, pos);
+		return;
 
-	else if (strcmp(s, "edge") == 0 || strcmp(s, "e") == 0)
+	} else if (strcmp(s, "edge") == 0 || strcmp(s, "e") == 0) {
 		cli_graph_edge(cmdline, pos);
+		return;
 
-	else if (strcmp(s, "enum") == 0)
+	} else if (strcmp(s, "enum") == 0) {
 		cli_graph_enum(cmdline, pos);
+		return;
 
-	else if (strcmp(s, "schema") == 0 || strcmp(s, "s") == 0)
+	} else if (strcmp(s, "schema") == 0 || strcmp(s, "s") == 0) {
 		cli_graph_schema(cmdline, pos);
+		return;
 
-	else if (strcmp(s, "tuple") == 0 || strcmp(s, "t") == 0)
+	} else if (strcmp(s, "tuple") == 0 || strcmp(s, "t") == 0) {
 		cli_graph_tuple(cmdline, pos);
+		return;
 
-	else if (isdigit(s[0])) {
+	} else if (isdigit(s[0])) {
 		int cidx, gidx, spos;
 		char s1[BUFSIZE];
 #if _DEBUG
@@ -68,7 +74,8 @@ cli_graph(char *cmdline, int *pos)
 #endif
 		gno = gidx;
 		cno = cidx;
-		
+
+		return;
 	}
 	if (strlen(s) == 0)
 		cli_graphs_print();

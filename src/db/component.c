@@ -123,7 +123,7 @@ component_print(FILE *out, component_t c, int with_tuples)
 			tuple.s = c->sv;
 			tuple.len = size;
 			tuple.buf = buf + sizeof(vertexid_t);
-			tuple_print(&tuple, c->el);
+			tuple_print(out, &tuple, c->el);
 		}
 	}
 	fprintf(out, "},{");
@@ -156,7 +156,7 @@ component_print(FILE *out, component_t c, int with_tuples)
 			tuple.s = c->se;
 			tuple.len = size;
 			tuple.buf = buf + (sizeof(vertexid_t) << 1);
-			tuple_print(&tuple, c->el);
+			tuple_print(out, &tuple, c->el);
 		}
 	}
 	free(buf);

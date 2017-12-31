@@ -47,11 +47,11 @@ enum_file_open(char *grdbdir, int gidx, int cidx)
 }
 
 void
-enum_print(enum_t e)
+enum_print(FILE *out, enum_t e)
 {
-	printf("(");
-	string_pool_print(e->pool);
-	printf(")");
+	fprintf(out, "(");
+	string_pool_print(out, e->pool);
+	fprintf(out, ")");
 }
 
 void
@@ -112,13 +112,13 @@ enum_list_count(enum_list_t el)
 }
 
 void
-enum_list_print(enum_list_t el)
+enum_list_print(FILE *out, enum_list_t el)
 {
 	enum_t e;
 
 	for (e = el; e != NULL; e = e->next) {
-		printf("%s ", e->name);
-		enum_print(e);
+		fprintf(out, "%s ", e->name);
+		enum_print(out, e);
 		printf("\n");
 	}
 }

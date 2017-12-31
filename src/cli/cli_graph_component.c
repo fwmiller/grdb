@@ -217,12 +217,20 @@ cli_graph_component(char *cmdline, int *pos)
 		cli_graph_component_join(cmdline, pos);
 
 	else if (strlen(s) == 0) {
-/*
+		FILE *out;
 		char s[BUFSIZE];
 
 		memset(s, 0, BUFSIZE);
+		sprintf(s, "/tmp/grdbGraphs");
+		out = fopen(s, "w");
+		if (out == NULL) {
+			printf("cli_graph_component: fopen %s failed\n", s);
+			return;
+		}
+		memset(s, 0, BUFSIZE);
 		sprintf(s, "%d", gno);
-		cli_components_print(s, 0); // no tuples
-*/
+		cli_components_print(out, s, 0); /* no tuples */
+
+		fclose(out);
 	}
 }

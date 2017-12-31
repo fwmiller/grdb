@@ -118,7 +118,10 @@ cli()
 		}
 		// cmdline = readline(PROMPT);
 		memset(prompt, 0, BUFSIZE);
-		sprintf(prompt, "grdb> ");
+		if (gno < 0 || cno < 0)
+			sprintf(prompt, "grdb> ");
+		else
+			sprintf(prompt, "%d.%d: ", gno, cno);
 
 		if (tty)
 			cmdline = readline(prompt);

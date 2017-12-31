@@ -1,6 +1,7 @@
 #ifndef __TUPLE_H
 #define __TUPLE_H
 
+#include <stdio.h>
 #include "schema.h"
 
 struct tuple {
@@ -24,7 +25,7 @@ void tuple_set_enum(
 	char *val,
 	enum_list_t el);
 
-void tuple_print(tuple_t t, enum_list_t el);
+void tuple_print(FILE *out, tuple_t t, enum_list_t el);
 
 /* Getters */
 char   tuple_get_char(char *tbuf);

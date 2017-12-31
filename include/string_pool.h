@@ -2,6 +2,9 @@
 #define __STRING_POOL_H
 
 
+#include <stdio.h>
+
+
 /*****************************************************************************
 ******************************************************************************
 
@@ -45,7 +48,7 @@ void bufdump(char *buf, int size);
 #endif
 
 void string_pool_init(string_pool_t *pool);
-void string_pool_print(string_pool_t pool);
+void string_pool_print(FILE *out, string_pool_t pool);
 int string_pool_overall_len(string_pool_t pool);
 void string_pool_insert(string_pool_t *pool, char *s);
 char *string_pool_find_by_idx(string_pool_t pool, int idx);

@@ -77,13 +77,21 @@ cli_graph_tuple(char *cmdline, int *pos)
 	printf("s1=[%s] s2=[%s] s3=[%s], s4=[%s]\n", s1, s2, s3, s4);
 #endif
 	if (strlen(s1) <= 0) {
-/*
+		FILE *out;
 		char s[BUFSIZE];
 
 		memset(s, 0, BUFSIZE);
+		sprintf(s, "/tmp/grdbGraphs");
+		out = fopen(s, "w");
+		if (out == NULL) {
+			printf("cli_graph_tuple: fopen %s failed\n", s);
+			return;
+		}
+		memset(s, 0, BUFSIZE);
 		sprintf(s, "%d", gno);
-		cli_components_print(s, 1); // with tuples
-*/
+		cli_components_print(out, s, 1); /* with tuples */
+
+		fclose(out);
 		return;
 	}
 	if (strlen(s2) <= 0) {

@@ -14,16 +14,13 @@ cli_component_print(
 	int fd;
 	char s[BUFSIZE];
 
-	gidx = atoi(gname);
-	cidx = atoi(cname);
-	if (gidx == gno && cidx == cno)
-		fprintf(out, ">");
-
 	fprintf(out, "%s.%s:", gname, cname);
 
 	component_init(&c);
 
 	/* Load enums */
+	gidx = atoi(gname);
+	cidx = atoi(cname);
 	c.efd = enum_file_open(grdbdir, gidx, cidx);
 	if (c.efd >= 0) {
 		enum_list_init(&(c.el));
@@ -45,7 +42,6 @@ cli_component_print(
 		c.se = schema_read(fd, c.el);
 		close(fd);
 	}
-
 	/* Open vertex file */
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%s/%s/v", grdbdir, gname, cname);
@@ -59,7 +55,6 @@ cli_component_print(
 	component_print(out, &c, with_tuples);
 	fprintf(out, "\n");
 
-	/* Close files */
 	close(c.efd);
 	close(c.vfd);
 }

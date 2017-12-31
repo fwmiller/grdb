@@ -1,6 +1,7 @@
 #ifndef __ENUMERATION_H
 #define __ENUMERATION_H
 
+#include <string.h>
 #include "string_pool.h"
 
 #define ENUM_NAME_LEN	256
@@ -16,7 +17,7 @@ typedef enum_t enum_list_t;
 
 void enum_init(enum_t *e);
 int enum_file_open(char *grdbdir, int gidx, int cidx);
-void enum_print(enum_t e);
+void enum_print(FILE *out, enum_t e);
 void enum_insert(enum_t *e, char *s);
 char *enum_find_by_idx(enum_t e, int idx);
 int enum_find_idx_by_name(enum_t e, char *s);
@@ -26,7 +27,7 @@ char *enum_get_name_ptr(enum_t e);
 
 void enum_list_init(enum_list_t *el);
 int enum_list_count(enum_list_t el);
-void enum_list_print(enum_list_t el);
+void enum_list_print(FILE *out, enum_list_t el);
 void enum_list_insert(enum_list_t *el, enum_t e);
 enum_t enum_list_find_by_name(enum_list_t el, char *name);
 int enum_list_find_idx_by_name(enum_list_t el, char *name);

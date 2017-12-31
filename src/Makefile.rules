@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -c -Wall
 
-#GDB = -g
+GDB = -g
 #DEBUG = -D_DEBUG
 
 INCDIRS = -I../../include

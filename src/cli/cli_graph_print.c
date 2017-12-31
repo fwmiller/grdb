@@ -68,6 +68,7 @@ cli_graphs_print()
 	}
 	closedir(dirfd);
 	fclose(out);
+	out = NULL;
 
 	out = fopen(s, "r");
 	if (out == NULL) {

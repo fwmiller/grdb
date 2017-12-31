@@ -54,7 +54,7 @@ string_pool_init(string_pool_t *pool)
 }
 
 void
-string_pool_print(string_pool_t pool)
+string_pool_print(FILE *out, string_pool_t pool)
 {
 	int i, n;
 
@@ -78,9 +78,9 @@ string_pool_print(string_pool_t pool)
 		char *s;
 
 		s = string_pool_get_string(pool, n, i);
-		printf("%s", s);
+		fprintf(out, "%s", s);
 		if (i + 1 < n)
-			printf(" ");
+			fprintf(out, " ");
 	}
 }
 
