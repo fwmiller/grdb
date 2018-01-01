@@ -121,7 +121,7 @@ cli()
 		if (gno < 0 || cno < 0)
 			sprintf(prompt, "grdb> ");
 		else
-			sprintf(prompt, "%d.%d: ", gno, cno);
+			sprintf(prompt, "%d.%d> ", gno, cno);
 
 		if (tty)
 			cmdline = readline(prompt);

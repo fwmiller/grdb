@@ -34,7 +34,8 @@ cli_graph_enum_print_current()
 {
 	FILE *out;
 	enum_list_t el = NULL;
-	int fd;
+	int fd, len;
+	char ch;
 
 	if (gno < 0 || cno < 0)
 		return;
@@ -58,6 +59,23 @@ cli_graph_enum_print_current()
 		enum_list_print(out, el);
 	}
 	fclose(out);
+	out = NULL;
+
+	out = fopen("/tmp/grdbEnum", "r");
+	if (out == NULL) {
+		printf("cli_graphs_print: fopen /tmp/grdbEnum failed\n");
+		return;
+	}
+	for (;;) {
+		len = fread(&ch, 1, 1, out);
+		if (len <= 0)
+			break;
+		printf("%c", ch);
+	}
+	fclose(out);
+
+	/* Remove the file */
+	//unlink(s);
 }
 
 void

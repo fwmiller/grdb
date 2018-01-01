@@ -5,7 +5,7 @@
 #include "tuple.h"
 
 static void
-tuple_print_enum(tuple_t t, int offset, enum_list_t el)
+tuple_print_enum(FILE *out, tuple_t t, int offset, enum_list_t el)
 {
 	int eidx, iidx;
 	enum_t e;
@@ -19,7 +19,7 @@ tuple_print_enum(tuple_t t, int offset, enum_list_t el)
 		return;
 
 	s = enum_find_by_idx(e, iidx);
-	printf("%s", s);
+	fprintf(out, "%s", s);
 }
 
 void
@@ -59,7 +59,7 @@ tuple_print(FILE *out, tuple_t t, enum_list_t el)
 				break;
 
 			case ENUM:
-				tuple_print_enum(t, offset, el);
+				tuple_print_enum(out, t, offset, el);
 				break;
 
 			case INTEGER:

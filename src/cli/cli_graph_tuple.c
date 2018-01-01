@@ -63,7 +63,8 @@ cli_graph_tuple(char *cmdline, int *pos)
 	char s1[BUFSIZE], s2[BUFSIZE], s3[BUFSIZE], s4[BUFSIZE];
 	vertexid_t id1;
 	schema_type_t st;
-	int i, n;
+	int i, n, len;
+	char ch;
 
 	memset(s1, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s1);
@@ -92,6 +93,25 @@ cli_graph_tuple(char *cmdline, int *pos)
 		cli_components_print(out, s, 1); /* with tuples */
 
 		fclose(out);
+		out = NULL;
+
+		memset(s, 0, BUFSIZE);
+		sprintf(s, "/tmp/grdbGraphs");
+		out = fopen(s, "r");
+		if (out == NULL) {
+			printf("cli_graph_tuple: fopen %s failed\n", s);
+			return;
+		}
+		for (;;) {
+			len = fread(&ch, 1, 1, out);
+			if (len <= 0)
+				break;
+			printf("%c", ch);
+		}
+		fclose(out);
+
+		/* Remove the file */
+		//unlink(s);
 		return;
 	}
 	if (strlen(s2) <= 0) {
