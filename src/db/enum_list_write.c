@@ -38,10 +38,7 @@ enum_list_write(enum_list_t el, int fd)
 		if (len < ENUM_NAME_LEN)
 			return NULL;
 		off += ENUM_NAME_LEN;
-#if _DEBUG
-		printf("enum_list_write: string pool ");
-		string_pool_print(e->pool);
-#endif
+
 		/* Write enum string pool */
 		lseek(fd, off, SEEK_SET);
 		blen = string_pool_overall_len(e->pool);

@@ -9,7 +9,7 @@
 void cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos);
 
 void
-cli_graph_schemas_print(char *gname)
+cli_graph_schemas_print(FILE *out, char *gname)
 {
 	char s[BUFSIZE];
 	DIR *dirfd;
@@ -31,10 +31,8 @@ cli_graph_schemas_print(char *gname)
 			enum_list_t el;
 			schema_t sv, se;
 
-			if (atoi(gname) == gno && atoi(de->d_name) == cno)
-				printf(">");
-
-			printf("component %s.%s\n", gname, de->d_name);
+			fprintf(out, "component %s.%s\n",
+				gname, de->d_name);
 
 			/* Load any enums */
 			fd = enum_file_open(grdbdir, gno, cno);
@@ -54,9 +52,9 @@ cli_graph_schemas_print(char *gname)
 				close(fd);
 
 				if (sv != NULL) {
-					printf("Sv = ");
-					schema_print(sv, el);
-					printf("\n");
+					fprintf(out, "Sv = ");
+					schema_print(out, sv, el);
+					fprintf(out, "\n");
 				}
 			}
 			/* Edge schema */
@@ -70,9 +68,9 @@ cli_graph_schemas_print(char *gname)
 				close(fd);
 
 				if (se != NULL) {
-					printf("Se = ");
-					schema_print(se, el);
-					printf("\n");
+					fprintf(out, "Se = ");
+					schema_print(out, se, el);
+					fprintf(out, "\n");
 				}
 			}
 
@@ -87,6 +85,7 @@ cli_graph_schema(char *cmdline, int *pos)
 	char s[BUFSIZE];
         DIR *dirfd;
         struct dirent *de;
+	FILE *out;
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
@@ -99,7 +98,15 @@ cli_graph_schema(char *cmdline, int *pos)
 		cli_graph_schema_add(EDGE, cmdline, pos);
 		return;
 	}
-        /* Loop over directories in grdb directory to display each graph */
+        /*
+	 * Loop over directories in grdb directory to display
+	 * each graph
+	 */
+	out = fopen("/tmp/grdbSchema", "w");
+	if (out == NULL) {
+		printf("fopen /tmp/grdbSchema failed\n");
+		return;
+	}
         if ((dirfd = opendir(grdbdir)) == NULL)
                 return;
 
@@ -110,8 +117,9 @@ cli_graph_schema(char *cmdline, int *pos)
 
                 if (strcmp(de->d_name, ".") != 0 &&
                     strcmp(de->d_name, "..") != 0) {
-			cli_graph_schemas_print(de->d_name);
+			cli_graph_schemas_print(out, de->d_name);
                 }
         }
         closedir(dirfd);
+	fclose(out);
 }

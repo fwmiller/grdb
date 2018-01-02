@@ -45,7 +45,8 @@ void schema_attribute_init(
         enum base_types bt,
         enum_t e);
 
-void schema_attribute_print(attribute_t attr, enum_list_t el);
+void schema_attribute_print(
+	FILE *out, attribute_t attr, enum_list_t el);
 void schema_attribute_insert(schema_t s, attribute_t attr);
 void schema_attribute_remove(schema_t s, attribute_t attr);
 attribute_t schema_attribute_last(schema_t s);
@@ -56,7 +57,7 @@ int schema_count(schema_t s);
 int schema_size(schema_t s);
 base_types_t schema_find_type_by_name(schema_t s, char *name);
 attribute_t schema_find_attr_by_name(schema_t s, char *name);
-void schema_print(schema_t s, enum_list_t el);
+void schema_print(FILE *out, schema_t s, enum_list_t el);
 
 schema_t schema_read(int fd, enum_list_t el);
 schema_t schema_write(schema_t s, int fd);

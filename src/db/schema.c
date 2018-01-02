@@ -52,11 +52,11 @@ schema_attribute_init(
 }
 
 void
-schema_attribute_print(attribute_t attr, enum_list_t el)
+schema_attribute_print(FILE *out, attribute_t attr, enum_list_t el)
 {
 	assert (attr != NULL);
 
-	printf("%s:%s",
+	fprintf(out, "%s:%s",
 	       (attr->bt == ENUM ?
 		attr->e->name :
 		base_types_str[attr->bt]),
@@ -208,19 +208,19 @@ schema_find_attr_by_name(schema_t s, char *name)
 }
 
 void
-schema_print(schema_t s, enum_list_t el)
+schema_print(FILE *out, schema_t s, enum_list_t el)
 {
 	attribute_t attr;
 
 	assert (s != NULL);
 
-	printf("[");
+	fprintf(out, "[");
 	for (attr = s->attrlist; attr != NULL; attr = attr->next) {
-		schema_attribute_print(attr, el);
+		schema_attribute_print(out, attr, el);
 		if (attr->next != NULL)
-			printf(",");
+			fprintf(out, ",");
 	}
-	printf("]");
+	fprintf(out, "]");
 
 	/* XXX Print enum list */
 }

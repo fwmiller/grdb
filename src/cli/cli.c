@@ -56,6 +56,9 @@ cli_clear_database()
 		}
 	}
 	closedir(dirfd);
+
+	gno = (-1);
+	cno = (-1);
 }
 
 static int

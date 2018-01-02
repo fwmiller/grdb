@@ -49,7 +49,7 @@ cli_graphs_print()
 	sprintf(s, "/tmp/grdbGraphs");
 	out = fopen(s, "w");
 	if (out == NULL) {
-		printf("cli_graphs_print: fopen %s failed\n", s);
+		printf("fopen %s failed\n", s);
 		return;
 	}
 	/*
@@ -72,7 +72,7 @@ cli_graphs_print()
 
 	out = fopen(s, "r");
 	if (out == NULL) {
-		printf("cli_graphs_print: fopen %s failed\n", s);
+		printf("fopen %s failed\n", s);
 		return;
 	}
 	for (;;) {

@@ -119,7 +119,7 @@ enum_list_print(FILE *out, enum_list_t el)
 	for (e = el; e != NULL; e = e->next) {
 		fprintf(out, "%s ", e->name);
 		enum_print(out, e);
-		printf("\n");
+		fprintf(out, "\n");
 	}
 }
 

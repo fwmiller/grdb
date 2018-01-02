@@ -23,8 +23,7 @@ cli_graph_vertex_write(vertex_t v)
 	fd = open(s, O_RDWR);
 	if (fd < 0) {
 #if _DEBUG
-		printf("cli_graph_vertex_write: ");
-		printf("open vertex file failed (%s)\n",
+		printf("Open vertex file failed (%s)\n",
 			strerror(errno));
 #endif
 		return;
@@ -47,8 +46,7 @@ cli_graph_edge_write(edge_t e)
 	fd = open(s, O_RDWR);
 	if (fd < 0) {
 #if _DEBUG
-		printf("cli_graph_edge_write: ");
-		printf("open edge file failed (%s)\n",
+		printf("Open edge file failed (%s)\n",
 			strerror(errno));
 #endif
 		return;
@@ -85,7 +83,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		sprintf(s, "/tmp/grdbGraphs");
 		out = fopen(s, "w");
 		if (out == NULL) {
-			printf("cli_graph_tuple: fopen %s failed\n", s);
+			printf("Fopen %s failed\n", s);
 			return;
 		}
 		memset(s, 0, BUFSIZE);
@@ -99,7 +97,7 @@ cli_graph_tuple(char *cmdline, int *pos)
 		sprintf(s, "/tmp/grdbGraphs");
 		out = fopen(s, "r");
 		if (out == NULL) {
-			printf("cli_graph_tuple: fopen %s failed\n", s);
+			printf("Fopen %s failed\n", s);
 			return;
 		}
 		for (;;) {

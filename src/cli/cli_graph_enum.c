@@ -42,7 +42,6 @@ cli_graph_enum_print_current()
 
 	out = fopen("/tmp/grdbEnum", "w");
 	if (out == NULL) {
-		printf("cli_graph_enum_print_current ");
 		printf("fopen /tmp/grdbEnum failed\n");
 		return;
 	}
@@ -55,7 +54,7 @@ cli_graph_enum_print_current()
 	close(fd);
 
 	if (el != NULL) {
-		printf(">component %d.%d\n", gno, cno);
+		printf("component %d.%d\n", gno, cno);
 		enum_list_print(out, el);
 	}
 	fclose(out);
@@ -63,7 +62,7 @@ cli_graph_enum_print_current()
 
 	out = fopen("/tmp/grdbEnum", "r");
 	if (out == NULL) {
-		printf("cli_graphs_print: fopen /tmp/grdbEnum failed\n");
+		printf("fopen /tmp/grdbEnum failed\n");
 		return;
 	}
 	for (;;) {
