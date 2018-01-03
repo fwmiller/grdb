@@ -64,15 +64,66 @@ cli_clear_database()
 static int
 cli_find_low_gno()
 {
-	/* XXX This needs to be fancier */
-	return 0;
+	int gno = (-1);
+	DIR *dirfd;
+	struct dirent *de;
+
+	if ((dirfd = opendir(grdbdir)) == NULL) {
+#if _DEBUG
+		printf("cli_find_low_gno: opendir %s failed\n", s);
+#endif
+		return (-1);
+	}
+	for (;;) {
+		de = readdir(dirfd);
+		if (de == NULL)
+			break;
+
+		if (strcmp(de->d_name, ".") != 0 &&
+		    strcmp(de->d_name, "..") != 0) {
+			int i;
+
+			i = atoi(de->d_name);
+			if (gno < 0 || (i < gno && i >= 0))
+				gno = i;
+		}
+	}
+	closedir(dirfd);
+	return gno;
 }
 
 static int
 cli_find_low_cno(int gno)
 {
-	/* XXX This needs to be fancier */
-	return 0;
+	int cno = (-1);
+	char s[BUFSIZE];
+	DIR *dirfd;
+	struct dirent *de;
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d", grdbdir, gno);
+	if ((dirfd = opendir(s)) == NULL) {
+#if _DEBUG
+		printf("cli_find_low_cno: opendir %s failed\n", s);
+#endif
+		return (-1);
+	}
+	for (;;) {
+		de = readdir(dirfd);
+		if (de == NULL)
+			break;
+
+		if (strcmp(de->d_name, ".") != 0 &&
+		    strcmp(de->d_name, "..") != 0) {
+			int i;
+
+			i = atoi(de->d_name);
+			if (cno < 0 || (i < cno && i >= 0))
+				cno = i;
+		}
+	}
+	closedir(dirfd);
+	return cno;
 }
 
 static void

@@ -54,47 +54,51 @@ clear database\r
 grdb> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
+0.0> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
+0.0> "
 send -- "g c n\r"
 expect -exact "g c n\r
-grdb> "
+0.0> "
 send -- "g\r"
 expect -exact "g\r
->0.0:({1},{})\r
+0.0:({1},{})\r
 0.1:({1},{})\r
 1.0:({1},{})\r
-grdb> "
+0.0> "
 send -- "g 1.0\r"
 expect -exact "g 1.0\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
-0.0:({1},{})\r
-0.1:({1},{})\r
->1.0:({1},{})\r
-grdb> "
-send -- "g c n\r"
-expect -exact "g c n\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
-0.0:({1},{})\r
-0.1:({1},{})\r
->1.0:({1},{})\r
-1.1:({1},{})\r
-grdb> "
-send -- "g 1.1\r"
-expect -exact "g 1.1\r
-grdb> "
+1.0> "
 send -- "g\r"
 expect -exact "g\r
 0.0:({1},{})\r
 0.1:({1},{})\r
 1.0:({1},{})\r
->1.1:({1},{})\r
+1.0> "
+send -- "g c n\r"
+expect -exact "g c n\r
+1.0> "
+send -- "g\r"
+expect -exact "g\r
+0.0:({1},{})\r
+0.1:({1},{})\r
+1.0:({1},{})\r
+1.1:({1},{})\r
+1.0> "
+send -- "g 1.1\r"
+expect -exact "g 1.1\r
+1.1> "
+send -- "g\r"
+expect -exact "g\r
+0.0:({1},{})\r
+0.1:({1},{})\r
+1.0:({1},{})\r
+1.1:({1},{})\r
+1.1> "
+send -- "clear\r"
+expect -exact "clear\r
+clear database\r
 grdb> "
 send -- "quit\r"
 expect eof
