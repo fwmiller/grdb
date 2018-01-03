@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include "cli.h"
 #include "graph.h"
@@ -31,6 +32,8 @@ cli_clear_database()
 {
 	DIR *dirfd;
 	struct dirent *de;
+	pid_t pid;
+	int status = 0;
 
 	if ((dirfd = opendir(grdbdir)) == NULL)
 		return;
@@ -42,7 +45,9 @@ cli_clear_database()
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-			if (fork() == 0) {
+			pid = fork();
+			if (pid == 0) {
+				/* The child */
 				char s[BUFSIZE];
 
 				memset(s, 0, BUFSIZE);
@@ -53,6 +58,7 @@ cli_clear_database()
 #endif
 				execl("/bin/rm", "/bin/rm", "-fr", s, NULL);
 			}
+			wait(&status);
 		}
 	}
 	closedir(dirfd);

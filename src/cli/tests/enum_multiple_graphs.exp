@@ -54,49 +54,53 @@ clear database\r
 grdb> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
-send -- "e test one two three\r"
-expect -exact "e test one two three\r
-grdb> "
-send -- "e\r"
-expect -exact "e\r
->component 0.0\r
+0.0> "
+send -- "g enum test one two three\r"
+expect -exact "g enum test one two three\r
+0.0> "
+send -- "g enum\r"
+expect -exact "g enum\r
+component 0.0\r
 test (one two three)\r
-grdb> "
+0.0> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
-send -- "e\r"
-expect -exact "e\r
->component 0.0\r
+0.0> "
+send -- "g enum\r"
+expect -exact "g enum\r
+component 0.0\r
 test (one two three)\r
-grdb> "
+0.0> "
 send -- "g 1.0\r"
 expect -exact "g 1.0\r
-grdb> "
-send -- "e\r"
-expect -exact "e\r
-grdb> "
-send -- "e color red green blue\r"
-expect -exact "e color red green blue\r
-grdb> "
-send -- "e\r"
-expect -exact "e\r
->component 1.0\r
+1.0> "
+send -- "g enum\r"
+expect -exact "g enum\r
+1.0> "
+send -- "g enum color red green blue\r"
+expect -exact "g enum color red green blue\r
+1.0> "
+send -- "g enum\r"
+expect -exact "g enum\r
+component 1.0\r
 color (red green blue)\r
-grdb> "
+1.0> "
 send -- "g\r"
 expect -exact "g\r
 0.0:({1},{})\r
->1.0:({1},{})\r
-grdb> "
+1.0:({1},{})\r
+1.0> "
 send -- "g 0.0\r"
 expect -exact "g 0.0\r
-grdb> "
-send -- "e\r"
-expect -exact "e\r
->component 0.0\r
+0.0> "
+send -- "g enum\r"
+expect -exact "g enum\r
+component 0.0\r
 test (one two three)\r
+0.0> "
+send -- "clear\r"
+expect -exact "clear\r
+clear database\r
 grdb> "
 send -- "quit\r"
 expect eof

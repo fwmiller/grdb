@@ -54,14 +54,18 @@ clear database\r
 grdb> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
-send -- "e color red green blue\r"
-expect -exact "e color red green blue\r
-grdb> "
-send -- "e\r"
-expect -exact "e\r
->component 0.0\r
+0.0> "
+send -- "g enum color red green blue\r"
+expect -exact "g enum color red green blue\r
+0.0> "
+send -- "g enum\r"
+expect -exact "g enum\r
+component 0.0\r
 color (red green blue)\r
+0.0> "
+send -- "clear\r"
+expect -exact "clear\r
+clear database\r
 grdb> "
 send -- "quit\r"
 expect eof
