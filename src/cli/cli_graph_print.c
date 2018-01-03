@@ -1,6 +1,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include "cli.h"
 #include "graph.h"
@@ -40,7 +41,8 @@ cli_graphs_print()
 	char s[BUFSIZE];
 	FILE *out;
 	char ch;
-	int len;
+	int len, status = 0;
+	pid_t pid;
 
 	if ((dirfd = opendir(grdbdir)) == NULL)
 		return;
@@ -70,6 +72,21 @@ cli_graphs_print()
 	fclose(out);
 	out = NULL;
 
+	/* Sort the output based on graph and component number */
+	pid = fork();
+	if (pid == 0) {
+		/* The child */
+		execl( "sort",
+			"-g",
+			"/tmp/grdbGraphs",
+			">",
+			"/tmp/grdbGraphsSorted",
+			NULL);
+	}
+	waitpid(pid, &status, 0);
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "/tmp/grdbGraphsSorted");
 	out = fopen(s, "r");
 	if (out == NULL) {
 		printf("fopen %s failed\n", s);
@@ -83,6 +100,7 @@ cli_graphs_print()
 	}
 	fclose(out);
 
-	/* Remove the file */
-	//unlink(s);
+	/* Remove the files */
+	unlink("/tmp/grdbGraphs");
+	unlink("/tmp/grdbGraphsSorted");
 }

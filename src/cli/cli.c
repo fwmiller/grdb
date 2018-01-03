@@ -58,7 +58,7 @@ cli_clear_database()
 #endif
 				execl("/bin/rm", "/bin/rm", "-fr", s, NULL);
 			}
-			wait(&status);
+			waitpid(pid, &status, 0);
 		}
 	}
 	closedir(dirfd);
