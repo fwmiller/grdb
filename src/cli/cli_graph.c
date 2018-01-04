@@ -22,7 +22,11 @@ cli_graph(char *cmdline, int *pos)
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
 
-	if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0) {
+	if (strlen(s) == 0) {
+		cli_graphs_print();
+		return;
+
+	} else if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0) {
 		cli_graph_new(cmdline, pos);
 		return;
 
@@ -77,6 +81,4 @@ cli_graph(char *cmdline, int *pos)
 
 		return;
 	}
-	if (strlen(s) == 0)
-		cli_graphs_print();
 }

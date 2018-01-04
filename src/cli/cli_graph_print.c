@@ -41,8 +41,7 @@ cli_graphs_print()
 	char s[BUFSIZE];
 	FILE *out;
 	char ch;
-	int len, status = 0;
-	pid_t pid;
+	int len, ret;
 
 	if ((dirfd = opendir(grdbdir)) == NULL)
 		return;
@@ -73,18 +72,11 @@ cli_graphs_print()
 	out = NULL;
 
 	/* Sort the output based on graph and component number */
-	pid = fork();
-	if (pid == 0) {
-		/* The child */
-		execl( "sort",
-			"-g",
-			"/tmp/grdbGraphs",
-			">",
-			"/tmp/grdbGraphsSorted",
-			NULL);
+	ret = system("sort -g /tmp/grdbGraphs > /tmp/grdbGraphsSorted");
+	if (ret < 0) {
+		printf("sort failed\n");
+		return;
 	}
-	waitpid(pid, &status, 0);
-
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "/tmp/grdbGraphsSorted");
 	out = fopen(s, "r");

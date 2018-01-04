@@ -32,8 +32,6 @@ cli_clear_database()
 {
 	DIR *dirfd;
 	struct dirent *de;
-	pid_t pid;
-	int status = 0;
 
 	if ((dirfd = opendir(grdbdir)) == NULL)
 		return;
@@ -45,20 +43,14 @@ cli_clear_database()
 
 		if (strcmp(de->d_name, ".") != 0 &&
 		    strcmp(de->d_name, "..") != 0) {
-			pid = fork();
-			if (pid == 0) {
-				/* The child */
-				char s[BUFSIZE];
+			char s[BUFSIZE];
+			int ret;
 
-				memset(s, 0, BUFSIZE);
-				sprintf(s, "%s/%s", grdbdir, de->d_name);
-#if _DEBUG
-				printf("cli_clear_database: ");
-				printf("remove directory: %s\n", s);
-#endif
-				execl("/bin/rm", "/bin/rm", "-fr", s, NULL);
-			}
-			waitpid(pid, &status, 0);
+			memset(s, 0, BUFSIZE);
+			sprintf(s, "/bin/rm -fr %s/%s", grdbdir, de->d_name);
+			ret = system(s);
+			if (ret < 0)
+				printf("clear database directory failed\n");
 		}
 	}
 	closedir(dirfd);
