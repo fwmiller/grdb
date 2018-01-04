@@ -54,37 +54,37 @@ clear database\r
 grdb> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
+0.0> "
 send -- "g e 1 2\r"
 expect -exact "g e 1 2\r
-grdb> "
+0.0> "
 send -- "g\r"
 expect -exact "g\r
->0.0:({1,2},{(1,2)})\r
-grdb> "
-send -- "e test one two three\r"
-expect -exact "e test one two three\r
-grdb> "
-send -- "e\r"
-expect -exact "e\r
->component 0.0\r
+0.0:({1,2},{(1,2)})\r
+0.0> "
+send -- "g enum test one two three\r"
+expect -exact "g enum test one two three\r
+0.0> "
+send -- "g enum\r"
+expect -exact "g enum\r
+component 0.0\r
 test (one two three)\r
-grdb> "
+0.0> "
 send -- "g s e test t\r"
 expect -exact "g s e test t\r
-grdb> "
+0.0> "
 send -- "g\r"
 expect -exact "g\r
->0.0:({1,2},{(1,2)})\r
-grdb> "
+0.0:({1,2},{(1,2)})\r
+0.0> "
 send -- "g s\r"
 expect -exact "g s\r
->component 0.0\r
+component 0.0\r
 Se = \[test:t\]\r
-grdb> "
+0.0> "
 send -- "g t\r"
 expect -exact "g t\r
->0.0:({1,2},{(1,2)\[one\]})\r
-grdb> "
+0.0:({1,2},{(1,2)\[one\]})\r
+0.0> "
 send -- "quit\r"
 expect eof

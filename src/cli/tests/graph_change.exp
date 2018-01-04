@@ -48,57 +48,57 @@ match_max 100000
 expect -exact "Graph Database\r
 (C) Frank W. Miller\r
 grdb> "
+send -- "g n\r"
+expect -exact "g n\r
+0.0> "
+send -- "g n\r"
+expect -exact "g n\r
+0.0> "
+send -- "g n\r"
+expect -exact "g n\r
+0.0> "
+send -- "g\r"
+expect -exact "g\r
+0.0:({1},{})\r
+1.0:({1},{})\r
+2.0:({1},{})\r
+0.0> "
+send -- "g 1.0\r"
+expect -exact "g 1.0\r
+1.0> "
+send -- "g 2.0\r"
+expect -exact "g 2.0\r
+2.0> "
+send -- "g\r"
+expect -exact "g\r
+0.0:({1},{})\r
+1.0:({1},{})\r
+2.0:({1},{})\r
+2.0> "
+send -- "g 1.0\r"
+expect -exact "g 1.0\r
+1.0> "
+send -- "g\r"
+expect -exact "g\r
+0.0:({1},{})\r
+1.0:({1},{})\r
+2.0:({1},{})\r
+1.0> "
+send -- "g 0.0\r"
+expect -exact "g 0.0\r
+0.0> "
+send -- "g\r"
+expect -exact "g\r
+0.0:({1},{})\r
+1.0:({1},{})\r
+2.0:({1},{})\r
+0.0> "
+send -- "g 3.0\r"
+expect -exact "g 3.0\r
+3.0> "
 send -- "clear\r"
 expect -exact "clear\r
 clear database\r
-grdb> "
-send -- "g n\r"
-expect -exact "g n\r
-grdb> "
-send -- "g n\r"
-expect -exact "g n\r
-grdb> "
-send -- "g n\r"
-expect -exact "g n\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
-2.0:({1},{})\r
->0.0:({1},{})\r
-1.0:({1},{})\r
-grdb> "
-send -- "g 1.0\r"
-expect -exact "g 1.0\r
-grdb> "
-send -- "g 2.0\r"
-expect -exact "g 2.0\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
->2.0:({1},{})\r
-0.0:({1},{})\r
-1.0:({1},{})\r
-grdb> "
-send -- "g 1.0\r"
-expect -exact "g 1.0\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
-2.0:({1},{})\r
-0.0:({1},{})\r
->1.0:({1},{})\r
-grdb> "
-send -- "g 0.0\r"
-expect -exact "g 0.0\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
-2.0:({1},{})\r
->0.0:({1},{})\r
-1.0:({1},{})\r
-grdb> "
-send -- "g 3.0\r"
-expect -exact "g 3.0\r
 grdb> "
 send -- "quit\r"
 expect eof

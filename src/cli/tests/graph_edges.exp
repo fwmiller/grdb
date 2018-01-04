@@ -48,25 +48,25 @@ match_max 100000
 expect -exact "Graph Database\r
 (C) Frank W. Miller\r
 grdb> "
+send -- "g n\r"
+expect -exact "g n\r
+0.0> "
+send -- "g e 1 2\r"
+expect -exact "g e 1 2\r
+0.0> "
+send -- "g e 2 3\r"
+expect -exact "g e 2 3\r
+0.0> "
+send -- "g e 3 1\r"
+expect -exact "g e 3 1\r
+0.0> "
+send -- "g\r"
+expect -exact "g\r
+0.0:({1,2,3},{(1,2),(2,3),(3,1)})\r
+0.0> "
 send -- "clear\r"
 expect -exact "clear\r
 clear database\r
-grdb> "
-send -- "g n\r"
-expect -exact "g n\r
-grdb> "
-send -- "g e 1 2\r"
-expect -exact "g e 1 2\r
-grdb> "
-send -- "g e 2 3\r"
-expect -exact "g e 2 3\r
-grdb> "
-send -- "g e 3 1\r"
-expect -exact "g e 3 1\r
-grdb> "
-send -- "g\r"
-expect -exact "g\r
->0.0:({1,2,3},{(1,2),(2,3),(3,1)})\r
 grdb> "
 send -- "quit\r"
 expect eof
