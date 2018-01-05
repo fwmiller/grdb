@@ -86,6 +86,8 @@ cli_graph_schema(char *cmdline, int *pos)
         DIR *dirfd;
         struct dirent *de;
 	FILE *out;
+	char ch;
+	int len;
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
@@ -121,5 +123,19 @@ cli_graph_schema(char *cmdline, int *pos)
                 }
         }
         closedir(dirfd);
+	fclose(out);
+	out = NULL;
+
+	out = fopen("/tmp/grdbSchema", "r");
+	if (out == NULL) {
+		printf("fopen /tmp/grdbSchema failed\n");
+		return;
+	}
+	for (;;) {
+		len = fread(&ch, 1, 1, out);
+		if (len <= 0)
+			break;
+		printf("%c", ch);
+	}
 	fclose(out);
 }

@@ -48,45 +48,45 @@ match_max 100000
 expect -exact "Graph Database\r
 (C) Frank W. Miller\r
 grdb> "
+send -- "g n\r"
+expect -exact "g n\r
+0.0> "
+send -- "g s v char ch\r"
+expect -exact "g s v char ch\r
+0.0> "
+send -- "g s v varchar s\r"
+expect -exact "g s v varchar s\r
+0.0> "
+send -- "g s v bool result\r"
+expect -exact "g s v bool result\r
+0.0> "
+send -- "g s v int i\r"
+expect -exact "g s v int i\r
+0.0> "
+send -- "g s v float f\r"
+expect -exact "g s v float f\r
+0.0> "
+send -- "g s v double g\r"
+expect -exact "g s v double g\r
+0.0> "
+send -- "g s v date d\r"
+expect -exact "g s v date d\r
+0.0> "
+send -- "g s v time t\r"
+expect -exact "g s v time t\r
+0.0> "
+send -- "g s\r"
+expect -exact "g s\r
+component 0.0\r
+Sv = \[CHAR:ch,VARCHAR:s,BOOL:result,INT:i,FLOAT:f,DOUBLE:g,DATE:d,TIME:t\]\r
+0.0> "
+send -- "g t\r"
+expect -exact "g t\r
+0.0:({1\['',\"\",FALSE,0,0.00,0.00,08-27-2016,00:00:00\]},{})\r
+0.0> "
 send -- "clear\r"
 expect -exact "clear\r
 clear database\r
-grdb> "
-send -- "g n\r"
-expect -exact "g n\r
-grdb> "
-send -- "g s v char ch\r"
-expect -exact "g s v char ch\r
-grdb> "
-send -- "g s v varchar s\r"
-expect -exact "g s v varchar s\r
-grdb> "
-send -- "g s v bool result\r"
-expect -exact "g s v bool result\r
-grdb> "
-send -- "g s v int i\r"
-expect -exact "g s v int i\r
-grdb> "
-send -- "g s v float f\r"
-expect -exact "g s v float f\r
-grdb> "
-send -- "g s v double g\r"
-expect -exact "g s v double g\r
-grdb> "
-send -- "g s v date d\r"
-expect -exact "g s v date d\r
-grdb> "
-send -- "g s v time t\r"
-expect -exact "g s v time t\r
-grdb> "
-send -- "g s\r"
-expect -exact "g s\r
->component 0.0\r
-Sv = \[CHAR:ch,VARCHAR:s,BOOL:result,INT:i,FLOAT:f,DOUBLE:g,DATE:d,TIME:t\]\r
-grdb> "
-send -- "g t\r"
-expect -exact "g t\r
->0.0:({1\['',\"\",FALSE,0,0.00,0.00,08-27-2016,00:00:00\]},{})\r
 grdb> "
 send -- "quit\r"
 expect eof
