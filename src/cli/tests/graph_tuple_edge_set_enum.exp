@@ -48,45 +48,45 @@ match_max 100000
 expect -exact "Graph Database\r
 (C) Frank W. Miller\r
 grdb> "
-send -- "clear\r"
-expect -exact "clear\r
-clear database\r
-grdb> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
+0.0> "
 send -- "g e 1 2\r"
 expect -exact "g e 1 2\r
-grdb> "
-send -- "e color red blue green\r"
-expect -exact "e color red blue green\r
-grdb> "
+0.0> "
+send -- "g enum color red blue green\r"
+expect -exact "g enum color red blue green\r
+0.0> "
 send -- "g s e color c\r"
 expect -exact "g s e color c\r
-grdb> "
+0.0> "
 send -- "g s\r"
 expect -exact "g s\r
->component 0.0\r
+component 0.0\r
 Se = \[color:c\]\r
-grdb> "
+0.0> "
 send -- "g t\r"
 expect -exact "g t\r
->0.0:({1,2},{(1,2)\[red\]})\r
-grdb> "
+0.0:({1,2},{(1,2)\[red\]})\r
+0.0> "
 send -- "g t 1 2 c blue\r"
 expect -exact "g t 1 2 c blue\r
-grdb> "
+0.0> "
 send -- "g t\r"
 expect -exact "g t\r
->0.0:({1,2},{(1,2)\[blue\]})\r
-grdb> "
+0.0:({1,2},{(1,2)\[blue\]})\r
+0.0> "
 send -- "g t 1 2 c purple\r"
 expect -exact "g t 1 2 c purple\r
 enum color does not contain purple\r
-grdb> "
+0.0> "
 send -- "g t\r"
 expect -exact "g t\r
->0.0:({1,2},{(1,2)\[blue\]})\r
+0.0:({1,2},{(1,2)\[blue\]})\r
+0.0> "
+send -- "clear\r"
+expect -exact "clear\r
+clear database\r
 grdb> "
 send -- "quit\r"
 expect eof

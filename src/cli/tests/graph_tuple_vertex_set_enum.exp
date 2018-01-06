@@ -48,42 +48,42 @@ match_max 100000
 expect -exact "Graph Database\r
 (C) Frank W. Miller\r
 grdb> "
-send -- "clear\r"
-expect -exact "clear\r
-clear database\r
-grdb> "
 send -- "g n\r"
 expect -exact "g n\r
-grdb> "
-send -- "e test one two three\r"
-expect -exact "e test one two three\r
-grdb> "
+0.0> "
+send -- "g enum test one two three\r"
+expect -exact "g enum test one two three\r
+0.0> "
 send -- "g s v test t\r"
 expect -exact "g s v test t\r
-grdb> "
+0.0> "
 send -- "g s\r"
 expect -exact "g s\r
->component 0.0\r
+component 0.0\r
 Sv = \[test:t\]\r
-grdb> "
+0.0> "
 send -- "g t\r"
 expect -exact "g t\r
->0.0:({1\[one\]},{})\r
-grdb> "
+0.0:({1\[one\]},{})\r
+0.0> "
 send -- "g t 1 t three\r"
 expect -exact "g t 1 t three\r
-grdb> "
+0.0> "
 send -- "g t\r"
 expect -exact "g t\r
->0.0:({1\[three\]},{})\r
-grdb> "
+0.0:({1\[three\]},{})\r
+0.0> "
 send -- "g t 1 t four\r"
 expect -exact "g t 1 t four\r
 enum test does not contain four\r
-grdb> "
+0.0> "
 send -- "g t\r"
 expect -exact "g t\r
->0.0:({1\[three\]},{})\r
+0.0:({1\[three\]},{})\r
+0.0> "
+send -- "clear\r"
+expect -exact "clear\r
+clear database\r
 grdb> "
 send -- "quit\r"
 expect eof

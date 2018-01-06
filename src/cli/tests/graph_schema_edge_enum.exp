@@ -48,10 +48,6 @@ match_max 100000
 expect -exact "Graph Database\r
 (C) Frank W. Miller\r
 grdb> "
-send -- "clear\r"
-expect -exact "clear\r
-clear database\r
-grdb> "
 send -- "g n\r"
 expect -exact "g n\r
 0.0> "
@@ -86,5 +82,9 @@ send -- "g t\r"
 expect -exact "g t\r
 0.0:({1,2},{(1,2)\[one\]})\r
 0.0> "
+send -- "clear\r"
+expect -exact "clear\r
+clear database\r
+grdb> "
 send -- "quit\r"
 expect eof
