@@ -75,7 +75,6 @@ component_join_structure(component_t c1, component_t c2)
 	char *buf;
 	st_ver *v_head = NULL,*v_tmp,*v_fwd;
 	st_edg *e_head = NULL,*e_tmp,*e_fwd;
-	off_t offset_v,offset_e;
 	int new_v_fd,new_e_fd;
 	int c1_size_v,c2_size_v,c1_size_e,c2_size_e;
 	struct vertex c1_temp,c1_v_dum,c2_v_dum;
@@ -167,8 +166,6 @@ for (off = 0;; off += (sizeof(vertexid_t) << 1) + c1_size_e) {
 	// Start of vertex loop for component 2
 	readlen = sizeof(vertexid_t) + c2_size_v;
 	buf = malloc(readlen);
-	offset_v = 0;
-
 	for (off = 0;;) {
 		lseek(c2->vfd, off, SEEK_SET);
 		len = read(c2->vfd, buf, sizeof(vertexid_t));
@@ -205,7 +202,6 @@ for (off = 0;; off += (sizeof(vertexid_t) << 1) + c1_size_e) {
 	free(buf);
 	readlen = sizeof(vertexid_t) + sizeof(vertexid_t) + c2_size_e;
 	buf = malloc(readlen);
-	offset_e = 0;
 	for (off = 0;; off += (sizeof(vertexid_t) << 1) + c2_size_e) {
 		lseek(c2->efd, off, SEEK_SET);
 		len = read(c2->efd, buf, sizeof(vertexid_t) << 1);
@@ -285,19 +281,17 @@ component_t
 component_join(component_t c1, component_t c2)
 {
 	struct component temp;
-	component_init(&temp);
 	component_t c = NULL;
 	char s[BUFSIZE];
 	int fd;
+	struct stat st = {0};
 
+	component_init(&temp);
 
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/123",grdbdir, gno);
-	struct stat st = {0};
-
-	if (stat(s, &st) == -1) {
-    	mkdir(s, 0777);
-	}
+	if (stat(s, &st) < 0)
+		mkdir(s, 0777);
 
 	/* Join enums */
 	temp.el = enum_list_join(c1->el, c2->el);
@@ -307,33 +301,19 @@ component_join(component_t c1, component_t c2)
 	enum_list_write(temp.el, fd);
 	close(fd);
 
-	/*
-	 * Join vertex schema.  The first schema is concatentated with
-	 * the second schema.  This order is assumed in the component
-	 * structure join
-	 */
-	temp.sv = schema_join(c1->sv,c2->sv);
-
-
-	/*
-	 * Join edge schema.  The first schema is concatentated with
-	 * the second schema.  This order is assumed in the component
-	 * structure join
-	 */
-	temp.se = schema_join(c1->se,c2->se);
-
+	/* Join vertex schema */
+	temp.sv = schema_join(c1->sv, c2->sv);
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/123/sv",grdbdir, gno);
 	fd = open(s, O_WRONLY | O_CREAT, 0644);
-
 	schema_write(temp.sv, fd);
 	close(fd);
 
-
+	/* Join edge schema */
+	temp.se = schema_join(c1->se, c2->se);
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/123/se",grdbdir, gno);
 	fd = open(s, O_WRONLY | O_CREAT, 0644);
-
 	schema_write(temp.se, fd);
 	close(fd);
 
