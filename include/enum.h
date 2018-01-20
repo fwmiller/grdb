@@ -35,7 +35,7 @@ enum_t enum_list_find_by_idx(enum_list_t el, int idx);
 enum_list_t enum_list_read(enum_list_t *el, int fd);
 enum_list_t enum_list_write(enum_list_t el, int fd);
 
-enum_list_t enum_list_join(enum_list_t el1, enum_list_t el2);
+enum_list_t enum_list_union(enum_list_t el1, enum_list_t el2);
 
 
 #endif

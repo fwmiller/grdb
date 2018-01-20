@@ -62,7 +62,7 @@ void schema_print(FILE *out, schema_t s, enum_list_t el);
 schema_t schema_read(int fd, enum_list_t el);
 schema_t schema_write(schema_t s, int fd);
 
-schema_t schema_join(schema_t s1, schema_t s2);
+schema_t schema_union(schema_t s1, schema_t s2);
 
 
 #endif

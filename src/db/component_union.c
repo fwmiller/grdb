@@ -65,7 +65,7 @@ is_vertex_present(vertex_t key, st_ver *head)
 }
 
 static component_t
-component_join_structure(component_t c1, component_t c2)
+component_union_structure(component_t c1, component_t c2)
 {
 	
 	struct vertex new_comp_ver;
@@ -277,11 +277,10 @@ while(e_fwd != NULL){
  * component structure, including tuples, based on the structures of the
  * two input components.
  */
-component_t
-component_join(component_t c1, component_t c2)
+int
+component_union(component_t c1, component_t c2, int *gidx, int *cidx)
 {
 	struct component temp;
-	component_t c = NULL;
 	char s[BUFSIZE];
 	int fd;
 	struct stat st = {0};
@@ -294,7 +293,7 @@ component_join(component_t c1, component_t c2)
 		mkdir(s, 0777);
 
 	/* Join enums */
-	temp.el = enum_list_join(c1->el, c2->el);
+	temp.el = enum_list_union(c1->el, c2->el);
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/123/enum",grdbdir, gno);
 	fd = open(s, O_WRONLY | O_CREAT, 0644);
@@ -302,7 +301,7 @@ component_join(component_t c1, component_t c2)
 	close(fd);
 
 	/* Join vertex schema */
-	temp.sv = schema_join(c1->sv, c2->sv);
+	temp.sv = schema_union(c1->sv, c2->sv);
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/123/sv",grdbdir, gno);
 	fd = open(s, O_WRONLY | O_CREAT, 0644);
@@ -310,7 +309,7 @@ component_join(component_t c1, component_t c2)
 	close(fd);
 
 	/* Join edge schema */
-	temp.se = schema_join(c1->se, c2->se);
+	temp.se = schema_union(c1->se, c2->se);
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/123/se",grdbdir, gno);
 	fd = open(s, O_WRONLY | O_CREAT, 0644);
@@ -318,7 +317,8 @@ component_join(component_t c1, component_t c2)
 	close(fd);
 
 	/* Join component structures including tuples */
-	c = component_join_structure(c1, c2);
+	if (component_union_structure(c1, c2) == NULL)
+		return (-1);
 
-	return NULL;
+	return 0;
 }

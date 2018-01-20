@@ -163,7 +163,7 @@ cli_graph_component_select(char *cmdline, int *pos)
 }
 
 static void
-cli_graph_component_join(char *cmdline, int *pos)
+cli_graph_component_union(char *cmdline, int *pos)
 {
 	struct component c1, c2;
 	int gidx, cidx, result;
@@ -173,22 +173,22 @@ cli_graph_component_join(char *cmdline, int *pos)
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
 #if _DEBUG
-	printf("cli_graph_component_join: left component %s\n", s);
+	printf("cli_graph_component_union: left component %s\n", s);
 #endif
 	/* Get second component argument */
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
 #if _DEBUG
-	printf("cli_graph_component_join: right component %s\n", s);
+	printf("cli_graph_component_union: right component %s\n", s);
 #endif
 	component_init(&c1);
 	component_init(&c2);
 	gidx = (-1);
 	cidx = (-1);
-	result = component_join(&c1, &c1, &gidx, &cidx);
+	result = component_union(&c1, &c1, &gidx, &cidx);
 	if (result < 0) {
 #if _DEBUG
-		printf("cli_graph_component_join: join failed\n");
+		printf("cli_graph_component_union: join failed\n");
 #endif
 	}
 }
@@ -214,7 +214,7 @@ cli_graph_component(char *cmdline, int *pos)
 		cli_graph_component_select(cmdline, pos);
 
 	else if (strcmp(s, "join") == 0 || strcmp(s, "j") == 0)
-		cli_graph_component_join(cmdline, pos);
+		cli_graph_component_union(cmdline, pos);
 
 	else if (strlen(s) == 0) {
 		FILE *out;
