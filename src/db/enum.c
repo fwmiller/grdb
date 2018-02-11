@@ -14,10 +14,10 @@ void
 enum_init(enum_t *e)
 {
 	assert (e != NULL);
-
+#if 0
 	if (*e != NULL)
 		free(*e);
-
+#endif
 	*e = malloc(sizeof(struct grdb_enum));
 	assert(*e != NULL);
 

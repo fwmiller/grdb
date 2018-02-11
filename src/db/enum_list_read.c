@@ -9,7 +9,7 @@
 enum_list_t
 enum_list_read(enum_list_t *el, int fd)
 {
-	enum_t e;
+	enum_t e = NULL;
 	off_t off;
 	u64_t n;
 	ssize_t len;

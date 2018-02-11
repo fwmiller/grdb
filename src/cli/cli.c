@@ -68,7 +68,7 @@ cli_find_low_gno()
 
 	if ((dirfd = opendir(grdbdir)) == NULL) {
 #if _DEBUG
-		printf("cli_find_low_gno: opendir %s failed\n", s);
+		printf("cli_find_low_gno: opendir %s failed\n", grdbdir);
 #endif
 		return (-1);
 	}

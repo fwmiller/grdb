@@ -115,7 +115,7 @@ cli_graph_enum(char *cmdline, int *pos)
 	enum_list_init(&el);
 	enum_list_read(&el, fd);
 #if _DEBUG
-	enum_list_print(el);
+	enum_list_print(stdout, el);
 #endif
 
 	/* Check whether enum name is a duplicate */

@@ -2,6 +2,7 @@
 #define __GRAPH_H
 
 
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "schema.h"
@@ -90,8 +91,7 @@ void component_print(FILE *out, component_t c, int with_tuples);
  * Project a component from the input component c.  The resulting
  * component has only the attributes listed in the attrlist.
  */
-component_t
-component_project(component_t c, attribute_t attrlist);
+component_t component_project(component_t c, attribute_t attrlist);
 
 /*
  * Select a component from the input compnent c
@@ -99,8 +99,7 @@ component_project(component_t c, attribute_t attrlist);
  * The resulting component must be connected or the select operation
  * fails.
  */
-component_t
-component_select();
+component_t component_select();
 
 /*
  * Union two components, c1 and c2, together based on their vertex ids.
@@ -118,8 +117,7 @@ component_select();
  * number of the new component are returned through the gidx and
  * cidx reference parameters, respectively.
  */
-int
-component_union(component_t c1, component_t c2, int *gidx, int *cidx);
+int component_union(int cidx1, int cidx2, char *grdbdir, int gno);
 
 /* 
  * Execute Dijkstra's algorithm on the specified component.  Find the
@@ -152,6 +150,7 @@ component_sssp(
 void graph_init(graph_t g);
 void graph_file_init(int gidx);
 void graph_insert_component(graph_t g, component_t c);
+int graph_next_cno(char *grdbdir, int gno);
 
 
 #endif

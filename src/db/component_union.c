@@ -1,25 +1,10 @@
-#include "graph.h"
-#include <string.h>
-#include <stdio.h>
-
 #include <assert.h>
-
-
-#include <stdlib.h>
-#include <sys/stat.h>
-
-#include <unistd.h>
-#include "config.h"
-
-#include "tuple.h"
-#include "enum.h"
-#include "cli.h"
 #include <fcntl.h>
-#include <limits.h>
-#include <errno.h>
-
-
-#define BUFSIZE			(1 << 12)
+#include <sys/stat.h>
+#include <unistd.h>
+#include "cli.h"
+#include "config.h"
+#include "graph.h"
 
 
 typedef struct ver{
@@ -36,7 +21,7 @@ typedef struct edg{
 } st_edg;
 
 
-int
+static int
 is_edge_present(edge_t key, st_edg *head)
 {
 	st_edg *temp = head;
@@ -50,7 +35,7 @@ is_edge_present(edge_t key, st_edg *head)
 	return 0;
 }
 
-int
+static int
 is_vertex_present(vertex_t key, st_ver *head)
 {
 	st_ver *temp = head;
@@ -271,6 +256,60 @@ while(e_fwd != NULL){
 }
 
 
+static int
+component_union_enums(
+	int cidx1,
+	int cidx2,
+	char *grdbdir,
+	int gno,
+	int cidx,
+	component_t c1,
+	component_t c2)
+{
+	struct stat st = {0};
+	char s[BUFSIZE];
+	int fd;
+
+	assert (c1 != NULL && c2 != NULL);
+
+	/* Read in enums for component 1 */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/enum", grdbdir, gno, cidx1);
+	fd = open(s, O_RDONLY);
+	if (fd < 0) {
+#if _DEBUG
+		printf("component_union: open %s failed\n", s);
+#endif
+		return (-1);
+	}
+	enum_list_read(&(c1->el), fd);
+	close(fd);
+	
+	/* Read in enums for component 2 */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d/enum", grdbdir, gno, cidx2);
+	fd = open(s, O_RDONLY);
+	if (fd < 0) {
+#if _DEBUG
+		printf("component_union: open %s failed\n", s);
+#endif
+		return (-1);
+	}
+	enum_list_read(&(c2->el), fd);
+	close(fd);
+
+	/* Check whether a new component directory needs to be created */
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", grdbdir, gno, cidx);
+	if (stat(s, &st) < 0)
+		mkdir(s, 0777);
+
+	enum_list_union(c1->el, c2->el, grdbdir, gno, cidx);
+	return 0;
+}
+
+
+
 /*
  * This function does two things.  1) It builds the enums and vertex and
  * edge schemas from the two input components and 2) It builds a new
@@ -278,15 +317,79 @@ while(e_fwd != NULL){
  * two input components.
  */
 int
-component_union(component_t c1, component_t c2, int *gidx, int *cidx)
+component_union(int cidx1, int cidx2, char *grdbdir, int gno)
 {
-	struct component temp;
-	char s[BUFSIZE];
-	int fd;
+	struct component c1, c2;
 	struct stat st = {0};
+	char s[BUFSIZE];
+	int cidx, result;
 
-	component_init(&temp);
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", grdbdir, gno, cidx1);
+	if (stat(s, &st) < 0) {
+#if _DEBUG
+		printf("component_union: stat %s failed\n", s);
+#endif
+		return (-1);
+	}
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", grdbdir, gno, cidx2);
+	if (stat(s, &st) < 0) {
+#if _DEBUG
+		printf("component_union: stat %s failed\n", s);
+#endif
+		return (-1);
+	}
+	/* Get the next component number for the current graph */
+	cidx = graph_next_cno(grdbdir, gno);
 
+	/* Union enums */
+	component_init(&c1);
+	component_init(&c2);
+	result = component_union_enums(
+		cidx1, cidx2, grdbdir, gno, cidx, &c1, &c2);
+	if (result < 0)
+		return (-1);
+
+	/* Union schemas */
+
+	/* Union structures */
+
+
+	return 0;
+
+#if 0
+
+	fd1 = open(s, O_RDONLY);
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", grdbdir, gno, cidx2);
+	fd2 = open(s, O_RDONLY);
+	if (fd2 < 0) {
+		return (-1);
+	}
+	/* Get the next component number for the current graph */
+	cidxnext = graph_next_cno(grdbdir, gno);
+
+	memset(s, 0, BUFSIZE);
+	sprintf(s, "%s/%d/%d", grdbdir, gno, cidxnext);
+	fdnew = open(s, O_WRONLY | O_CREAT, 0644);
+	if (fdnew < 0) {
+		return (-1);
+	}
+
+	close(fdnew);
+	close(fd2);
+	close(fd1);
+
+	return 0;
+
+	/*
+	 * XXX Find the highest numbered component in the current graph
+	 * directory
+	 */
+
+	/* Create a new component directory */
 	memset(s, 0, BUFSIZE);
 	sprintf(s, "%s/%d/123",grdbdir, gno);
 	if (stat(s, &st) < 0)
@@ -321,4 +424,5 @@ component_union(component_t c1, component_t c2, int *gidx, int *cidx)
 		return (-1);
 
 	return 0;
+#endif
 }

@@ -38,3 +38,6 @@ clean:
 
 wc: clean
 	wc -l *.c
+
+indent:
+	indent -kr *.c
