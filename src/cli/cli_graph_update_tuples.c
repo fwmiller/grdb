@@ -138,8 +138,8 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 		write(fd2, s, writelen);
 	}
 	/* Close both files */
-	close(fd1);
 	close(fd2);
+	close(fd1);
 
 	/* Move the vertex to a temporary file name */
 	memset(s, 0, BUFSIZE);
@@ -151,7 +151,7 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 	if (rename(s, s1) < 0) {
 #if _DEBUG
 		printf("cli_graph_update_tuples: ");
-		printf("rename %s to %s failed (%s)\n",
+		printf("rename %s to temporay %s failed (%s)\n",
 			s, s1, strerror(errno));
 #endif
 	}
@@ -167,7 +167,7 @@ cli_graph_update_tuples(schema_type_t st, int old_schema_size)
 	if (rename(s, s1) < 0) {
 #if _DEBUG
 		printf("cli_graph_update_tuples: ");
-		printf("rename %s to %s failed (%s)\n",
+		printf("rename new %s to %s failed (%s)\n",
 			s, s1, strerror(errno));
 #endif
 	}

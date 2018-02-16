@@ -18,7 +18,8 @@ enum_list_union(
 	char s[BUFSIZE];
 	int fd;
 
-	assert (el1 != NULL && el2 != NULL);
+	if (el1 == NULL && el2 == NULL)
+		return 0;
 
         /* Open file for concatenating the two enums */
         memset(s, 0, BUFSIZE);
@@ -31,12 +32,17 @@ enum_list_union(
 		return (-1);
 	}
 	/* Concatenate the enum lists */
-	for (e = el1; e->next != NULL; e = e->next);
-	e->next = el2;
+	if (el1 == NULL)
+		enum_list_write(el2, fd);
 
-	/* Write the concatenated enum list to the file */
-	enum_list_write(el1, fd);
+	else if (el2 == NULL)
+		enum_list_write(el1, fd);
 
+	else {
+		for (e = el1; e->next != NULL; e = e->next);
+		e->next = el2;
+		enum_list_write(el1, fd);
+	}
 	close(fd);
 	return 0;
 }

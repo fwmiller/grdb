@@ -6,6 +6,10 @@
 
 #define ATTR_NAME_MAXLEN	256
 
+enum schema_type { VERTEX, EDGE };
+
+typedef enum schema_type schema_type_t;
+
 /* Base types */
 enum base_types
 {
@@ -60,9 +64,16 @@ attribute_t schema_find_attr_by_name(schema_t s, char *name);
 void schema_print(FILE *out, schema_t s, enum_list_t el);
 
 schema_t schema_read(int fd, enum_list_t el);
-schema_t schema_write(schema_t s, int fd);
+schema_t schema_write(schema_t s, int fd, int append);
 
-schema_t schema_union(schema_t s1, schema_t s2);
+int
+schema_union(
+        schema_type_t st,
+        schema_t s1,
+        schema_t s2,
+        char *grdbdir,
+        int gno,
+        int cidx);
 
 
 #endif

@@ -129,7 +129,7 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 #if _DEBUG
 		printf("cli_graph_schema_add: write schema file %s\n", s);
 #endif
-		schema_write(schema, fd);
+		schema_write(schema, fd, 0);
 		close(fd);
 
 #if _DEBUG
@@ -145,7 +145,7 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 	if (schema == NULL)
 		schema_init(&schema);
 	cli_graph_schema_add_base(schema, old_schema_size, st, type, name);
-	schema_write(schema, fd);
+	schema_write(schema, fd, 0);
 	close(fd);
 
 #if _DEBUG

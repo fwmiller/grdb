@@ -8,7 +8,7 @@
 #include "types.h"
 
 schema_t
-schema_write(schema_t s, int fd)
+schema_write(schema_t s, int fd, int append)
 {
 	attribute_t attr;
 	ssize_t len;
@@ -25,7 +25,8 @@ schema_write(schema_t s, int fd)
 	printf("schema_write: schema has %llu attributes\n", n);
 #endif
 	/* Write number of attributes in schema */
-	lseek(fd, 0, SEEK_SET);
+	if (!append)
+		lseek(fd, 0, SEEK_SET);
 	len = write(fd, &n, sizeof(u64_t));
 	if (len < sizeof(u64_t))
 		return NULL;

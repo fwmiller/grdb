@@ -2,14 +2,11 @@
 #define __CLI_GRAPH_H
 
 #include "graph.h"
+#include "schema.h"
 
 #define PROMPT		"grdb> "
 #define BUFSIZE		(1 << 12)
 #define MAX_GRAPHS	8
-
-enum schema_type { VERTEX, EDGE };
-
-typedef enum schema_type schema_type_t;
 
 extern char grdbdir[];
 
