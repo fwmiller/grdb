@@ -66,7 +66,7 @@ schema_attribute_print(FILE *out, attribute_t attr, enum_list_t el)
 void
 schema_attribute_insert(schema_t s, attribute_t attr)
 {
-	attribute_t t;
+	attribute_t t = NULL;
 
 	assert (s != NULL);
 	assert (attr != NULL);
@@ -82,7 +82,7 @@ schema_attribute_insert(schema_t s, attribute_t attr)
 attribute_t
 schema_attribute_last(schema_t s)
 {
-	attribute_t attr;
+	attribute_t attr = NULL;
 
 	if (s == NULL || s->attrlist == NULL)
 		return NULL;
@@ -94,7 +94,7 @@ schema_attribute_last(schema_t s)
 void
 schema_attribute_remove(schema_t s, attribute_t attr)
 {
-	attribute_t prev, curr;
+	attribute_t prev = NULL, curr = NULL;
 
 	assert (s != NULL);
 	assert (attr != NULL);
@@ -148,7 +148,7 @@ schema_file_init(int gidx, int cidx, char *name)
 int
 schema_count(schema_t s)
 {
-	attribute_t attr;
+	attribute_t attr = NULL;
 	int cnt;
 
 	assert(s != NULL);
@@ -163,7 +163,7 @@ schema_count(schema_t s)
 int
 schema_size(schema_t s)
 {
-	attribute_t attr;
+	attribute_t attr = NULL;
 	int acc = 0;
 
 	assert(s != NULL);
@@ -176,7 +176,7 @@ schema_size(schema_t s)
 base_types_t
 schema_find_type_by_name(schema_t s, char *name)
 {
-	attribute_t attr;
+	attribute_t attr = NULL;
 
 	assert (s != NULL);
 
@@ -193,7 +193,7 @@ schema_find_type_by_name(schema_t s, char *name)
 attribute_t
 schema_find_attr_by_name(schema_t s, char *name)
 {
-	attribute_t attr;
+	attribute_t attr = NULL;
 
 	assert (s != NULL);
 
@@ -210,7 +210,7 @@ schema_find_attr_by_name(schema_t s, char *name)
 void
 schema_print(FILE *out, schema_t s, enum_list_t el)
 {
-	attribute_t attr;
+	attribute_t attr = NULL;
 
 	assert (s != NULL);
 

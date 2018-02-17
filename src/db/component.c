@@ -105,6 +105,8 @@ component_print(FILE *out, component_t c, int with_tuples)
 
 	readlen = sizeof(vertexid_t) + size;
 	buf = malloc(readlen);
+	assert (buf != NULL);
+	memset(buf, 0, readlen);
 
 	for (off = 0;; off += readlen) {
 		lseek(c->vfd, off, SEEK_SET);
@@ -137,6 +139,8 @@ component_print(FILE *out, component_t c, int with_tuples)
 	readlen = (sizeof(vertexid_t) << 1) + size;
 	free(buf);
 	buf = malloc(readlen);
+	assert (buf != NULL);
+	memset(buf, 0, readlen);
 
 	for (off = 0;; off += readlen) {
 		lseek(c->efd, off, SEEK_SET);
