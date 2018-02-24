@@ -9,6 +9,7 @@ OBJS =	bufdump.o 			\
 	cli_graph_component.o		\
 	cli_graph_edge.o		\
 	cli_graph_enum.o		\
+	cli_graph_import.o		\
 	cli_graph_new.o			\
 	cli_graph_print.o		\
 	cli_graph_schema.o		\

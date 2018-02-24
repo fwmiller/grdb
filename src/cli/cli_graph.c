@@ -5,6 +5,7 @@
 #include "cli.h"
 #include "graph.h"
 
+void cli_graph_import(char *cmdline, int *pos);
 void cli_graph_new(char *cmdline, int *pos);
 void cli_graph_component(char *cmdline, int *pos);
 void cli_graph_edge(char *cmdline, int *pos);
@@ -24,6 +25,10 @@ cli_graph(char *cmdline, int *pos)
 
 	if (strlen(s) == 0) {
 		cli_graphs_print();
+		return;
+
+	} else if (strcmp(s, "import") == 0 || strcmp(s, "i") == 0) {
+		cli_graph_import(cmdline, pos);
 		return;
 
 	} else if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0) {

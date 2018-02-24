@@ -48,6 +48,36 @@ cli_graph_component_new()
 }
 
 static void
+cli_graph_component_neighbors(char *cmdline, int *pos)
+{
+	vertexid_t id;
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	id = (vertexid_t) atoi(s);
+#if _DEBUG
+	printf("cli_graph_component_neighbors: ");
+	printf("determine neighbors of vertex id %llu\n", id);
+#endif
+}
+
+static void
+cli_graph_component_gcs(char *cmdline, int *pos)
+{
+	vertexid_t id;
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	id = (vertexid_t) atoi(s);
+#if _DEBUG
+	printf("cli_graph_component_gcs: ");
+	printf("determine greatest common schema for vertex id %llu\n", id);
+#endif
+}
+
+static void
 cli_graph_component_sssp(char *cmdline, int *pos)
 {
 	struct component c;
@@ -165,6 +195,12 @@ cli_graph_component(char *cmdline, int *pos)
 
 	if (strcmp(s, "new") == 0 || strcmp(s, "n") == 0)
 		cli_graph_component_new();
+
+	else if (strcmp(s, "neighbors") == 0)
+		cli_graph_component_neighbors(cmdline, pos);
+
+	else if (strcmp(s, "gcs") == 0)
+		cli_graph_component_gcs(cmdline, pos);
 
 	else if (strcmp(s, "sssp") == 0)
 		cli_graph_component_sssp(cmdline, pos);
