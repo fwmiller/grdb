@@ -20,43 +20,14 @@ char *readline(char *prompt);
 
 static int tty = 0;
 
+void cli_clear_database();
+void cli_help();
+
 static void
 cli_about()
 {
 	printf("Graph Database\n");
 	printf("(C) Frank W. Miller\n");
-}
-
-static void
-cli_clear_database()
-{
-	DIR *dirfd;
-	struct dirent *de;
-
-	if ((dirfd = opendir(grdbdir)) == NULL)
-		return;
-
-	for (;;) {
-		de = readdir(dirfd);
-		if (de == NULL)
-			break;
-
-		if (strcmp(de->d_name, ".") != 0 &&
-		    strcmp(de->d_name, "..") != 0) {
-			char s[BUFSIZE];
-			int ret;
-
-			memset(s, 0, BUFSIZE);
-			sprintf(s, "/bin/rm -fr %s/%s", grdbdir, de->d_name);
-			ret = system(s);
-			if (ret < 0)
-				printf("clear database directory failed\n");
-		}
-	}
-	closedir(dirfd);
-
-	gno = (-1);
-	cno = (-1);
 }
 
 static int
@@ -122,12 +93,6 @@ cli_find_low_cno(int gno)
 	}
 	closedir(dirfd);
 	return cno;
-}
-
-static void
-cli_help()
-{
-	return;
 }
 
 void

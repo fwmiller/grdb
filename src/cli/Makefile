@@ -4,6 +4,7 @@ LIBDIRS = -L../db -L../import
 
 OBJS =	bufdump.o 			\
 	cli.o				\
+	cli_clear_database.o		\
 	cli_component_print.o		\
 	cli_graph.o			\
 	cli_graph_component.o		\
@@ -16,6 +17,7 @@ OBJS =	bufdump.o 			\
 	cli_graph_schema_add.o		\
 	cli_graph_tuple.o		\
 	cli_graph_update_tuples.o	\
+	cli_help.o			\
 	lex.o				\
 	main.o
 
