@@ -35,5 +35,8 @@ schema_union(
 		schema_write(s2, fd, 1);
 
 	close(fd);
+
+	/* XXX Need to do duplicate elimination */
+
 	return 0;
 }

@@ -135,6 +135,31 @@ component_union_schemas(
 	return 0;
 }
 
+static int
+component_union_structures(
+	int cidx1,
+	int cidx2,
+	char *grdbdir,
+	int gno,
+	int cidx)
+{
+	/* Open new vertex file for unioned component */
+
+	/* Open first input component vertex file */
+
+	/* Copy all the vertices to the new vertex file */
+
+	/* Open second input component vertex file */
+
+	/* Concatenate all the vertices to the end of new vertex file */
+
+
+	/* XXX Need to do duplicate elimination on the new vertex file */
+
+
+	return (-1);
+}
+
 /*
  * This function does two things.  1) It builds the enums and vertex and
  * edge schemas from the two input components and 2) It builds a new

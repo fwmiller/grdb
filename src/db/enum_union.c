@@ -44,5 +44,8 @@ enum_list_union(
 		enum_list_write(el1, fd);
 	}
 	close(fd);
+
+	/* XXX Need to do duplicate elimination */
+
 	return 0;
 }
