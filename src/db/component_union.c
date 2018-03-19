@@ -7,6 +7,10 @@
 #include "graph.h"
 
 
+int component_union_structures(
+	int cidx1, int cidx2, char *grdbdir, int gno, int cidx);
+
+
 static int
 component_union_enums(
 	int cidx1, int cidx2, char *grdbdir, int gno, int cidx)
@@ -135,31 +139,6 @@ component_union_schemas(
 	return 0;
 }
 
-static int
-component_union_structures(
-	int cidx1,
-	int cidx2,
-	char *grdbdir,
-	int gno,
-	int cidx)
-{
-	/* Open new vertex file for unioned component */
-
-	/* Open first input component vertex file */
-
-	/* Copy all the vertices to the new vertex file */
-
-	/* Open second input component vertex file */
-
-	/* Concatenate all the vertices to the end of new vertex file */
-
-
-	/* XXX Need to do duplicate elimination on the new vertex file */
-
-
-	return (-1);
-}
-
 /*
  * This function does two things.  1) It builds the enums and vertex and
  * edge schemas from the two input components and 2) It builds a new
@@ -211,75 +190,12 @@ component_union(int cidx1, int cidx2, char *grdbdir, int gno)
 	}
 
 	/* Union structures */
-
-	return 0;
-
-#if 0
-	fd1 = open(s, O_RDONLY);
-
-	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/%d", grdbdir, gno, cidx2);
-	fd2 = open(s, O_RDONLY);
-	if (fd2 < 0) {
-		return (-1);
-	}
-	/* Get the next component number for the current graph */
-	cidxnext = graph_next_cno(grdbdir, gno);
-
-	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/%d", grdbdir, gno, cidxnext);
-	fdnew = open(s, O_WRONLY | O_CREAT, 0644);
-	if (fdnew < 0) {
-		return (-1);
-	}
-
-	close(fdnew);
-	close(fd2);
-	close(fd1);
-
-	return 0;
-
-	/*
-	 * XXX Find the highest numbered component in the current graph
-	 * directory
-	 */
-
-	/* Create a new component directory */
-	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/123",grdbdir, gno);
-	if (stat(s, &st) < 0)
-		mkdir(s, 0777);
-
-	/* Join enums */
-	temp.el = enum_list_union(c1->el, c2->el);
-	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/123/enum",grdbdir, gno);
-	fd = open(s, O_WRONLY | O_CREAT, 0644);
-	enum_list_write(temp.el, fd);
-	close(fd);
-
-	/* Join vertex schema */
-	temp.sv = schema_union(c1->sv, c2->sv);
-	if (temp.sv != NULL) {
-		memset(s, 0, BUFSIZE);
-		sprintf(s, "%s/%d/123/sv",grdbdir, gno);
-		fd = open(s, O_WRONLY | O_CREAT, 0644);
-		schema_write(temp.sv, fd);
-		close(fd);
-	}
-	/* Join edge schema */
-	temp.se = schema_union(c1->se, c2->se);
-	if (temp.se != NULL) {
-		memset(s, 0, BUFSIZE);
-		sprintf(s, "%s/%d/123/se",grdbdir, gno);
-		fd = open(s, O_WRONLY | O_CREAT, 0644);
-		schema_write(temp.se, fd);
-		close(fd);
-	}
-	/* Join component structures including tuples */
-	if (component_union_structure(c1, c2) == NULL)
-		return (-1);
-
-	return 0;
+	result = component_union_structures(cidx1, cidx2, grdbdir, gno, cidx);
+	if (result < 0) {
+#if _DEBUG
+		printf("component_union: union structures failed\n");
 #endif
+		return (-1);
+	}
+	return 0;
 }
