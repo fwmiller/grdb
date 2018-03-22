@@ -88,6 +88,17 @@ void component_insert_edge(component_t c, edge_t e);
 void component_print(FILE *out, component_t c, int with_tuples);
 
 /*
+ * Determine if two vertices are connected withing a specified component.
+ * The strong routine determines if there is a directed path between the
+ * the two vertices.  The weak routine determines if there is a path
+ * that treats the edges as undirected between the vertices.
+ */
+int component_connected_strong(
+	char *grdbdir, int gidx, int cidx, vertexid_t id1, vertexid_t id2);
+int component_connected_weak(
+	char *grdbdir, int gidx, int cidx, vertexid_t id1, vertexid_t id2);
+
+/*
  * Project a component from the input component c.  The resulting
  * component has only the attributes listed in the attrlist.
  */
@@ -119,32 +130,29 @@ component_t component_select();
  */
 int component_union(int cidx1, int cidx2, char *grdbdir, int gno);
 
+
 /* 
  * Execute Dijkstra's algorithm on the specified component.  Find the
  * shortest path from v1 to v2 if it exists in the component c.
  *
- * For CSCI 3287:  Assume that the path will have at least one integer
- * attribute that is the same along the edges connecting the two vertices
- * if a path exists.  You should be able to find an integer attribute
- * in the edge schema associated with the component.
+ * For CSCI 5817:
+ *   Assume that the weight_file contains the name of the edge attribute
+ *   to be used as the integer weight for Dijkstra.
+ *
+ *   Your implementation should include _DEBUG statements that print
+ *   the total weight for the path and the edges on the path in order.
  *
  * The routine returns the value 0 if the algorithm executes successfully
- * and the value (-1) otherwise.  If a correct result is obtained an
- * array is returned through the other parameters.  The reference parameter
- * n is used to return the number of vertices on the path, including the
- * two specified endpoints.  The reference parameter total_weight is used 
- * to return the total_weight of summed along the edges of the path.  The
- * path reference parameter returns an array of vertex ids that contain
- * the shortest path, including the two specified endpoints.
+ * and the value (-1) otherwise.
  */
 int
 component_sssp(
-	component_t c,
-	vertexid_t v1,
-	vertexid_t v2,
-	int *n,
-	int *total_weight,
-	vertexid_t **path);
+	char *grdbdir,
+	int gidx,
+	int cidx,
+	vertexid_t id1,
+	vertexid_t id2,
+	char *weight_field);
 
 
 void graph_init(graph_t g);

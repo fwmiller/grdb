@@ -6,12 +6,12 @@
 
 int
 component_sssp(
-        component_t c,
-        vertexid_t v1,
-        vertexid_t v2,
-        int *n,
-        int *total_weight,
-        vertexid_t **path)
+        char *grdbdir,
+        int gidx,
+        int cidx,
+        vertexid_t id1,
+        vertexid_t id2,
+        char *weight_field)
 {
 	
 	/*
