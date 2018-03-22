@@ -34,14 +34,12 @@ component_union_structures(
 #endif
 		return (-1);
 	}
-	/* Copy all the vertices to the new vertex file */
+	/* Add all vertices and their tuple data to the new vertex file */
 
 	/* Open second input component vertex file */
 
-	/* Concatenate all the vertices to the end of new vertex file */
+	/* Add all vertices and their tuple data to the new vertex file */
 
-
-	/* XXX Need to do duplicate elimination on the new vertex file */
 
 
 	return (-1);
