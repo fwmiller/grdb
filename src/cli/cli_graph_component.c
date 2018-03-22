@@ -65,11 +65,9 @@ cli_graph_component_neighbors(char *cmdline, int *pos)
 static void
 cli_graph_component_sssp(char *cmdline, int *pos)
 {
-	struct component c;
 	vertexid_t v1, v2;
 	char s[BUFSIZE];
-	int fd, n, total_weight, result;
-	vertexid_t *path = NULL;
+	int result;
 
 	memset(s, 0, BUFSIZE);
 	nextarg(cmdline, pos, " ", s);
@@ -81,40 +79,17 @@ cli_graph_component_sssp(char *cmdline, int *pos)
 
 	/* XXX Need to do some error checking on v1 and v2 here */
 
-#if _DEBUG
-	printf("cli_graph_component_sssp: ");
-	printf("execute dijkstra on vertex ids %llu and %llu\n", v1, v2);
-#endif
-
-	/* Initialize component */
-	component_init(&c);
-
-	/* Load enums */
-	fd = enum_file_open(grdbdir, gno, cno);
-	if (fd >= 0) {
-		enum_list_init(&(c.el));
-		enum_list_read(&(c.el), fd);
-		close(fd);
-	}
-	/* Load the edge schema */
+	/* Get the name of the attribute that contains the weights */
 	memset(s, 0, BUFSIZE);
-	sprintf(s, "%s/%d/%d/se", grdbdir, gno, cno);
+	nextarg(cmdline, pos, " ", s);
+
 #if _DEBUG
 	printf("cli_graph_component_sssp: ");
-	printf("read edge schema file %s\n", s);
+	printf("dijkstra on vertex ids %llu and %llu using weight %s\n",
+		v1, v2, s);
 #endif
-	fd = open(s, O_RDONLY);
-	if (fd < 0) {
-		printf("Component must have an edge schema\n");
-		return;
-	}
-	c.se = schema_read(fd, c.el);
-	close(fd);
-
 	/* Setup and run Dijkstra */
-	n = (-1);
-	total_weight = (-1);
-	result = component_sssp(&c, v1, v2, &n, &total_weight, &path);
+	result = component_sssp(grdbdir, gno, cno, v1, v2, s);
 	if (result < 0) {
 		/* Failure... */
 	}
