@@ -68,9 +68,16 @@ void vertex_init(vertex_t v);
 int vertex_file_init(int gidx, int cidx);
 void vertex_set_id(vertex_t v, vertexid_t id);
 void vertex_print(FILE *out, vertex_t v);
+void vertex_copy_by_field(char *buf1, schema_t s1, char *buf2, schema_t s2);
 ssize_t vertex_read(vertex_t v, schema_t schema, int fd);
 ssize_t vertex_write(vertex_t v, int fd);
 
+void vertex_write_from(
+        vertexid_t id,
+        char *buf,
+        schema_t schema,
+        int fdnew,
+        schema_t schemanew);
 
 void edge_init(edge_t e);
 int edge_file_init(int gidx, int cidx);

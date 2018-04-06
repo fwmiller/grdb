@@ -27,6 +27,7 @@ OBJS =	component.o			\
 	vertex.o			\
 	vertex_read.o			\
 	vertex_write.o			\
+	vertex_write_from.o		\
 	vertexid.o
 
 TGT = libdb.a
