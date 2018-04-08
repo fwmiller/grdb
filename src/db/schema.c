@@ -168,8 +168,11 @@ schema_size(schema_t s)
 
 	assert(s != NULL);
 
-	for (attr = s->attrlist; attr != NULL; attr = attr->next)
+	for (attr = s->attrlist;
+	     attr != NULL && attr->bt < BASE_TYPES_MAX;
+	     attr = attr->next) {
 		acc += base_types_len[attr->bt];
+	}
 	return acc;
 }
 

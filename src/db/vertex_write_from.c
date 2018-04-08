@@ -118,12 +118,13 @@ vertex_write_from(
 		}
 		if (*((vertexid_t *) bufnew) == id) {
 			/* Fill in the values of the new tuple buffer */
+/*
 			vertex_copy_values(
 				char *old,
 				schema_t sold,
 				char *new,
 				schema_t snew)
-
+*/
 			/* Write the new tuple back out */
 			lseek(fdnew, off, SEEK_SET);
 			write(fdnew, bufnew, sizeof(vertexid_t) + sizenew);
