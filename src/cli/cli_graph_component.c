@@ -62,6 +62,13 @@ cli_graph_component_neighbors(char *cmdline, int *pos)
 #endif
 }
 
+
+static int
+cli_graph_component_connected()
+{
+	return 0;
+}
+
 static void
 cli_graph_component_sssp(char *cmdline, int *pos)
 {
