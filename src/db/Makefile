@@ -1,6 +1,7 @@
 include ../Makefile.rules
 
 OBJS =	component.o			\
+	component_connected.o		\
 	component_project.o		\
 	component_select.o		\
 	component_union.o		\

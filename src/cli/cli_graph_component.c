@@ -64,8 +64,44 @@ cli_graph_component_neighbors(char *cmdline, int *pos)
 
 
 static int
-cli_graph_component_connected()
+cli_graph_component_connected_strong(char *cmdline, int *pos)
 {
+	vertexid_t id1, id2;
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	id1 = (vertexid_t) atoi(s);
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	id2 = (vertexid_t) atoi(s);
+#if _DEBUG
+	printf("cli_graph_component_connected_strong: ");
+	printf("determine vertexe ids %llu and %llu are strongly connected\n",
+	       id1, id2);
+#endif
+	return 0;
+}
+
+static int
+cli_graph_component_connected_weak(char *cmdline, int *pos)
+{
+	vertexid_t id1, id2;
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	id1 = (vertexid_t) atoi(s);
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+	id2 = (vertexid_t) atoi(s);
+#if _DEBUG
+	printf("cli_graph_component_connected_weak: ");
+	printf("determine vertexe ids %llu and %llu are weakly connected\n",
+	       id1, id2);
+#endif
 	return 0;
 }
 
