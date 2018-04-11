@@ -94,6 +94,9 @@ edge_t component_find_edge_by_ids( component_t c, edge_t e);
 void component_insert_edge(component_t c, edge_t e);
 void component_print(FILE *out, component_t c, int with_tuples);
 
+/* Print the neighbors of the specified vertex and component */
+void component_neighbors(char *grdbdir, int gidx, int cidx, vertexid_t id);
+
 /*
  * Determine if two vertices are connected withing a specified component.
  * The strong routine determines if there is a directed path between the

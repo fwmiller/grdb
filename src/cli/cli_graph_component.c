@@ -60,8 +60,8 @@ cli_graph_component_neighbors(char *cmdline, int *pos)
 	printf("cli_graph_component_neighbors: ");
 	printf("determine neighbors of vertex id %llu\n", id);
 #endif
+	component_neighbors(grdbdir, gno, cno, id);
 }
-
 
 static int
 cli_graph_component_connected_strong(char *cmdline, int *pos)
@@ -81,7 +81,7 @@ cli_graph_component_connected_strong(char *cmdline, int *pos)
 	printf("determine vertexe ids %llu and %llu are strongly connected\n",
 	       id1, id2);
 #endif
-	return 0;
+	return component_connected_strong(grdbdir, gno, cno, id1, id2);
 }
 
 static int
@@ -102,7 +102,21 @@ cli_graph_component_connected_weak(char *cmdline, int *pos)
 	printf("determine vertexe ids %llu and %llu are weakly connected\n",
 	       id1, id2);
 #endif
-	return 0;
+	return component_connected_weak(grdbdir, gno, cno, id1, id2);
+}
+
+static void
+cli_graph_component_connected(char *cmdline, int *pos)
+{
+	char s[BUFSIZE];
+
+	memset(s, 0, BUFSIZE);
+	nextarg(cmdline, pos, " ", s);
+
+	if (strcmp(s, "strong") == 0)
+		cli_graph_component_connected_strong(cmdline, pos);
+	else if (strcmp(s, "weak") == 0)
+		cli_graph_component_connected_weak(cmdline, pos);
 }
 
 static void
@@ -201,6 +215,9 @@ cli_graph_component(char *cmdline, int *pos)
 
 	else if (strcmp(s, "neighbors") == 0)
 		cli_graph_component_neighbors(cmdline, pos);
+
+	else if (strcmp(s, "connected") == 0 || strcmp(s, "c") == 0)
+		cli_graph_component_connected(cmdline, pos);
 
 	else if (strcmp(s, "sssp") == 0)
 		cli_graph_component_sssp(cmdline, pos);
