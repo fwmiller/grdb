@@ -137,7 +137,9 @@ component_print(FILE *out, component_t c, int with_tuples)
 		size = schema_size(c->se);
 
 	readlen = (sizeof(vertexid_t) << 1) + size;
+#if 0
 	free(buf);
+#endif
 	buf = malloc(readlen);
 	assert (buf != NULL);
 	memset(buf, 0, readlen);
@@ -163,7 +165,8 @@ component_print(FILE *out, component_t c, int with_tuples)
 			tuple_print(out, &tuple, c->el);
 		}
 	}
+#if 0
 	free(buf);
-
+#endif
 	fprintf(out, "})");
 }

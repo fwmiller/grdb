@@ -94,10 +94,10 @@ void
 tuple_delete(tuple_t t)
 {
 	assert (t != NULL);
-
+#if 0
 	if (t->buf != NULL)
 		free(t->buf);
-
+#endif
 	memset(t, 0, sizeof(struct tuple));
 }
 

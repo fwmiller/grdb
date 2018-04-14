@@ -128,12 +128,15 @@ vertex_write_from(
 			/* Write the new tuple back out */
 			lseek(fdnew, off, SEEK_SET);
 			write(fdnew, bufnew, sizeof(vertexid_t) + sizenew);
+#if 0
 			free(bufnew);
+#endif
 			return;
 		}
 	}
+#if 0
 	free(bufnew);
-
+#endif
 	/*
 	 * The vertex id was not found so "drop the head" and write the
 	 * new vertex id and tuple
