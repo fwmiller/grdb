@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "cli.h"
 #include "graph.h"
 
@@ -16,6 +17,7 @@ void
 cli_graph(char *cmdline, int *pos)
 {
 	char s[BUFSIZE];
+	struct stat sbuf;
 
 	assert (cmdline != NULL);
 	assert (pos != NULL);
@@ -57,7 +59,8 @@ cli_graph(char *cmdline, int *pos)
 
 	} else if (isdigit(s[0])) {
 		int cidx, gidx, spos;
-		char s1[BUFSIZE];
+		char s1[BUFSIZE], s2[BUFSIZE];
+		int result;
 #if _DEBUG
 		printf("s=[%s] ", s);
 #endif
@@ -72,18 +75,30 @@ cli_graph(char *cmdline, int *pos)
 		printf("gidx=%d ", gidx);
 #endif
 		spos++;
-		memset(s1, 0, BUFSIZE);
-		nextarg(s, &spos, " ", s1);
+		memset(s2, 0, BUFSIZE);
+		nextarg(s, &spos, " ", s2);
 #if _DEBUG
-		printf("s1=[%s] ", s1);
+		printf("s2=[%s] ", s2);
 #endif
-		cidx = atoi(s1);
+		cidx = atoi(s2);
 #if _DEBUG
 		printf("cidx=%d\n", cidx);
 #endif
+		/*
+		 * Check whether specified graph and component
+		 * number exist
+		 */
+		memset(s, 0, BUFSIZE);
+		sprintf(s, "%s/%s/%s", grdbdir, s1, s2);
+		memset(&sbuf, 0, sizeof(struct stat));
+		result = stat(s, &sbuf);
+		if (result < 0) {
+			printf("component %d.%d does not exist\n",
+				gidx, cidx);
+			return;
+		}
 		gno = gidx;
 		cno = cidx;
-
 		return;
 	}
 }
