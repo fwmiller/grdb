@@ -95,9 +95,13 @@ tuple_delete(tuple_t t)
 {
 #if 0
 	assert (t != NULL);
+<<<<<<< HEAD
+=======
+#if 0
+>>>>>>> 03c4c3171792f369f578a06fd9716f3773b9cdc8
 	if (t->buf != NULL)
 		free(t->buf);
-
+#endif
 	memset(t, 0, sizeof(struct tuple));
 #endif
 }

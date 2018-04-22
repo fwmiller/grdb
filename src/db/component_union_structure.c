@@ -143,7 +143,9 @@ component_union_structures(
 			buf + sizeof(vertexid_t),
 			sv1, fdnew, sv);
 	}
+#if 0
 	free(buf);
+#endif
 	close(fd);
 
 
