@@ -44,10 +44,10 @@ void
 string_pool_init(string_pool_t *pool)
 {
 	assert(pool != NULL);
-
+#if 0
 	if (*pool != NULL)
 		free(*pool);
-
+#endif
 	*pool = malloc(1);
 	assert(*pool != NULL);
 	string_pool_set_entries(*pool, 0);
@@ -153,7 +153,9 @@ string_pool_insert(string_pool_t *pool, char *s)
 #if _DEBUG
 	bufdump((char *) buf, blen);
 #endif
+#if 0
 	free(*pool);
+#endif
 	*pool = (string_pool_t) buf;
 }
 
