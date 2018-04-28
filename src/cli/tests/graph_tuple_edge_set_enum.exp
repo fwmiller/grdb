@@ -54,8 +54,8 @@ expect -exact "g n\r
 send -- "g e 1 2\r"
 expect -exact "g e 1 2\r
 0.0> "
-send -- "g enum color red blue green\r"
-expect -exact "g enum color red blue green\r
+send -- "enum color red blue green\r"
+expect -exact "enum color red blue green\r
 0.0> "
 send -- "g s e color c\r"
 expect -exact "g s e color c\r

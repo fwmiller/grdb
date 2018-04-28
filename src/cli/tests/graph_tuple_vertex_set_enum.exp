@@ -51,8 +51,8 @@ grdb> "
 send -- "g n\r"
 expect -exact "g n\r
 0.0> "
-send -- "g enum test one two three\r"
-expect -exact "g enum test one two three\r
+send -- "enum test one two three\r"
+expect -exact "enum test one two three\r
 0.0> "
 send -- "g s v test t\r"
 expect -exact "g s v test t\r

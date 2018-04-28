@@ -45,10 +45,6 @@ cli_graph(char *cmdline, int *pos)
 		cli_graph_edge(cmdline, pos);
 		return;
 
-	} else if (strcmp(s, "enum") == 0) {
-		cli_graph_enum(cmdline, pos);
-		return;
-
 	} else if (strcmp(s, "schema") == 0 || strcmp(s, "s") == 0) {
 		cli_graph_schema(cmdline, pos);
 		return;

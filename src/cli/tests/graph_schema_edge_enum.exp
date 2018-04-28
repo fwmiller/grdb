@@ -58,11 +58,11 @@ send -- "g\r"
 expect -exact "g\r
 0.0:({1,2},{(1,2)})\r
 0.0> "
-send -- "g enum test one two three\r"
-expect -exact "g enum test one two three\r
+send -- "enum test one two three\r"
+expect -exact "enum test one two three\r
 0.0> "
-send -- "g enum\r"
-expect -exact "g enum\r
+send -- "enum\r"
+expect -exact "enum\r
 component 0.0\r
 test (one two three)\r
 0.0> "

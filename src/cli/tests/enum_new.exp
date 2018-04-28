@@ -51,11 +51,11 @@ grdb> "
 send -- "g n\r"
 expect -exact "g n\r
 0.0> "
-send -- "g enum color red green blue\r"
-expect -exact "g enum color red green blue\r
+send -- "enum color red green blue\r"
+expect -exact "enum color red green blue\r
 0.0> "
-send -- "g enum\r"
-expect -exact "g enum\r
+send -- "enum\r"
+expect -exact "enum\r
 component 0.0\r
 color (red green blue)\r
 0.0> "

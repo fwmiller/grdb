@@ -175,6 +175,10 @@ cli()
 			cli_clear_database();
 			continue;
 
+		} else if (strcmp(cmd, "enum") == 0) {
+			cli_graph_enum(cmdline, &pos);
+			continue;
+
 		} else if (strcmp(cmd, "help") == 0 ||
 			   strcmp(cmd, "h") == 0) {
 			cli_help();

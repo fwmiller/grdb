@@ -51,33 +51,33 @@ grdb> "
 send -- "g n\r"
 expect -exact "g n\r
 0.0> "
-send -- "g enum test one two three\r"
-expect -exact "g enum test one two three\r
+send -- "enum test one two three\r"
+expect -exact "enum test one two three\r
 0.0> "
-send -- "g enum\r"
-expect -exact "g enum\r
+send -- "enum\r"
+expect -exact "enum\r
 component 0.0\r
 test (one two three)\r
 0.0> "
 send -- "g n\r"
 expect -exact "g n\r
 0.0> "
-send -- "g enum\r"
-expect -exact "g enum\r
+send -- "enum\r"
+expect -exact "enum\r
 component 0.0\r
 test (one two three)\r
 0.0> "
 send -- "g 1.0\r"
 expect -exact "g 1.0\r
 1.0> "
-send -- "g enum\r"
-expect -exact "g enum\r
+send -- "enum\r"
+expect -exact "enum\r
 1.0> "
-send -- "g enum color red green blue\r"
-expect -exact "g enum color red green blue\r
+send -- "enum color red green blue\r"
+expect -exact "enum color red green blue\r
 1.0> "
-send -- "g enum\r"
-expect -exact "g enum\r
+send -- "enum\r"
+expect -exact "enum\r
 component 1.0\r
 color (red green blue)\r
 1.0> "
@@ -89,8 +89,8 @@ expect -exact "g\r
 send -- "g 0.0\r"
 expect -exact "g 0.0\r
 0.0> "
-send -- "g enum\r"
-expect -exact "g enum\r
+send -- "enum\r"
+expect -exact "enum\r
 component 0.0\r
 test (one two three)\r
 0.0> "
