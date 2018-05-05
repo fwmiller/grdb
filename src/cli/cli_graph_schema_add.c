@@ -19,7 +19,6 @@ cli_graph_schema_add_enum(
 	attribute_t attr;
 
 	assert (schema != NULL);
-
 #if _DEBUG
 	printf("cli_graph_schema_add_enum: ");
 	printf("add attribute type enum %s name %s to schema\n",
@@ -103,7 +102,6 @@ cli_graph_schema_add(schema_type_t st, char *cmdline, int *pos)
 #if _DEBUG
 	printf("cli_graph_schema_add: old_schema_size %d\n", old_schema_size);
 #endif
-
 	/* Attribute type */
         memset(type, 0, BUFSIZE);
         nextarg(cmdline, pos, " ", type);

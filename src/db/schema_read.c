@@ -11,7 +11,7 @@
 schema_t
 schema_read(int fd, enum_list_t el)
 {
-	schema_t s = NULL;
+	schema_t schema = NULL;
 	attribute_t attr = NULL;
 	ssize_t len;
 	u64_t n;
@@ -29,7 +29,7 @@ schema_read(int fd, enum_list_t el)
 		printf("s");
 	printf("\n");
 #endif
-	schema_init(&s);
+	schema_init(&schema);
 
 	/* Read each attribute in the schema */
 	for (i = 0; i < n; i++) {
@@ -79,8 +79,8 @@ schema_read(int fd, enum_list_t el)
 			}
 		}
 		/* Insert attribute in schema */
-		schema_attribute_insert(s, attr);
+		schema_attribute_insert(schema, attr);
 		attr = NULL;
 	}
-	return s;
+	return schema;
 }
